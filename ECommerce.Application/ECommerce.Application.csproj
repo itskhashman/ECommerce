@@ -10,4 +10,11 @@
     <ProjectReference Include="..\ECommerce.Domain\ECommerce.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interface\Repository\" />
+    <Folder Include="Interface\Service\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="Service\" />
+  </ItemGroup>
+
 </Project>
