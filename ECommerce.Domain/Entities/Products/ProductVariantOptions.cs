@@ -7,8 +7,6 @@ namespace ECommerce.Domain.Entities.Products
     {
         [Key]
         public int Id { get; set; }
-
-
         public int ProductVariantId { get; set; }
         public ProductVariant ProductVariant { get; set; } = null!;
         [MaxLength(30)]

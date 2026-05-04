@@ -15,9 +15,7 @@ namespace ECommerce.Domain.Entities.Products
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
-
         public ICollection<ProductImage>? ProductImages { get; set; } = new List<ProductImage>();
-
         public ICollection<ProductVariant>? ProductVariants { get; set; } = new List<ProductVariant>();
         public ICollection<Sku>? Skus { get; set; } = new List<Sku>();
         [Required]

@@ -75,6 +75,40 @@ namespace ECommerce.Infrastructure.Data
             modelBuilder.Entity<SKUProductVariantOptions>()
                 .HasKey(svo => new { svo.SkuId, svo.ProductVariantId, svo.ProductVariantOptionsId });
 
+            modelBuilder.Entity<SKUProductVariantOptions>()
+        .HasOne(svo => svo.Sku)
+        .WithMany()
+        .HasForeignKey(svo => svo.SkuId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+            // 2. Set this to Restrict: This breaks the "Multiple Path" cycle.
+            modelBuilder.Entity<SKUProductVariantOptions>()
+                .HasOne(svo => svo.ProductVariant)
+                .WithMany()
+                .HasForeignKey(svo => svo.ProductVariantId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // 3. Set this to Restrict: Prevents the third path from causing a clash.
+            modelBuilder.Entity<SKUProductVariantOptions>()
+                .HasOne(svo => svo.ProductVariantOptions)
+                .WithMany()
+                .HasForeignKey(svo => svo.ProductVariantOptionsId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // 4. Product to Sku (Keep Cascade)
+            modelBuilder.Entity<Sku>()
+                .HasOne(s => s.Product)
+                .WithMany(p => p.Skus)
+                .HasForeignKey(s => s.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // 5. Product to Variant (Keep Cascade)
+            modelBuilder.Entity<ProductVariant>()
+                .HasOne(pv => pv.Product)
+                .WithMany(p => p.ProductVariants)
+                .HasForeignKey(pv => pv.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
         }
 
