@@ -75,6 +75,36 @@ namespace ECommerce.Infrastructure.Data
             modelBuilder.Entity<SKUProductVariantOptions>()
                 .HasKey(svo => new { svo.SkuId, svo.ProductVariantId, svo.ProductVariantOptionsId });
 
+            modelBuilder.Entity<SKUProductVariantOptions>()
+        .HasOne(svo => svo.Sku)
+        .WithMany()
+        .HasForeignKey(svo => svo.SkuId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SKUProductVariantOptions>()
+                .HasOne(svo => svo.ProductVariant)
+                .WithMany()
+                .HasForeignKey(svo => svo.ProductVariantId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SKUProductVariantOptions>()
+                .HasOne(svo => svo.ProductVariantOptions)
+                .WithMany()
+                .HasForeignKey(svo => svo.ProductVariantOptionsId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Sku>()
+                .HasOne(s => s.Product)
+                .WithMany(p => p.Skus)
+                .HasForeignKey(s => s.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ProductVariant>()
+                .HasOne(pv => pv.Product)
+                .WithMany(p => p.ProductVariants)
+                .HasForeignKey(pv => pv.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
         }
 
