@@ -1,8 +1,8 @@
 ﻿
 
-namespace ECommerce.Application.DTOs
+namespace ECommerce.Infrastructure.Repository
 {
-    internal class TestDto
+    public class TestRepository
     {
     }
 }

@@ -1,8 +1,10 @@
 ﻿
 
-namespace ECommerce.Application.DTOs
+using ECommerce.Application.Interface.Service;
+
+namespace ECommerce.Application.Service
 {
-    internal class TestDto
+    public class TestService : ITestService
     {
     }
 }
