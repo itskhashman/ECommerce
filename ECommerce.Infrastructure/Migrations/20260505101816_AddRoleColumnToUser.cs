@@ -1,0 +1,30 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace ECommerce.Infrastructure.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddRoleColumnToUser : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: "Role",
+                table: "Users",
+                type: "nvarchar(30)",
+                maxLength: 30,
+                nullable: false,
+                defaultValue: "");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "Role",
+                table: "Users");
+        }
+    }
+}

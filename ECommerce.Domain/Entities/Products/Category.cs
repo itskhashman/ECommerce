@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ECommerce.Domain.Entities.Base;
+using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.Domain.Entities.Products
 {
-    public class Category
+    public class Category : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
+        public string? ArName { get; set; }
         [Required]
-        public string Name { get; set; } = null!;
+        public string EnName { get; set; } = null!;
         public ICollection<Product> Products { get; set; } = new List<Product>();
+        public bool IsActive { get; set; } = true;
     }
 }
