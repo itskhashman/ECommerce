@@ -15,11 +15,14 @@ namespace ECommerce.Infrastructure.Repository
 
         public async Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(int categoryId)
         {
-            var Products = await _context.Products.Where(p => p.CategoryId == categoryId).ToListAsync();
+            var Products = await _context.Products
+                .AsNoTracking()
+                .Where(p => p.CategoryId == categoryId)
+                .ToListAsync();
             return Products;
         }
 
-        public async  Task<Product?> GetAllProductDetailsAsync(int productId)
+        public async Task<Product?> GetAllProductDetailsAsync(int productId)
         {
             var product = await _context.Products
                 .Where(p => p.Id == productId)
@@ -50,7 +53,7 @@ namespace ECommerce.Infrastructure.Repository
                             EnName = pvo.EnName,
                         }).ToList()
                     }).ToList(),
-                    Skus = p.Skus== null ? null : p.Skus.Select(s => new Sku
+                    Skus = p.Skus == null ? null : p.Skus.Select(s => new Sku
                     {
                         Id = s.Id,
                         SkuCode = s.SkuCode,
