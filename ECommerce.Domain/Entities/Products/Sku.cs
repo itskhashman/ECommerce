@@ -9,7 +9,7 @@ namespace ECommerce.Domain.Entities.Products
         [Required]
         public string SkuCode { get; set; } = null!;
         [Required]
-        [ForeignKey("Product")] 
+        [ForeignKey("Product")]
         public int ProductId { get; set; }
         public Product Product { get; set; } = null!;
         [Required]

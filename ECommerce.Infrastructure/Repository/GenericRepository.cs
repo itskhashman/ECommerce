@@ -9,7 +9,7 @@ namespace ECommerce.Infrastructure.Repository
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         public readonly ApplicationDbContext _context;
-            
+
         public GenericRepository(ApplicationDbContext context)
         {
             _context = context;
@@ -22,13 +22,13 @@ namespace ECommerce.Infrastructure.Repository
 
         public async Task<T?> GetByIDAsync(int id)
         {
-                return await _context.Set<T>().FindAsync(id);
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public async Task Add(T entity)
         {
             _context.Set<T>().Add(entity);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
         }
 
         public async Task Update(T entity)

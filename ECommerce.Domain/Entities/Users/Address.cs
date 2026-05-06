@@ -10,11 +10,10 @@ namespace ECommerce.Domain.Entities.Users
         [ForeignKey("User")]
         public int UserId { get; set; }
         public User User { get; set; } = null!;
-        public string? Street { get; set; }
-        public string? City { get; set; }
-        public string? State { get; set; }
-        public string? PostalCode { get; set; }
-        public string? Country { get; set; }
+        public string City { get; set; } = null!;
+        public string PostalCode { get; set; } = null!;
+        public string Country { get; set; } = null!;
+        public string Street { get; set; } = null!;
 
     }
 

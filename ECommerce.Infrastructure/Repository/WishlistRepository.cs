@@ -28,12 +28,12 @@ namespace ECommerce.Infrastructure.Repository
         public async Task<Wishlist?> GetWishlistByUserIdAsync(int userId)
         {
             return await _context.Wishlists
-                .AsNoTracking() 
+                .AsNoTracking()
                 .Include(w => w.WishlistItems)
                 .FirstOrDefaultAsync(w => w.UserId == userId);
-        }   
+        }
         public async Task RemoveFromWishlistAsync(int userId, int skuId)
-        { 
+        {
             var wishlistItem = await _context.WishlistItems
                 .FirstOrDefaultAsync(wi => wi.Wishlist.UserId == userId && wi.SkuId == skuId && !wi.IsDeleted);
 

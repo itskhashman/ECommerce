@@ -9,20 +9,20 @@ namespace ECommerce.Domain.Entities.Users
     public class User : BaseEntity
     {
         [MaxLength(30)]
-        public string? ArFirstName { get; set; }
+        public string? FirstNameAr { get; set; }
         [MaxLength(30)]
-        public string? ArMiddleName { get; set; }
+        public string? MiddleNameAr { get; set; }
         [MaxLength(30)]
-        public string? ArLastName { get; set; }
+        public string? LastNameAr { get; set; }
         [Required]
         [MaxLength(30)]
-        public string EnFirstName { get; set; } = null!;
+        public string FirstNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
-        public string EnMiddleName { get; set; } = null!;
+        public string MiddleNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
-        public string EnLastName { get; set; } = null!;
+        public string LastNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
         public string Role { get; set; } = null!;

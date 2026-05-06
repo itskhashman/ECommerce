@@ -29,8 +29,10 @@ namespace ECommerce.Infrastructure.Repository
                 .Select(p => new Product
                 {
                     Id = p.Id,
-                    EnName = p.EnName,
-                    EnDescription = p.EnDescription,
+                    NameEn = p.NameEn,
+                    DescriptionEn = p.DescriptionEn,
+                    NameAr = p.NameAr,
+                    DescriptionAr = p.DescriptionAr,
                     CategoryId = p.CategoryId,
                     Stock = p.Stock,
                     Rating = p.Rating,
@@ -46,11 +48,13 @@ namespace ECommerce.Infrastructure.Repository
                     ProductVariants = p.ProductVariants == null ? null : p.ProductVariants.Select(pv => new ProductVariant
                     {
                         Id = pv.Id,
-                        EnName = pv.EnName,
+                        NameEn = pv.NameEn,
+                        NameAr = pv.NameAr,
                         ProductVariantOptions = pv.ProductVariantOptions.Select(pvo => new ProductVariantOptions
                         {
                             Id = pvo.Id,
-                            EnName = pvo.EnName,
+                            NameEn = pvo.NameEn,
+                            NameAr = pvo.NameAr
                         }).ToList()
                     }).ToList(),
                     Skus = p.Skus == null ? null : p.Skus.Select(s => new Sku

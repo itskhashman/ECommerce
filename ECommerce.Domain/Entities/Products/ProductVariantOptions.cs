@@ -6,10 +6,10 @@ namespace ECommerce.Domain.Entities.Products
     public class ProductVariantOptions : BaseEntity
     {
         [MaxLength(30)]
-        public string? ArName { get; set; }
+        public string? NameAr { get; set; }
         [MaxLength(30)]
         [Required]
-        public string EnName { get; set; } = null!;
+        public string NameEn { get; set; } = null!;
         public int ProductVariantId { get; set; }
         public ProductVariant ProductVariant { get; set; } = null!;
 
