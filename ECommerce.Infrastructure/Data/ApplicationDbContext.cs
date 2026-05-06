@@ -10,10 +10,10 @@ using ECommerce.Domain.Entities.Base;
     {
         public class ApplicationDbContext : DbContext
         {
-            public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options , ICurrentUserService currentUserService) : base(options)
+            public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
             {
-                _currentUserService = currentUserService;
-        }
+            
+            }
 
             public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
             {
