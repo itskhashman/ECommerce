@@ -1,17 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ECommerce.Domain.Entities.Base;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities.Products
 {
-    public class Product
+    public class Product : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
-        [MaxLength(50)]
+        [MaxLength(100)]
+        public string? ArName { get; set; }
+        [MaxLength(100)]
         [Required]
-        public string Name { get; set; } = null!;
+        public string EnName { get; set; } = null!;
         [Required]
+        public string? ArDescription { get; set; } = null!;
+        [Required]
+        public string EnDescription { get; set; } = null!;
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
@@ -27,7 +30,7 @@ namespace ECommerce.Domain.Entities.Products
         public decimal? DiscountAmount { get; set; }
         [MaxLength(15)]
         public string? DiscountType { get; set; }
-
+        public bool IsActive { get; set; } = true;
 
     }
 }

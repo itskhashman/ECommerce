@@ -1,15 +1,14 @@
 ﻿
 
+using ECommerce.Domain.Entities.Base;
 using ECommerce.Domain.Entities.Products;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities.Sales
 {
-    public class OrderItem
+    public class OrderItem : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         [ForeignKey("Order")]
         public int OrderId { get; set; }

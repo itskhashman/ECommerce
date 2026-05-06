@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ECommerce.Domain.Entities.Base;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities.Products
 {
-    public class Sku
+    public class Sku : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
+        [Required]
+        public string SkuCode { get; set; } = null!;
         [Required]
         [ForeignKey("Product")] 
         public int ProductId { get; set; }

@@ -1,12 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ECommerce.Domain.Entities.Base;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities.Products
 {
-    public class ProductVariant
+    public class ProductVariant : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
+
+        [MaxLength(50)]
+        public string? ArName { get; set; }
+        [MaxLength(50)]
+        [Required]
+        public string EnName { get; set; } = null!;
         [Required]
         [ForeignKey("Product")]
         public int ProductId { get; set; }
@@ -14,8 +19,5 @@ namespace ECommerce.Domain.Entities.Products
         public ICollection<ProductVariantOptions> ProductVariantOptions { get; set; } = new List<ProductVariantOptions>();
         public ICollection<SKUProductVariantOptions> SKUJoinOptions { get; set; } = new List<SKUProductVariantOptions>();
 
-        [MaxLength(50)]
-        [Required]
-        public string Name { get; set; } = null!;
     }
 }

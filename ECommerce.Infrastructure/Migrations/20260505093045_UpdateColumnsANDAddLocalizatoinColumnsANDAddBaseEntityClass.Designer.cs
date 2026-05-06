@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260505093045_UpdateColumnsANDAddLocalizatoinColumnsANDAddBaseEntityClass")]
+    partial class UpdateColumnsANDAddLocalizatoinColumnsANDAddBaseEntityClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,9 +46,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("EnName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -107,9 +107,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -630,11 +627,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int?>("Phone")
                         .HasColumnType("int");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
                     b.Property<int>("WishlistId")
                         .HasColumnType("int");
 
@@ -866,7 +858,7 @@ namespace ECommerce.Infrastructure.Migrations
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.CartItem", b =>
                 {
                     b.HasOne("ECommerce.Domain.Entities.Users.Cart", "Cart")
-                        .WithMany("CartItems")
+                        .WithMany()
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -902,7 +894,7 @@ namespace ECommerce.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("ECommerce.Domain.Entities.Users.Wishlist", "Wishlist")
-                        .WithMany("WishlistItems")
+                        .WithMany()
                         .HasForeignKey("WishlistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -938,11 +930,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("ECommerce.Domain.Entities.Users.Cart", b =>
-                {
-                    b.Navigation("CartItems");
-                });
-
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.User", b =>
                 {
                     b.Navigation("Address");
@@ -954,11 +941,6 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Navigation("Wishlist")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Users.Wishlist", b =>
-                {
-                    b.Navigation("WishlistItems");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,13 +1,12 @@
-﻿using ECommerce.Domain.Entities.Products;
+﻿using ECommerce.Domain.Entities.Base;
+using ECommerce.Domain.Entities.Products;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities.Users
 {
-    public class CartItem
+    public class CartItem : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         [ForeignKey("Cart")]
         public int CartId { get; set; }

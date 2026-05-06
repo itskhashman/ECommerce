@@ -1,16 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using ECommerce.Domain.Entities.Base;
+using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.Domain.Entities.Products
 {
-    public class ProductVariantOptions
+    public class ProductVariantOptions : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-        public int ProductVariantId { get; set; }
-        public ProductVariant ProductVariant { get; set; } = null!;
+        [MaxLength(30)]
+        public string? ArName { get; set; }
         [MaxLength(30)]
         [Required]
-        public string Name { get; set; } = null!;
+        public string EnName { get; set; } = null!;
+        public int ProductVariantId { get; set; }
+        public ProductVariant ProductVariant { get; set; } = null!;
+
     }
 }
