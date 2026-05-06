@@ -1,11 +1,6 @@
-using ECommerce.Application.Interfaces;
-using ECommerce.Application.Service;
 using ECommerce.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services.AddControllersWithViews();
 

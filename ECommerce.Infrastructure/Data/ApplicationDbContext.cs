@@ -10,7 +10,6 @@ using ECommerce.Domain.Entities.Base;
     {
         public class ApplicationDbContext : DbContext
         {
-        private readonly ICurrentUserService _currentUserService;
             public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options , ICurrentUserService currentUserService) : base(options)
             {
                 _currentUserService = currentUserService;
@@ -23,12 +22,14 @@ using ECommerce.Domain.Entities.Base;
                 foreach (var entry in entries)
                 {
                     var entity = entry.Entity;
+
                     entity.ModifiedAt = DateTime.UtcNow;
-                    entity.ModifiedBy = _currentUserService.UserEmail ?? "Unknown";
+                    entity.ModifiedBy = "Unknown";
+
                     if (entry.State == EntityState.Added)
                     {
                         entity.CreatedAt = DateTime.UtcNow;
-                        entity.CreatedBy = _currentUserService.UserEmail ?? "Unknown";
+                        entity.CreatedBy = "Unknown";
                     }
  
                 }
