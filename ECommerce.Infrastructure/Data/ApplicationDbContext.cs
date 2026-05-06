@@ -14,7 +14,6 @@ using ECommerce.Domain.Entities.Base;
             {
             
             }
-
             public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
             {
                 var entries = ChangeTracker.Entries<BaseEntity>()
@@ -24,12 +23,12 @@ using ECommerce.Domain.Entities.Base;
                     var entity = entry.Entity;
 
                     entity.ModifiedAt = DateTime.UtcNow;
-                    entity.ModifiedBy = "Unknown";
+                    entity.ModifiedBy = 0;
 
                     if (entry.State == EntityState.Added)
                     {
                         entity.CreatedAt = DateTime.UtcNow;
-                        entity.CreatedBy = "Unknown";
+                        entity.CreatedBy = 0;
                     }
  
                 }
