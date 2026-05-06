@@ -2,7 +2,9 @@
 
 using ECommerce.Domain.Entities.Base;
 using ECommerce.Domain.Entities.Sales;
+using ECommerce.Domain.Entities.Users.Lookups;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities.Users
 {
@@ -24,12 +26,15 @@ namespace ECommerce.Domain.Entities.Users
         [MaxLength(30)]
         public string EnLastName { get; set; } = null!;
         [Required]
-        [MaxLength(30)]
-        public string Role { get; set; } = null!;
+        [ForeignKey("Role")]
+        public int RoleId { get; set; }
+        public Role Role { get; set; } = null!;
         [EmailAddress]
         public string? Email { get; set; }
         public int? Phone { get; set; }
-        public string? CountryCode { get; set; }
+        [ForeignKey("CountryCode")]
+        public int? CountryCodeId { get; set; }
+        public CountryCode CountryCode { get; set; } = null!;
         public ICollection<Order>? Orders { get; set; } = new List<Order>();
         [Required]
         public int CartId { get; set; }

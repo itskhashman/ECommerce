@@ -1,6 +1,7 @@
 ﻿
 
 using ECommerce.Domain.Entities.Base;
+using ECommerce.Domain.Entities.Sales.Lookups;
 using ECommerce.Domain.Entities.Users;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,8 +19,9 @@ namespace ECommerce.Domain.Entities.Sales
         [Required]
         public decimal TotalAmount { get; set; }
         [Required]
-        [MaxLength(15)]
-        public string Status { get; set; } = null!;
+        [ForeignKey("OrderStatus")]
+        public int OrderStatusId { get; set; }
+        public OrderStatus OrderStatus { get; set; } = null!;
         [Required]
         [ForeignKey("Address")]
         public int AddressId { get; set; }
