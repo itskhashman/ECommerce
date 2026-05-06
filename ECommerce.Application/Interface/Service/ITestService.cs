@@ -1,8 +1,6 @@
-﻿
-
-namespace ECommerce.Application.Interface.Service
+﻿namespace ECommerce.Application.Interfaces
 {
-    public class ITestService
+    public interface ITestService
     {
     }
 }
