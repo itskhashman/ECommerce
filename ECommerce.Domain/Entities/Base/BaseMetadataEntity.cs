@@ -2,7 +2,7 @@
 
 namespace ECommerce.Domain.Entities.Base
 {
-    public class AuditableEntity
+    public class BaseMetadataEntity
     {
         [Required]
         public int CreatedBy { get; set; }
