@@ -5,10 +5,11 @@ namespace ECommerce.Domain.Entities.Products
 {
     public class Category : BaseEntity
     {
-        public string? ArName { get; set; }
+        public string? NameAr { get; set; }
         [Required]
-        public string EnName { get; set; } = null!;
+        public string NameEn { get; set; } = null!;
         public ICollection<Product> Products { get; set; } = new List<Product>();
+        public int NumberOfProducts { get; set; }
         public bool IsActive { get; set; } = true;
     }
 }

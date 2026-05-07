@@ -43,10 +43,6 @@ namespace ECommerce.Infrastructure.Data
                 .HasPrecision(3, 2);
 
             modelBuilder.Entity<Product>()
-                .Property(p => p.DefaultPrice)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<Product>()
                 .Property(p => p.DiscountAmount)
                 .HasPrecision(8, 2);
 
@@ -137,23 +133,14 @@ namespace ECommerce.Infrastructure.Data
                 new OrderStatus { Id = 4, StatusName = "Delivered" }
             );
 
-            modelBuilder.Entity<CountryCode>().HasData(
-                new CountryCode { Id = 1, Code = "+966" },
-                new CountryCode { Id = 2, Code = "+962" },
-                new CountryCode { Id = 3, Code = "+971" },
-                new CountryCode { Id = 4, Code = "+20" },
-                new CountryCode { Id = 5, Code = "+1" },
-                new CountryCode { Id = 6, Code = "+44" }
-            );
-
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, RoleName = "Admin" },
                 new Role { Id = 2, RoleName = "Customer" }
             );
             modelBuilder.Entity<Country>().HasData(
-                new Country { Id = 1, Name = "Saudi Arabia", IsoCode = "SA" },
-                new Country { Id = 2, Name = "United Arab Emirates", IsoCode = "AE" },
-                new Country { Id = 3, Name = "Jordan", IsoCode = "JO" }
+                new Country { Id = 1, Name = "Saudi Arabia"},
+                new Country { Id = 2, Name = "United Arab Emirates" },
+                new Country { Id = 3, Name = "Jordan" }
             );
 
             modelBuilder.Entity<City>().HasData(
@@ -196,6 +183,10 @@ namespace ECommerce.Infrastructure.Data
         public DbSet<CartItem> CartItems { get; set; } = null!;
         public DbSet<Wishlist> Wishlists { get; set; } = null!;
         public DbSet<WishlistItem> WishlistItems { get; set; } = null!;
+        public DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
+        public DbSet<Role> Roles { get; set; } = null!;
+        public DbSet<Country> Countries { get; set; } = null!;
+        public DbSet<City> Cities { get; set; } = null!;
     }
 
 }

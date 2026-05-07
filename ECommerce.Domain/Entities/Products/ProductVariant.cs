@@ -8,10 +8,10 @@ namespace ECommerce.Domain.Entities.Products
     {
 
         [MaxLength(50)]
-        public string? ArName { get; set; }
+        public string? NameAr { get; set; }
         [MaxLength(50)]
         [Required]
-        public string EnName { get; set; } = null!;
+        public string NameEn { get; set; } = null!;
         [Required]
         [ForeignKey("Product")]
         public int ProductId { get; set; }

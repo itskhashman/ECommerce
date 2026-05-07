@@ -7,14 +7,14 @@ namespace ECommerce.Domain.Entities.Products
     public class Product : BaseEntity
     {
         [MaxLength(100)]
-        public string? ArName { get; set; }
+        public string? NameAr { get; set; }
         [MaxLength(100)]
         [Required]
-        public string EnName { get; set; } = null!;
+        public string NameEn { get; set; } = null!;
         [Required]
-        public string? ArDescription { get; set; } = null!;
+        public string? DescriptionAr { get; set; } = null!;
         [Required]
-        public string EnDescription { get; set; } = null!;
+        public string DescriptionEn { get; set; } = null!;
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
@@ -22,11 +22,10 @@ namespace ECommerce.Domain.Entities.Products
         public ICollection<ProductVariant>? ProductVariants { get; set; } = new List<ProductVariant>();
         public ICollection<Sku>? Skus { get; set; } = new List<Sku>();
         [Required]
-        public int Stock { get; set; }
+        public int TotalStock { get; set; }
         public decimal? Rating { get; set; }
         public int? ReviewCount { get; set; }
         [Required]
-        public decimal DefaultPrice { get; set; }
         public decimal? DiscountAmount { get; set; }
         [MaxLength(15)]
         public string? DiscountType { get; set; }

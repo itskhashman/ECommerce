@@ -14,6 +14,8 @@ namespace ECommerce.Domain.Entities.Sales
         public int OrderId { get; set; }
         public Order Order { get; set; } = null!;
         [Required]
+        public int OrderItemNumber { get; set; }
+        [Required]
         [ForeignKey("Sku")]
         public int SkuId { get; set; }
         public Sku Sku { get; set; } = null!;

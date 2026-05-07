@@ -11,30 +11,27 @@ namespace ECommerce.Domain.Entities.Users
     public class User : BaseEntity
     {
         [MaxLength(30)]
-        public string? ArFirstName { get; set; }
+        public string? FirstNameAr { get; set; }
         [MaxLength(30)]
-        public string? ArMiddleName { get; set; }
+        public string? MiddleNameAr { get; set; }
         [MaxLength(30)]
-        public string? ArLastName { get; set; }
+        public string? LastNameAr { get; set; }
         [Required]
         [MaxLength(30)]
-        public string EnFirstName { get; set; } = null!;
+        public string FirstNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
-        public string EnMiddleName { get; set; } = null!;
+        public string MiddleNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
-        public string EnLastName { get; set; } = null!;
+        public string LastNameEn { get; set; } = null!;
         [Required]
         [ForeignKey("Role")]
         public int RoleId { get; set; }
         public Role Role { get; set; } = null!;
         [EmailAddress]
         public string? Email { get; set; }
-        public int? Phone { get; set; }
-        [ForeignKey("CountryCode")]
-        public int? CountryCodeId { get; set; }
-        public CountryCode CountryCode { get; set; } = null!;
+        public string? Phone { get; set; }
         public ICollection<Order>? Orders { get; set; } = new List<Order>();
         [Required]
         public int CartId { get; set; }

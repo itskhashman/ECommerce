@@ -16,6 +16,6 @@ namespace ECommerce.Domain.Entities.Products
         [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
         [MaxLength(10)]
-        public string PriceUnit { get; set; } = null!;
+        public int Stock { get; set; }
     }
 }
