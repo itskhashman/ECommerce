@@ -22,6 +22,7 @@ namespace ECommerce.Domain.Entities.Products
         public ICollection<ProductVariant>? ProductVariants { get; set; } = new List<ProductVariant>();
         public ICollection<Sku>? Skus { get; set; } = new List<Sku>();
         [Required]
+        public decimal? DefaultPrice { get; set; }
         public int TotalStock { get; set; }
         public decimal? Rating { get; set; }
         public int? ReviewCount { get; set; }

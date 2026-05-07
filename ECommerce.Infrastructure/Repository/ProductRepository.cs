@@ -35,6 +35,7 @@ namespace ECommerce.Infrastructure.Repository
                     DescriptionAr = p.DescriptionAr,
                     CategoryId = p.CategoryId,
                     TotalStock = p.TotalStock,
+                    DefaultPrice = p.DefaultPrice,
                     Rating = p.Rating,
                     ReviewCount = p.ReviewCount,
                     DiscountAmount = p.DiscountAmount,
