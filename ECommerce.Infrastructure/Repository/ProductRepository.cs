@@ -4,6 +4,7 @@ using ECommerce.Application.Interface.Repository;
 using ECommerce.Domain.Entities.Products;
 using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace ECommerce.Infrastructure.Repository
 {
@@ -17,7 +18,7 @@ namespace ECommerce.Infrastructure.Repository
         {
             var Products = await _context.Products
                 .AsNoTracking()
-                .Where(p => p.CategoryId == categoryId)
+                .Where(p => p.CategoryId == categoryId && !p.IsDeleted && p.IsActive)
                 .ToListAsync();
             return Products;
         }
@@ -25,7 +26,7 @@ namespace ECommerce.Infrastructure.Repository
         public async Task<Product?> GetAllProductDetailsAsync(int productId)
         {
             var product = await _context.Products
-                .Where(p => p.Id == productId)
+                .Where(p => p.Id == productId && !p.IsDeleted && p.IsActive)
                 .Select(p => new Product
                 {
                     Id = p.Id,
@@ -34,8 +35,6 @@ namespace ECommerce.Infrastructure.Repository
                     NameAr = p.NameAr,
                     DescriptionAr = p.DescriptionAr,
                     CategoryId = p.CategoryId,
-                    TotalStock = p.TotalStock,
-                    DefaultPrice = p.DefaultPrice,
                     Rating = p.Rating,
                     ReviewCount = p.ReviewCount,
                     DiscountAmount = p.DiscountAmount,
@@ -44,25 +43,25 @@ namespace ECommerce.Infrastructure.Repository
                     {
                         Id = pi.Id,
                         URL = pi.URL
-                    }).ToList(),
+                    }).Where(i => !i.IsDeleted).ToList(),
                     ProductVariants = p.ProductVariants == null ? null : p.ProductVariants.Select(pv => new ProductVariant
                     {
                         Id = pv.Id,
                         NameEn = pv.NameEn,
                         NameAr = pv.NameAr,
-                        ProductVariantOptions = pv.ProductVariantOptions.Select(pvo => new ProductVariantOptions
+                        ProductVariantOptions =  pv.ProductVariantOptions.Select(pvo => new ProductVariantOptions
                         {
                             Id = pvo.Id,
                             NameEn = pvo.NameEn,
                             NameAr = pvo.NameAr,
-                        }).ToList()
-                    }).ToList(),
+                        }).Where(pvo => !pvo.IsDeleted).ToList()
+                    }).Where(pv => !pv.IsDeleted).ToList(),
                     Skus = p.Skus == null ? null : p.Skus.Select(s => new Sku
                     {
                         Id = s.Id,
                         SkuCode = s.SkuCode,
                         Price = s.Price,
-                    }).ToList()
+                    }).Where(s => !s.IsDeleted && s.IsActive).ToList()
                 })
                 .FirstOrDefaultAsync();
             return product;

@@ -17,13 +17,16 @@ namespace ECommerce.Infrastructure.Repository
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
-        public async Task<IEnumerable<User>> GetUsersByRoleAsync(string role)
+        public async Task<IEnumerable<User>> GetUsersByRoleAsync(int roleId)
         {
-            return await _context.Users.Where(u => u.Role.RoleName == role).ToListAsync();
+            return await _context.Users.Where(u => u.RoleId == roleId).ToListAsync();
         }
         public async Task<string?> GetUserRoleAsync(int userId)
         {
-            return await _context.Users.Where(u => u.Id == userId).Select(u => u.Role.RoleName).FirstOrDefaultAsync();
+            return await _context.Users.Where(u => u.Id == userId)
+                .Include(u => u.Role)
+                .Select(u => u.Role.NameAr + " " + u.Role.NameEn)
+                .FirstOrDefaultAsync();
         }
         public async Task<User?> GetUserWithAddressesAsync(int userId)
         {

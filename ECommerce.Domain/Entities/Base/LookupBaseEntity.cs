@@ -10,9 +10,7 @@ namespace ECommerce.Domain.Entities.Base
         [MaxLength(15)]
         [Required]
         public string NameEn { get; set; } = null!;
-        [Required]
-        public string DescriptionAr { get; set; } = null!;
-        [Required]
-        public string DescriptionEn { get; set; } = null!;
+        public string? DescriptionAr { get; set; }
+        public string? DescriptionEn { get; set; }
     }
 }
