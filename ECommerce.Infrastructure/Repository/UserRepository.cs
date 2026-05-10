@@ -19,11 +19,11 @@ namespace ECommerce.Infrastructure.Repository
         }
         public async Task<IEnumerable<User>> GetUsersByRoleAsync(string role)
         {
-            return await _context.Users.Where(u => u.Role == role).ToListAsync();
+            return await _context.Users.Where(u => u.Role.RoleName == role).ToListAsync();
         }
         public async Task<string?> GetUserRoleAsync(int userId)
         {
-            return await _context.Users.Where(u => u.Id == userId).Select(u => u.Role).FirstOrDefaultAsync();
+            return await _context.Users.Where(u => u.Id == userId).Select(u => u.Role.RoleName).FirstOrDefaultAsync();
         }
         public async Task<User?> GetUserWithAddressesAsync(int userId)
         {

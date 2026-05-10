@@ -1,15 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities.Base
 {
-    public class BaseMetadataEntity
+    public abstract class BaseMetadataEntity
     {
         [Required]
+        public DateTime CreatedAt { get; set; }
+        [Required]
         public int CreatedBy { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Required]
+        public DateTime ModifiedAt { get; set; }
         [Required]
         public int ModifiedBy { get; set; }
-        public DateTime? ModifiedAt { get; set; } = DateTime.UtcNow;
+        [Required]
         public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
+        public int? DeletedBy { get; set; }
     }
 }

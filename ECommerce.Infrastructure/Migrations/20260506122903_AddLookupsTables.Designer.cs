@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260506122903_AddLookupsTables")]
+    partial class AddLookupsTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,11 +33,18 @@ namespace ECommerce.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ArName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
+
+                    b.Property<string>("EnName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -46,16 +56,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NameAr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfProducts")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -71,6 +71,14 @@ namespace ECommerce.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ArDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ArName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -80,26 +88,26 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("DefaultPrice")
-                        .IsRequired()
+                    b.Property<decimal>("DefaultPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("DescriptionAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionEn")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal?>("DiscountAmount")
-                        .IsRequired()
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
                     b.Property<string>("DiscountType")
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("EnDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -113,15 +121,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("NameAr")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<decimal?>("Rating")
                         .HasPrecision(3, 2)
                         .HasColumnType("decimal(3,2)");
@@ -129,7 +128,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int?>("ReviewCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalStock")
+                    b.Property<int>("Stock")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -187,11 +186,20 @@ namespace ECommerce.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ArName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
+
+                    b.Property<string>("EnName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -201,15 +209,6 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
-
-                    b.Property<string>("NameAr")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -229,11 +228,20 @@ namespace ECommerce.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ArName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
+
+                    b.Property<string>("EnName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -243,15 +251,6 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
-
-                    b.Property<string>("NameAr")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("ProductVariantId")
                         .HasColumnType("int");
@@ -315,16 +314,17 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("PriceUnit")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<string>("SkuCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Stock")
-                        .HasMaxLength(10)
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -362,46 +362,46 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderStatuses");
+                    b.ToTable("OrderStatus");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7956),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(5876),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7960),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(5879),
                             ModifiedBy = 0,
                             StatusName = "Pending"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7966),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(5886),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7966),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(5887),
                             ModifiedBy = 0,
                             StatusName = "Confirmed"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7968),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(5889),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7969),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(5890),
                             ModifiedBy = 0,
                             StatusName = "Shipped"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7970),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(5891),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7971),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(5892),
                             ModifiedBy = 0,
                             StatusName = "Delivered"
                         });
@@ -483,9 +483,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrderItemNumber")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("PriceAtPurchase")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -517,11 +514,11 @@ namespace ECommerce.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CountryId")
-                        .HasColumnType("int");
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -541,6 +538,9 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("PostalCode")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
@@ -548,10 +548,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("CountryId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -668,17 +664,17 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Cities");
+                    b.ToTable("City");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8320),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8397),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8321),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8398),
                             ModifiedBy = 0,
                             Name = "Amman"
                         },
@@ -686,10 +682,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 2,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8323),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8401),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8323),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8402),
                             ModifiedBy = 0,
                             Name = "Zarqa"
                         },
@@ -697,10 +693,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 3,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8325),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8404),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8326),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8405),
                             ModifiedBy = 0,
                             Name = "Irbid"
                         },
@@ -708,10 +704,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 4,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8327),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8475),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8328),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8476),
                             ModifiedBy = 0,
                             Name = "Russeifa"
                         },
@@ -719,10 +715,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 5,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8329),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8478),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8330),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8479),
                             ModifiedBy = 0,
                             Name = "Sahab"
                         },
@@ -730,10 +726,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 6,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8331),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8481),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8332),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8481),
                             ModifiedBy = 0,
                             Name = "As-Salt"
                         },
@@ -741,10 +737,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 7,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8333),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8483),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8334),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8484),
                             ModifiedBy = 0,
                             Name = "Aqaba"
                         },
@@ -752,10 +748,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 8,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8336),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8486),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8336),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8486),
                             ModifiedBy = 0,
                             Name = "Madaba"
                         },
@@ -763,10 +759,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 9,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8338),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8488),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8338),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8489),
                             ModifiedBy = 0,
                             Name = "Jerash"
                         },
@@ -774,10 +770,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 10,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8340),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8490),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8340),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8491),
                             ModifiedBy = 0,
                             Name = "Ma'an"
                         },
@@ -785,10 +781,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 11,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8342),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8492),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8342),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8493),
                             ModifiedBy = 0,
                             Name = "Al-Mafraq"
                         },
@@ -796,10 +792,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 12,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8344),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8494),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8344),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8495),
                             ModifiedBy = 0,
                             Name = "Tafilah"
                         },
@@ -807,10 +803,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 13,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8346),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8496),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8347),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8497),
                             ModifiedBy = 0,
                             Name = "Ajloun"
                         },
@@ -818,10 +814,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 14,
                             CountryId = 1,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8348),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8499),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8349),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8499),
                             ModifiedBy = 0,
                             Name = "Riyadh"
                         },
@@ -829,10 +825,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 15,
                             CountryId = 1,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8350),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8501),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8351),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8502),
                             ModifiedBy = 0,
                             Name = "Jeddah"
                         },
@@ -840,10 +836,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 16,
                             CountryId = 2,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8352),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8503),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8353),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8504),
                             ModifiedBy = 0,
                             Name = "Dubai"
                         },
@@ -851,10 +847,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 17,
                             CountryId = 2,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8358),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8505),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8359),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8506),
                             ModifiedBy = 0,
                             Name = "Abu Dhabi"
                         });
@@ -877,6 +873,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("IsoCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -889,38 +889,135 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Country");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8289),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8272),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8289),
+                            IsoCode = "SA",
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8273),
                             ModifiedBy = 0,
                             Name = "Saudi Arabia"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8291),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8281),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8292),
+                            IsoCode = "AE",
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8281),
                             ModifiedBy = 0,
                             Name = "United Arab Emirates"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8294),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8284),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8295),
+                            IsoCode = "JO",
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 542, DateTimeKind.Utc).AddTicks(8285),
                             ModifiedBy = 0,
                             Name = "Jordan"
+                        });
+                });
+
+            modelBuilder.Entity("ECommerce.Domain.Entities.Users.Lookups.CountryCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CountryCode");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "+966",
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6199),
+                            CreatedBy = 0,
+                            IsDeleted = false,
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6200),
+                            ModifiedBy = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "+962",
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6202),
+                            CreatedBy = 0,
+                            IsDeleted = false,
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6202),
+                            ModifiedBy = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Code = "+971",
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6204),
+                            CreatedBy = 0,
+                            IsDeleted = false,
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6204),
+                            ModifiedBy = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Code = "+20",
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6206),
+                            CreatedBy = 0,
+                            IsDeleted = false,
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6206),
+                            ModifiedBy = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Code = "+1",
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6208),
+                            CreatedBy = 0,
+                            IsDeleted = false,
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6208),
+                            ModifiedBy = 0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Code = "+44",
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6209),
+                            CreatedBy = 0,
+                            IsDeleted = false,
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6210),
+                            ModifiedBy = 0
                         });
                 });
 
@@ -953,26 +1050,26 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Role");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8247),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6251),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8248),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6252),
                             ModifiedBy = 0,
                             RoleName = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8250),
+                            CreatedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6254),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8251),
+                            ModifiedAt = new DateTime(2026, 5, 6, 12, 29, 2, 536, DateTimeKind.Utc).AddTicks(6254),
                             ModifiedBy = 0,
                             RoleName = "Customer"
                         });
@@ -989,7 +1086,23 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ArFirstName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("ArLastName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("ArMiddleName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
                     b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CountryCodeId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1001,11 +1114,17 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstNameAr")
+                    b.Property<string>("EnFirstName")
+                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("FirstNameEn")
+                    b.Property<string>("EnLastName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("EnMiddleName")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
@@ -1013,32 +1132,14 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LastNameAr")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("LastNameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("MiddleNameAr")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("MiddleNameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Phone")
+                        .HasColumnType("int");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -1047,6 +1148,8 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CountryCodeId");
 
                     b.HasIndex("RoleId");
 
@@ -1259,25 +1362,11 @@ namespace ECommerce.Infrastructure.Migrations
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Address", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.Lookups.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.Lookups.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId");
-
                     b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
                         .WithOne("Address")
                         .HasForeignKey("ECommerce.Domain.Entities.Users.Address", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("City");
-
-                    b.Navigation("Country");
 
                     b.Navigation("User");
                 });
@@ -1325,11 +1414,19 @@ namespace ECommerce.Infrastructure.Migrations
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.User", b =>
                 {
+                    b.HasOne("ECommerce.Domain.Entities.Users.Lookups.CountryCode", "CountryCode")
+                        .WithMany()
+                        .HasForeignKey("CountryCodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ECommerce.Domain.Entities.Users.Lookups.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CountryCode");
 
                     b.Navigation("Role");
                 });

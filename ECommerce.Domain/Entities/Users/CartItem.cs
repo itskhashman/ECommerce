@@ -15,7 +15,10 @@ namespace ECommerce.Domain.Entities.Users
         [ForeignKey("Sku")]
         public int SkuId { get; set; }
         public Sku Sku { get; set; } = null!;
+        [Required]
         public int Quantity { get; set; }
+        [Required]
+        public decimal PriceAtAddTime { get; set; }
     }
 
 }

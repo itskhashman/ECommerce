@@ -6,16 +6,15 @@ namespace ECommerce.Domain.Entities.Products
 {
     public class ProductVariant : BaseEntity
     {
-
-        [MaxLength(50)]
-        public string? ArName { get; set; }
-        [MaxLength(50)]
-        [Required]
-        public string EnName { get; set; } = null!;
-        [Required]
         [ForeignKey("Product")]
         public int ProductId { get; set; }
         public Product Product { get; set; } = null!;
+        [MaxLength(30)]
+        public string? NameAr { get; set; }
+        [MaxLength(30)]
+        [Required]
+        public string NameEn { get; set; } = null!;
+        [Required]
         public ICollection<ProductVariantOptions> ProductVariantOptions { get; set; } = new List<ProductVariantOptions>();
         public ICollection<SKUProductVariantOptions> SKUJoinOptions { get; set; } = new List<SKUProductVariantOptions>();
 

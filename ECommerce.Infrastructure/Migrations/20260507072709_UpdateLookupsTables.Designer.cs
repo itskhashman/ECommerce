@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507072709_UpdateLookupsTables")]
+    partial class UpdateLookupsTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,10 +82,6 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
-
-                    b.Property<decimal?>("DefaultPrice")
-                        .IsRequired()
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DescriptionAr")
                         .IsRequired()
@@ -368,40 +367,40 @@ namespace ECommerce.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7956),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(7888),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7960),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(7891),
                             ModifiedBy = 0,
                             StatusName = "Pending"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7966),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(7899),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7966),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(7900),
                             ModifiedBy = 0,
                             StatusName = "Confirmed"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7968),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(7902),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7969),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(7903),
                             ModifiedBy = 0,
                             StatusName = "Shipped"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7970),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(7905),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7971),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(7905),
                             ModifiedBy = 0,
                             StatusName = "Delivered"
                         });
@@ -675,10 +674,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 1,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8320),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8532),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8321),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8533),
                             ModifiedBy = 0,
                             Name = "Amman"
                         },
@@ -686,10 +685,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 2,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8323),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8537),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8323),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8538),
                             ModifiedBy = 0,
                             Name = "Zarqa"
                         },
@@ -697,10 +696,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 3,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8325),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8540),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8326),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8541),
                             ModifiedBy = 0,
                             Name = "Irbid"
                         },
@@ -708,10 +707,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 4,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8327),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8543),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8328),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8544),
                             ModifiedBy = 0,
                             Name = "Russeifa"
                         },
@@ -719,10 +718,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 5,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8329),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8546),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8330),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8547),
                             ModifiedBy = 0,
                             Name = "Sahab"
                         },
@@ -730,10 +729,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 6,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8331),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8549),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8332),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8549),
                             ModifiedBy = 0,
                             Name = "As-Salt"
                         },
@@ -741,10 +740,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 7,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8333),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8553),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8334),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8553),
                             ModifiedBy = 0,
                             Name = "Aqaba"
                         },
@@ -752,10 +751,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 8,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8336),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8555),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8336),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8556),
                             ModifiedBy = 0,
                             Name = "Madaba"
                         },
@@ -763,10 +762,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 9,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8338),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8558),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8338),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8559),
                             ModifiedBy = 0,
                             Name = "Jerash"
                         },
@@ -774,10 +773,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 10,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8340),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8561),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8340),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8562),
                             ModifiedBy = 0,
                             Name = "Ma'an"
                         },
@@ -785,10 +784,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 11,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8342),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8564),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8342),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8564),
                             ModifiedBy = 0,
                             Name = "Al-Mafraq"
                         },
@@ -796,10 +795,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 12,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8344),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8567),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8344),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8567),
                             ModifiedBy = 0,
                             Name = "Tafilah"
                         },
@@ -807,10 +806,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 13,
                             CountryId = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8346),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8569),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8347),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8570),
                             ModifiedBy = 0,
                             Name = "Ajloun"
                         },
@@ -818,10 +817,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 14,
                             CountryId = 1,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8348),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8572),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8349),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8573),
                             ModifiedBy = 0,
                             Name = "Riyadh"
                         },
@@ -829,10 +828,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 15,
                             CountryId = 1,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8350),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8575),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8351),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8575),
                             ModifiedBy = 0,
                             Name = "Jeddah"
                         },
@@ -840,10 +839,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 16,
                             CountryId = 2,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8352),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8578),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8353),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8578),
                             ModifiedBy = 0,
                             Name = "Dubai"
                         },
@@ -851,10 +850,10 @@ namespace ECommerce.Infrastructure.Migrations
                         {
                             Id = 17,
                             CountryId = 2,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8358),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8580),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8359),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8580),
                             ModifiedBy = 0,
                             Name = "Abu Dhabi"
                         });
@@ -895,30 +894,30 @@ namespace ECommerce.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8289),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8487),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8289),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8487),
                             ModifiedBy = 0,
                             Name = "Saudi Arabia"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8291),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8490),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8292),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8491),
                             ModifiedBy = 0,
                             Name = "United Arab Emirates"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8294),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8493),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8295),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8494),
                             ModifiedBy = 0,
                             Name = "Jordan"
                         });
@@ -959,20 +958,20 @@ namespace ECommerce.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8247),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8435),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8248),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8436),
                             ModifiedBy = 0,
                             RoleName = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8250),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8440),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8251),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 27, 8, 894, DateTimeKind.Utc).AddTicks(8441),
                             ModifiedBy = 0,
                             RoleName = "Customer"
                         });

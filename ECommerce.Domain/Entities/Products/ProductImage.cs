@@ -6,13 +6,15 @@ namespace ECommerce.Domain.Entities.Products
 {   
     public class ProductImage : BaseEntity
     {
+        [ForeignKey("Product")]
+        public int ProductId { get; set; }
+        public Product Product { get; set; } = null!;
         [Required]
         public string URL { get; set; } = null!;
         [Required]
         public bool IsMain { get; set; }
-        [Required]
-        [ForeignKey("Product")]
-        public int ProductId { get; set; }
-        public Product Product { get; set; } = null!;
+        public string? AltText { get; set; } = null!;
+        public int? SortOrder { get; set; }
+
     }
 }

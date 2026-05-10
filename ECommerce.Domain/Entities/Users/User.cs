@@ -2,42 +2,53 @@
 
 using ECommerce.Domain.Entities.Base;
 using ECommerce.Domain.Entities.Sales;
+using ECommerce.Domain.Entities.Users.Lookups;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities.Users
 {
     public class User : BaseEntity
     {
-        [MaxLength(30)]
-        public string? ArFirstName { get; set; }
-        [MaxLength(30)]
-        public string? ArMiddleName { get; set; }
-        [MaxLength(30)]
-        public string? ArLastName { get; set; }
         [Required]
         [MaxLength(30)]
-        public string EnFirstName { get; set; } = null!;
+        public string FirstNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
-        public string EnMiddleName { get; set; } = null!;
+        public string MiddleNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
-        public string EnLastName { get; set; } = null!;
+        public string LastNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
-        public string Role { get; set; } = null!;
+        public string FirstNameAr { get; set; } = null!;
+        [MaxLength(30)]
+        [Required]
+        public string MiddleNameAr { get; set; } = null!;
+        [MaxLength(30)]
+        [Required]
+        public string LastNameAr { get; set; } = null!;
+        [Required]
         [EmailAddress]
-        public string? Email { get; set; }
-        public int? Phone { get; set; }
-        public string? CountryCode { get; set; }
-        public ICollection<Order>? Orders { get; set; } = new List<Order>();
+        public string Email { get; set; } = null!;
+        [ForeignKey("Role")]
         [Required]
-        public int CartId { get; set; }
+        public int RoleId { get; set; }
+        public Role Role { get; set; } = null!;
+        [Required]
+        public string Phone { get; set; } = null!;
+        [Required]
+        public bool IsActive { get; set; } = true;
+        [Required]
+        public bool IsEmailVerified { get; set; } = true;
+        [Required]
+        public DateTime LastLoginAt { get; set; }
+        public ICollection<Order>? Orders { get; set; } = new List<Order>();
+        public int? CartId { get; set; }
         public Cart Cart { get; set; } = null!;
         public int? AddressId { get; set; }
-        public Address? Address { get; set; }
-        [Required]
-        public int WishlistId { get; set; }
+        public Address Address { get; set; } = null!;
+        public int? WishlistId { get; set; }
         public Wishlist Wishlist { get; set; } = null!;
     }
 
