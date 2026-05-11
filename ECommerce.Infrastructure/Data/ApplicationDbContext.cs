@@ -81,6 +81,11 @@ namespace ECommerce.Infrastructure.Data
             modelBuilder.Entity<SKUProductVariantOptions>()
                 .HasKey(svo => new { svo.SkuId, svo.ProductVariantId, svo.ProductVariantOptionsId });
 
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
             modelBuilder.Entity<OrderStatus>().HasData(
                 new OrderStatus { Id = 1, NameEn = "Pending" , NameAr = "قيد الانتظار" },
                 new OrderStatus { Id = 2, NameEn = "Confirmed", NameAr = "تم التأكيد" },

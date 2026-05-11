@@ -12,6 +12,7 @@ namespace ECommerce.Domain.Entities.Users
         public int UserId { get; set; }
         public User User { get; set; } = null!;
         [Required]
+        [MaxLength(150)]
         public string Street { get; set; } = null!;
         [Required]
         [MaxLength(10)]

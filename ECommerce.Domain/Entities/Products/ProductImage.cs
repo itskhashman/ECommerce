@@ -13,6 +13,7 @@ namespace ECommerce.Domain.Entities.Products
         public string URL { get; set; } = null!;
         [Required]
         public bool IsMain { get; set; }
+        [MaxLength(30)]
         public string? AltText { get; set; } = null!;
         public int? SortOrder { get; set; }
 

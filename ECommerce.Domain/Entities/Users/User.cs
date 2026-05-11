@@ -28,23 +28,22 @@ namespace ECommerce.Domain.Entities.Users
         [MaxLength(30)]
         [Required]
         public string LastNameAr { get; set; } = null!;
-        [Required]
+        [Required , MaxLength(255)]
         [EmailAddress]
         public string Email { get; set; } = null!;
-        [Required]
+        [Required , MaxLength(256)]
         public string PasswordHash { get; set; } = null!;
         [ForeignKey("Role")]
         [Required]
         public int RoleId { get; set; }
         public Role Role { get; set; } = null!;
-        [Required]
+        [Required , MaxLength(15)]
         public string Phone { get; set; } = null!;
         [Required]
         public bool IsActive { get; set; } = true;
         [Required]
         public bool IsEmailVerified { get; set; } = true;
-        [Required]
-        public DateTime LastLoginAt { get; set; }
+        public DateTime? LastLoginAt { get; set; }
         public ICollection<Order>? Orders { get; set; } = new List<Order>();
         public int? CartId { get; set; }
         public Cart Cart { get; set; } = null!;

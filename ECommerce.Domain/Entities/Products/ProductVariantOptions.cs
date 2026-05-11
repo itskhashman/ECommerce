@@ -14,6 +14,7 @@ namespace ECommerce.Domain.Entities.Products
         [Required]
         public string NameEn { get; set; } = null!;
         public int? SortOrder { get; set; }
+        [MaxLength(8)]
         public string? HexColor { get; set; }
     }
 }

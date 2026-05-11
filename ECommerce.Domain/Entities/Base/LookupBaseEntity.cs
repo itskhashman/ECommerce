@@ -4,10 +4,10 @@ namespace ECommerce.Domain.Entities.Base
 {
     public class LookupBaseEntity : BaseEntity
     {
-        [MaxLength(30)]
+        [MaxLength(50)]
         [Required]
         public string NameAr { get; set; } = null!;
-        [MaxLength(30)]
+        [MaxLength(50)]
         [Required]
         public string NameEn { get; set; } = null!;
         public string? DescriptionAr { get; set; }

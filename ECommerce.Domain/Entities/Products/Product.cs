@@ -20,10 +20,9 @@ namespace ECommerce.Domain.Entities.Products
         public string DescriptionAr { get; set; } = null!;
         [Required]
         public string DescriptionEn { get; set; } = null!;
-        [Required]
         [ForeignKey("DiscountType")]
-        public int DiscountTypeId { get; set; }
-        public DiscountType DiscountType { get; set; } = null!;
+        public int? DiscountTypeId { get; set; }
+        public DiscountType? DiscountType { get; set; }
         public decimal? DiscountAmount { get; set; }
         public bool IsActive { get; set; } = true;
         public ICollection<ProductImage>? ProductImages { get; set; } = new List<ProductImage>();

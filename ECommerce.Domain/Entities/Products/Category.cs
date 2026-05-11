@@ -6,16 +6,16 @@ namespace ECommerce.Domain.Entities.Products
 {
     public class Category : BaseEntity
     {
-        [Required]
         [ForeignKey("ParentCategory")]
-        public int ParentCategoryId { get; set; }
+        public int? ParentCategoryId { get; set; }
         public Category ? ParentCategory { get; set; }
         public string? ImageUrl { get; set; }
-        [Required]
+        [Required, MaxLength(30)]
         public string NameAr { get; set; } = null!;
 
-        [Required]
+        [Required, MaxLength(30)]
         public string NameEn { get; set; } = null!;
+        public ICollection<Category> SubCategories { get; set; } = new List<Category>();
         public ICollection<Product> Products { get; set; } = new List<Product>();
         public bool IsActive { get; set; } = true;
     }

@@ -229,6 +229,10 @@ namespace ECommerce.Infrastructure.Migrations
                 name: "Name",
                 table: "Cities");
 
+            migrationBuilder.DropColumn(
+                name: "NumberOfProducts",
+                table: "Categories");
+
             migrationBuilder.RenameTable(
                 name: "Wishlists",
                 newName: "Wishlist");
@@ -404,11 +408,6 @@ namespace ECommerce.Infrastructure.Migrations
                 name: "IX_Cities_CountryId",
                 table: "City",
                 newName: "IX_City_CountryId");
-
-            migrationBuilder.RenameColumn(
-                name: "NumberOfProducts",
-                table: "Category",
-                newName: "ParentCategoryId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_Carts_UserId",
@@ -1239,6 +1238,12 @@ namespace ECommerce.Infrastructure.Migrations
                 type: "nvarchar(max)",
                 nullable: true);
 
+            migrationBuilder.AddColumn<int>(
+                name: "ParentCategoryId",
+                table: "Category",
+                type: "int",
+                nullable: true);
+
             migrationBuilder.AlterColumn<DateTime>(
                 name: "ModifiedAt",
                 table: "Cart",
@@ -1540,19 +1545,19 @@ namespace ECommerce.Infrastructure.Migrations
                         column: x => x.OrderItemId,
                         principalTable: "OrderItem",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Review_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Review_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1581,13 +1586,13 @@ namespace ECommerce.Infrastructure.Migrations
                         column: x => x.PaymentMethodId,
                         principalTable: "PaymentMethod",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Payment_PaymentStatus_PaymentStatusId",
                         column: x => x.PaymentStatusId,
                         principalTable: "PaymentStatus",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.UpdateData(
@@ -1842,7 +1847,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "CityId",
                 principalTable: "City",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Address_User_UserId",
@@ -1850,7 +1855,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Cart_User_UserId",
@@ -1858,7 +1863,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_CartItem_Cart_CartId",
@@ -1866,7 +1871,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "CartId",
                 principalTable: "Cart",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_CartItem_Sku_SkuId",
@@ -1874,7 +1879,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "SkuId",
                 principalTable: "Sku",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Category_Category_ParentCategoryId",
@@ -1882,7 +1887,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "ParentCategoryId",
                 principalTable: "Category",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_City_Country_CountryId",
@@ -1890,7 +1895,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "CountryId",
                 principalTable: "Country",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Order_Address_AddressId",
@@ -1898,7 +1903,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "AddressId",
                 principalTable: "Address",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Order_OrderStatus_OrderStatusId",
@@ -1906,7 +1911,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "OrderStatusId",
                 principalTable: "OrderStatus",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Order_User_UserId",
@@ -1914,7 +1919,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_OrderItem_Order_OrderId",
@@ -1922,7 +1927,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "OrderId",
                 principalTable: "Order",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_OrderItem_Sku_SkuId",
@@ -1930,7 +1935,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "SkuId",
                 principalTable: "Sku",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Product_Category_CategoryId",
@@ -1938,7 +1943,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "CategoryId",
                 principalTable: "Category",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Product_DiscountType_DiscountTypeId",
@@ -1946,7 +1951,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "DiscountTypeId",
                 principalTable: "DiscountType",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ProductImage_Product_ProductId",
@@ -1954,7 +1959,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "ProductId",
                 principalTable: "Product",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ProductVariant_Product_ProductId",
@@ -1962,7 +1967,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "ProductId",
                 principalTable: "Product",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ProductVariantOption_ProductVariant_ProductVariantId",
@@ -1970,7 +1975,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "ProductVariantId",
                 principalTable: "ProductVariant",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Sku_Product_ProductId",
@@ -1978,7 +1983,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "ProductId",
                 principalTable: "Product",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_SKUProductVariantOption_ProductVariantOption_ProductVariantOptionsId",
@@ -1986,7 +1991,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "ProductVariantOptionsId",
                 principalTable: "ProductVariantOption",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_SKUProductVariantOption_ProductVariant_ProductVariantId",
@@ -1994,7 +1999,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "ProductVariantId",
                 principalTable: "ProductVariant",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_SKUProductVariantOption_Sku_SkuId",
@@ -2002,7 +2007,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "SkuId",
                 principalTable: "Sku",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_User_Role_RoleId",
@@ -2010,7 +2015,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "RoleId",
                 principalTable: "Role",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Wishlist_User_UserId",
@@ -2018,7 +2023,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "UserId",
                 principalTable: "User",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_WishlistItem_Sku_SkuId",
@@ -2026,7 +2031,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "SkuId",
                 principalTable: "Sku",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_WishlistItem_Wishlist_WishlistId",
@@ -2034,7 +2039,7 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "WishlistId",
                 principalTable: "Wishlist",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
@@ -2532,6 +2537,10 @@ namespace ECommerce.Infrastructure.Migrations
                 table: "Category");
 
             migrationBuilder.DropColumn(
+                name: "ParentCategoryId",
+                table: "Category");
+
+            migrationBuilder.DropColumn(
                 name: "DeletedAt",
                 table: "CartItem");
 
@@ -2742,11 +2751,6 @@ namespace ECommerce.Infrastructure.Migrations
                 name: "IX_City_CountryId",
                 table: "Cities",
                 newName: "IX_Cities_CountryId");
-
-            migrationBuilder.RenameColumn(
-                name: "ParentCategoryId",
-                table: "Categories",
-                newName: "NumberOfProducts");
 
             migrationBuilder.RenameIndex(
                 name: "IX_CartItem_SkuId",
@@ -3112,6 +3116,13 @@ namespace ECommerce.Infrastructure.Migrations
                 nullable: true,
                 oldClrType: typeof(DateTime),
                 oldType: "datetime2");
+
+            migrationBuilder.AddColumn<int>(
+                name: "NumberOfProducts",
+                table: "Categories",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "ModifiedAt",
