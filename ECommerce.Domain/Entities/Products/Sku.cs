@@ -6,16 +6,20 @@ namespace ECommerce.Domain.Entities.Products
 {
     public class Sku : BaseEntity
     {
-        [Required]
-        public string SkuCode { get; set; } = null!;
-        [Required]
-        [ForeignKey("Product")] 
+        [ForeignKey("Product")]
         public int ProductId { get; set; }
         public Product Product { get; set; } = null!;
         [Required]
-        [Range(0, double.MaxValue)]
+        [MaxLength(50)]
+        public string SkuCode { get; set; } = null!;
+        [Required]
         public decimal Price { get; set; }
-        [MaxLength(10)]
-        public string PriceUnit { get; set; } = null!;
+        [Required]
+        public int Stock { get; set; }
+        [Required]
+        public bool IsActive { get; set; } = true;
+        public decimal? Weight { get; set; }
+        public int? LowStockThreshold { get; set; }
+        public ICollection<SKUProductVariantOptions>? SKUJoinOptions { get; set; } = new List<SKUProductVariantOptions>();
     }
 }

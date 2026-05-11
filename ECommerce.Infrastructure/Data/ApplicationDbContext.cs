@@ -1,151 +1,171 @@
 ﻿
-using ECommerce.Application.Interfaces;
 using ECommerce.Domain.Entities.Base;
-    using ECommerce.Domain.Entities.Products;
-    using ECommerce.Domain.Entities.Sales;
-    using ECommerce.Domain.Entities.Users;
-    using Microsoft.EntityFrameworkCore;
+using ECommerce.Domain.Entities.Products;
+using ECommerce.Domain.Entities.Products.Lookups;
+using ECommerce.Domain.Entities.Sales;
+using ECommerce.Domain.Entities.Sales.Lookups;
+using ECommerce.Domain.Entities.Users;
+using ECommerce.Domain.Entities.Users.Lookups;
+using Microsoft.EntityFrameworkCore;
 
-    namespace ECommerce.Infrastructure.Data
+namespace ECommerce.Infrastructure.Data
+{
+    public class ApplicationDbContext : DbContext
     {
-        public class ApplicationDbContext : DbContext
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+
+        }
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>()
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+            foreach (var entry in entries)
             {
-            
-            }
-            public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-            {
-                var entries = ChangeTracker.Entries<BaseEntity>()
-                    .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
-                foreach (var entry in entries)
+                var entity = entry.Entity;
+
+                entity.ModifiedAt = DateTime.UtcNow;
+                entity.ModifiedBy = 0;
+
+                if (entry.State == EntityState.Added)
                 {
-                    var entity = entry.Entity;
-
-                    entity.ModifiedAt = DateTime.UtcNow;
-                    entity.ModifiedBy = 0;
-
-                    if (entry.State == EntityState.Added)
-                    {
-                        entity.CreatedAt = DateTime.UtcNow;
-                        entity.CreatedBy = 0;
-                    }
- 
+                    entity.CreatedAt = DateTime.UtcNow;
+                    entity.CreatedBy = 0;
                 }
-                return base.SaveChangesAsync(cancellationToken);
+
             }
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                modelBuilder.Entity<Product>()
-                    .Property(p => p.Rating)
-                    .HasPrecision(3, 2);
+            return base.SaveChangesAsync(cancellationToken);
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Review>()
+                .Property(p => p.RatingValue)
+                .HasPrecision(2, 1);
 
-                modelBuilder.Entity<Product>()
-                    .Property(p => p.DefaultPrice)
-                    .HasPrecision(18, 2);
+            modelBuilder.Entity<Product>()
+                .Property(p => p.DiscountAmount)
+                .HasPrecision(8, 2);
 
-                modelBuilder.Entity<Product>()
-                    .Property(p => p.DiscountAmount)
-                    .HasPrecision(8, 2);
+            modelBuilder.Entity<Sku>()
+                .Property(s => s.Price)
+                .HasPrecision(18, 2);
 
-                modelBuilder.Entity<Sku>()
-                    .Property(s => s.Price)
-                    .HasPrecision(18, 2);
+            modelBuilder.Entity<Sku>()
+                .Property(s => s.Weight)
+                .HasPrecision(8, 3);
 
-                modelBuilder.Entity<Order>()
+            modelBuilder.Entity<Order>()
                     .Property(o => o.TotalAmount)
                     .HasPrecision(18, 2);
 
-                modelBuilder.Entity<OrderItem>()
-                    .Property(oi => oi.PriceAtPurchase)
+            modelBuilder.Entity<Order>()
+                    .Property(o => o.ShippingCost)
                     .HasPrecision(18, 2);
 
-                modelBuilder.Entity<OrderItem>()
-                    .Property(oi => oi.Rating)
-                    .HasPrecision(18, 2);
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.SubTotal)
+                .HasPrecision(18, 2);
 
-                modelBuilder.Entity<Order>()
-                    .HasOne(o => o.Address)
-                    .WithMany()
-                    .HasForeignKey(o => o.AddressId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.PriceAtPurchase)
+                .HasPrecision(18, 2);
 
-                modelBuilder.Entity<Product>()
-                    .HasOne(p => p.Category)
-                    .WithMany(c => c.Products)
-                    .HasForeignKey(p => p.CategoryId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.DiscountAmount)
+                .HasPrecision(8, 2);
 
-                modelBuilder.Entity<User>()
-                    .HasOne(u => u.Cart)
-                    .WithOne(c => c.User)
-                    .HasForeignKey<Cart>(c => c.UserId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<CartItem>()
+                .Property(oi => oi.PriceAtAddTime)
+                .HasPrecision(18, 2);
 
-                modelBuilder.Entity<Order>()
-                    .HasOne(o => o.User)
-                    .WithMany(u => u.Orders)
-                    .HasForeignKey(o => o.UserId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<SKUProductVariantOptions>()
+                .HasKey(svo => new { svo.SkuId, svo.ProductVariantId, svo.ProductVariantOptionsId });
 
-                modelBuilder.Entity<User>()
-                    .HasOne(u => u.Wishlist)
-                    .WithOne(w => w.User)
-                    .HasForeignKey<Wishlist>(w => w.UserId)
-                    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrderStatus>().HasData(
+                new OrderStatus { Id = 1, NameEn = "Pending" , NameAr = "قيد الانتظار" },
+                new OrderStatus { Id = 2, NameEn = "Confirmed", NameAr = "تم التأكيد" },
+                new OrderStatus { Id = 3, NameEn = "Shipped", NameAr = "تم الشحن" },
+                new OrderStatus { Id = 4, NameEn = "Delivered", NameAr = "تم التسليم" }
+            );
+
+            modelBuilder.Entity<Role>().HasData(
+                new Role { Id = 1, NameEn = "Admin", NameAr = "مشرف" },
+                new Role { Id = 2, NameEn = "Customer", NameAr = "عميل" }
+            );
+            modelBuilder.Entity<Country>().HasData(
+                new Country { Id = 1, NameEn = "Saudi Arabia", NameAr = "المملكة العربية السعودية" },
+                new Country { Id = 2, NameEn = "United Arab Emirates", NameAr = "الإمارات العربية المتحدة" },
+                new Country { Id = 3, NameEn = "Jordan", NameAr = "الأردن" }
+            );
+
+            modelBuilder.Entity<City>().HasData(
+                new City { Id = 1, NameEn = "Amman", NameAr = "عمان", CountryId = 3 },
+                new City { Id = 2, NameEn = "Zarqa", NameAr = "الزرقاء", CountryId = 3 },
+                new City { Id = 3, NameEn = "Irbid", NameAr = "إربد", CountryId = 3 },
+                new City { Id = 4, NameEn = "Russeifa", NameAr = "الرصيفة", CountryId = 3 },
+                new City { Id = 5, NameEn = "Sahab", NameAr = "صاحب", CountryId = 3 },
+                new City { Id = 6, NameEn = "As-Salt", NameAr = "السلط", CountryId = 3 },
+                new City { Id = 7, NameEn = "Aqaba", NameAr = "العقبة", CountryId = 3 },
+                new City { Id = 8, NameEn = "Madaba", NameAr = "مادبا", CountryId = 3 },
+                new City { Id = 9, NameEn = "Jerash", NameAr = "جرش", CountryId = 3 },
+                new City { Id = 10, NameEn = "Ma'an", NameAr = "معان", CountryId = 3 },
+                new City { Id = 11, NameEn = "Al-Mafraq", NameAr = "المفرق", CountryId = 3 },
+                new City { Id = 12, NameEn = "Tafilah", NameAr = "الطفيلة", CountryId = 3 },
+                new City { Id = 13, NameEn = "Ajloun", NameAr = "عجلون", CountryId = 3 },
+
+                new City { Id = 14, NameEn = "Riyadh", NameAr = "الرياض", CountryId = 1 },
+                new City { Id = 15, NameEn = "Jeddah", NameAr = "جدة", CountryId = 1 },
+
+                new City { Id = 16, NameEn = "Dubai", NameAr = "دبي", CountryId = 2 },
+                new City { Id = 17, NameEn = "Abu Dhabi", NameAr = "أبو ظبي", CountryId = 2 }
+            );
+
+            modelBuilder.Entity<DiscountType>().HasData(
+                new DiscountType { Id = 1, NameEn = "Percentage", NameAr = "نسبة مئوية" },
+                new DiscountType { Id = 2, NameEn = "Fixed Amount", NameAr = "مبلغ ثابت" }
+            );
+
+            modelBuilder.Entity<PaymentMethod>().HasData(
+                new PaymentMethod { Id = 1, NameEn = "Credit Card", NameAr = "بطاقة ائتمان" },
+                new PaymentMethod { Id = 2, NameEn = "PayPal", NameAr = "باي بال" },
+                new PaymentMethod { Id = 3, NameEn = "Cash on Delivery", NameAr = "الدفع عند الاستلام" }
+            );
+
+            modelBuilder.Entity<PaymentStatus>().HasData(
+               new PaymentStatus { Id = 1, NameEn = "Pending", NameAr = "قيد الانتظار" },
+               new PaymentStatus { Id = 2, NameEn = "Completed", NameAr = "مكتمل" },
+               new PaymentStatus { Id = 3, NameEn = "Failed", NameAr = "فشل" }
+           );
 
 
-                modelBuilder.Entity<SKUProductVariantOptions>()
-                    .HasKey(svo => new { svo.SkuId, svo.ProductVariantId, svo.ProductVariantOptionsId });
-
-                modelBuilder.Entity<SKUProductVariantOptions>()
-            .HasOne(svo => svo.Sku)
-            .WithMany()
-            .HasForeignKey(svo => svo.SkuId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-                modelBuilder.Entity<SKUProductVariantOptions>()
-                    .HasOne(svo => svo.ProductVariant)
-                    .WithMany()
-                    .HasForeignKey(svo => svo.ProductVariantId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                modelBuilder.Entity<SKUProductVariantOptions>()
-                    .HasOne(svo => svo.ProductVariantOptions)
-                    .WithMany()
-                    .HasForeignKey(svo => svo.ProductVariantOptionsId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                modelBuilder.Entity<Sku>()
-                    .HasOne(s => s.Product)
-                    .WithMany(p => p.Skus)
-                    .HasForeignKey(s => s.ProductId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                modelBuilder.Entity<ProductVariant>()
-                    .HasOne(pv => pv.Product)
-                    .WithMany(p => p.ProductVariants)
-                    .HasForeignKey(pv => pv.ProductId)
-                    .OnDelete(DeleteBehavior.Cascade);
 
 
-            }
-
-            public DbSet<Product> Products { get; set; } = null!;
-            public DbSet<Category> Categories { get; set; } = null!;
-            public DbSet<ProductImage> ProductImages { get; set; } = null!;
-            public DbSet<ProductVariant> ProductVariants { get; set; } = null!;
-            public DbSet<ProductVariantOptions> ProductVariantOptions { get; set; } = null!;
-            public DbSet<Sku> Skus { get; set; } = null!;
-            public DbSet<SKUProductVariantOptions> SKUProductVariantOptions { get; set; } = null!;
-            public DbSet<Order> Orders { get; set; } = null!;
-            public DbSet<OrderItem> OrderItems { get; set; } = null!;
-            public DbSet<User> Users { get; set; } = null!;
-            public DbSet<Address> Addresses { get; set; } = null!;
-            public DbSet<Cart> Carts { get; set; } = null!;
-            public DbSet<CartItem> CartItems { get; set; } = null!;
-            public DbSet<Wishlist> Wishlists { get; set; } = null!;
-            public DbSet<WishlistItem> WishlistItems { get; set; } = null!;
         }
 
+        public DbSet<Product> Product { get; set; } = null!;
+        public DbSet<Category> Category { get; set; } = null!;
+        public DbSet<ProductImage> ProductImage { get; set; } = null!;
+        public DbSet<ProductVariant> ProductVariant { get; set; } = null!;
+        public DbSet<ProductVariantOptions> ProductVariantOption { get; set; } = null!;
+        public DbSet<Sku> Sku { get; set; } = null!;
+        public DbSet<SKUProductVariantOptions> SKUProductVariantOption { get; set; } = null!;
+        public DbSet<Order> Order { get; set; } = null!;
+        public DbSet<OrderItem> OrderItem { get; set; } = null!;
+        public DbSet<User> User { get; set; } = null!;
+        public DbSet<Address> Address { get; set; } = null!;
+        public DbSet<Cart> Cart { get; set; } = null!;
+        public DbSet<CartItem> CartItem { get; set; } = null!;
+        public DbSet<Wishlist> Wishlist { get; set; } = null!;
+        public DbSet<WishlistItem> WishlistItem { get; set; } = null!;
+        public DbSet<OrderStatus> OrderStatus { get; set; } = null!;
+        public DbSet<Role> Role { get; set; } = null!;
+        public DbSet<Country> Country { get; set; } = null!;
+        public DbSet<City> City { get; set; } = null!;
+        public DbSet<DiscountType> DiscountType { get; set; } = null!;
+        public DbSet<Review> Review { get; set; } = null!;
+        public DbSet<Payment> Payment { get; set; } = null!;
+        public DbSet<PaymentMethod> PaymentMethod { get; set; } = null!;
+        public DbSet<PaymentStatus> PaymentStatus { get; set; } = null!;
     }
+
+}

@@ -1,9 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using ECommerce.Domain.Entities.Base;
 
 namespace ECommerce.Domain.Entities.Products
 {   
-    public class SKUProductVariantOptions
+    public class SKUProductVariantOptions : BaseEntity
     {
 
         public int SkuId { get; set; }

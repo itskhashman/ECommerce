@@ -15,6 +15,7 @@ namespace ECommerce.Domain.Entities.Users
         [ForeignKey("Sku")]
         public int SkuId { get; set; }
         public Sku Sku { get; set; } = null!;
+        public string? Notes { get; set; }
     }
 
 }

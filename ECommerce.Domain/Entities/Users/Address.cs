@@ -1,4 +1,5 @@
 ﻿using ECommerce.Domain.Entities.Base;
+using ECommerce.Domain.Entities.Users.Lookups;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,11 +11,16 @@ namespace ECommerce.Domain.Entities.Users
         [ForeignKey("User")]
         public int UserId { get; set; }
         public User User { get; set; } = null!;
-        public string? Street { get; set; }
-        public string? City { get; set; }
-        public string? State { get; set; }
-        public string? PostalCode { get; set; }
-        public string? Country { get; set; }
+        [Required]
+        public string Street { get; set; } = null!;
+        [Required]
+        [MaxLength(10)]
+        public string PostalCode { get; set; } = null!;
+        [ForeignKey("City")]
+        public int CityId { get; set; }
+        public City? City { get; set; }
+        public string? Label { get; set; }
+        public bool IsDefault { get; set; }= true;
 
     }
 

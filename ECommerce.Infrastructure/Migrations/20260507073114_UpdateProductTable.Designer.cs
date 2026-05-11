@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507073114_UpdateProductTable")]
+    partial class UpdateProductTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,117 +39,31 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ParentCategoryId")
+                    b.Property<int>("NumberOfProducts")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentCategoryId");
-
-                    b.ToTable("Category");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Products.Lookups.DiscountType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DescriptionAr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionEn")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NameAr")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DiscountType");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0,
-                            IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0,
-                            NameAr = "نسبة مئوية",
-                            NameEn = "Percentage"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0,
-                            IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0,
-                            NameAr = "مبلغ ثابت",
-                            NameEn = "Fixed Amount"
-                        });
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Product", b =>
@@ -166,11 +83,9 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
+                    b.Property<decimal?>("DefaultPrice")
+                        .IsRequired()
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DescriptionAr")
                         .IsRequired()
@@ -181,11 +96,13 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("DiscountAmount")
+                        .IsRequired()
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
-                    b.Property<int>("DiscountTypeId")
-                        .HasColumnType("int");
+                    b.Property<string>("DiscountType")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -193,29 +110,36 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NameEn")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("Rating")
+                        .HasPrecision(3, 2)
+                        .HasColumnType("decimal(3,2)");
+
+                    b.Property<int?>("ReviewCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalStock")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("DiscountTypeId");
-
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductImage", b =>
@@ -226,19 +150,10 @@ namespace ECommerce.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AltText")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -247,16 +162,13 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SortOrder")
                         .HasColumnType("int");
 
                     b.Property<string>("URL")
@@ -267,7 +179,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImage");
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariant", b =>
@@ -284,29 +196,23 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NameEn")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -315,7 +221,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductVariant");
+                    b.ToTable("ProductVariants");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariantOptions", b =>
@@ -332,26 +238,16 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("HexColor")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
@@ -363,14 +259,11 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("ProductVariantId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SortOrder")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("ProductVariantOption");
+                    b.ToTable("ProductVariantOptions");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.SKUProductVariantOptions", b =>
@@ -384,37 +277,18 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("ProductVariantOptionsId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ModifiedBy")
+                    b.Property<int?>("ProductVariantId1")
                         .HasColumnType("int");
 
                     b.HasKey("SkuId", "ProductVariantId", "ProductVariantOptionsId");
 
                     b.HasIndex("ProductVariantId");
 
+                    b.HasIndex("ProductVariantId1");
+
                     b.HasIndex("ProductVariantOptionsId");
 
-                    b.ToTable("SKUProductVariantOption");
+                    b.ToTable("SKUProductVariantOptions");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Sku", b =>
@@ -431,22 +305,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LowStockThreshold")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
@@ -461,21 +323,17 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("SkuCode")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Stock")
+                        .HasMaxLength(10)
                         .HasColumnType("int");
-
-                    b.Property<decimal?>("Weight")
-                        .HasPrecision(8, 3)
-                        .HasColumnType("decimal(8,3)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Sku");
+                    b.ToTable("Skus");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Lookups.OrderStatus", b =>
@@ -492,255 +350,63 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DescriptionAr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionEn")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("NameAr")
+                    b.Property<string>("StatusName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderStatus");
+                    b.ToTable("OrderStatuses");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7956),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7960),
                             ModifiedBy = 0,
-                            NameAr = "قيد الانتظار",
-                            NameEn = "Pending"
+                            StatusName = "Pending"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7966),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7966),
                             ModifiedBy = 0,
-                            NameAr = "تم التأكيد",
-                            NameEn = "Confirmed"
+                            StatusName = "Confirmed"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7968),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7969),
                             ModifiedBy = 0,
-                            NameAr = "تم الشحن",
-                            NameEn = "Shipped"
+                            StatusName = "Shipped"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7970),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(7971),
                             ModifiedBy = 0,
-                            NameAr = "تم التسليم",
-                            NameEn = "Delivered"
-                        });
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Lookups.PaymentMethod", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DescriptionAr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionEn")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NameAr")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PaymentMethod");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0,
-                            IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0,
-                            NameAr = "بطاقة ائتمان",
-                            NameEn = "Credit Card"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0,
-                            IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0,
-                            NameAr = "باي بال",
-                            NameEn = "PayPal"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0,
-                            IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0,
-                            NameAr = "الدفع عند الاستلام",
-                            NameEn = "Cash on Delivery"
-                        });
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Lookups.PaymentStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DescriptionAr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionEn")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NameAr")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PaymentStatus");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0,
-                            IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0,
-                            NameAr = "قيد الانتظار",
-                            NameEn = "Pending"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0,
-                            IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0,
-                            NameAr = "مكتمل",
-                            NameEn = "Completed"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = 0,
-                            IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0,
-                            NameAr = "فشل",
-                            NameEn = "Failed"
+                            StatusName = "Delivered"
                         });
                 });
 
@@ -761,39 +427,20 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("CurrencyCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OrderNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<int>("OrderNumber")
+                        .HasColumnType("int");
 
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("ShippingCost")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(18, 2)
@@ -810,7 +457,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.OrderItem", b =>
@@ -827,20 +474,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("DiscountAmount")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("decimal(8,2)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
@@ -856,30 +493,15 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ProductNameAr")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("ProductNameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("SkuCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<decimal?>("Rating")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("SkuId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("SubTotal")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -887,57 +509,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("SkuId");
 
-                    b.ToTable("OrderItem");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("PaidAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PaymentMethodId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PaymentStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TransactionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PaymentMethodId");
-
-                    b.HasIndex("PaymentStatusId");
-
-                    b.ToTable("Payment");
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Address", b =>
@@ -951,40 +523,28 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Label")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
@@ -994,10 +554,12 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("CityId");
 
+                    b.HasIndex("CountryId");
+
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Cart", b =>
@@ -1014,19 +576,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
@@ -1040,7 +593,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Cart");
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.CartItem", b =>
@@ -1060,24 +613,14 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("PriceAtAddTime")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -1091,7 +634,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("SkuId");
 
-                    b.ToTable("CartItem");
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Lookups.City", b =>
@@ -1111,247 +654,212 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DescriptionAr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionEn")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("NameAr")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("City");
+                    b.ToTable("Cities");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8320),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8321),
                             ModifiedBy = 0,
-                            NameAr = "عمان",
-                            NameEn = "Amman"
+                            Name = "Amman"
                         },
                         new
                         {
                             Id = 2,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8323),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8323),
                             ModifiedBy = 0,
-                            NameAr = "الزرقاء",
-                            NameEn = "Zarqa"
+                            Name = "Zarqa"
                         },
                         new
                         {
                             Id = 3,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8325),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8326),
                             ModifiedBy = 0,
-                            NameAr = "إربد",
-                            NameEn = "Irbid"
+                            Name = "Irbid"
                         },
                         new
                         {
                             Id = 4,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8327),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8328),
                             ModifiedBy = 0,
-                            NameAr = "الرصيفة",
-                            NameEn = "Russeifa"
+                            Name = "Russeifa"
                         },
                         new
                         {
                             Id = 5,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8329),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8330),
                             ModifiedBy = 0,
-                            NameAr = "صاحب",
-                            NameEn = "Sahab"
+                            Name = "Sahab"
                         },
                         new
                         {
                             Id = 6,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8331),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8332),
                             ModifiedBy = 0,
-                            NameAr = "السلط",
-                            NameEn = "As-Salt"
+                            Name = "As-Salt"
                         },
                         new
                         {
                             Id = 7,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8333),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8334),
                             ModifiedBy = 0,
-                            NameAr = "العقبة",
-                            NameEn = "Aqaba"
+                            Name = "Aqaba"
                         },
                         new
                         {
                             Id = 8,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8336),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8336),
                             ModifiedBy = 0,
-                            NameAr = "مادبا",
-                            NameEn = "Madaba"
+                            Name = "Madaba"
                         },
                         new
                         {
                             Id = 9,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8338),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8338),
                             ModifiedBy = 0,
-                            NameAr = "جرش",
-                            NameEn = "Jerash"
+                            Name = "Jerash"
                         },
                         new
                         {
                             Id = 10,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8340),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8340),
                             ModifiedBy = 0,
-                            NameAr = "معان",
-                            NameEn = "Ma'an"
+                            Name = "Ma'an"
                         },
                         new
                         {
                             Id = 11,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8342),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8342),
                             ModifiedBy = 0,
-                            NameAr = "المفرق",
-                            NameEn = "Al-Mafraq"
+                            Name = "Al-Mafraq"
                         },
                         new
                         {
                             Id = 12,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8344),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8344),
                             ModifiedBy = 0,
-                            NameAr = "الطفيلة",
-                            NameEn = "Tafilah"
+                            Name = "Tafilah"
                         },
                         new
                         {
                             Id = 13,
                             CountryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8346),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8347),
                             ModifiedBy = 0,
-                            NameAr = "عجلون",
-                            NameEn = "Ajloun"
+                            Name = "Ajloun"
                         },
                         new
                         {
                             Id = 14,
                             CountryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8348),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8349),
                             ModifiedBy = 0,
-                            NameAr = "الرياض",
-                            NameEn = "Riyadh"
+                            Name = "Riyadh"
                         },
                         new
                         {
                             Id = 15,
                             CountryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8350),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8351),
                             ModifiedBy = 0,
-                            NameAr = "جدة",
-                            NameEn = "Jeddah"
+                            Name = "Jeddah"
                         },
                         new
                         {
                             Id = 16,
                             CountryId = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8352),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8353),
                             ModifiedBy = 0,
-                            NameAr = "دبي",
-                            NameEn = "Dubai"
+                            Name = "Dubai"
                         },
                         new
                         {
                             Id = 17,
                             CountryId = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8358),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8359),
                             ModifiedBy = 0,
-                            NameAr = "أبو ظبي",
-                            NameEn = "Abu Dhabi"
+                            Name = "Abu Dhabi"
                         });
                 });
 
@@ -1369,74 +877,53 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DescriptionAr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionEn")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("NameAr")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Country");
+                    b.ToTable("Countries");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8289),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8289),
                             ModifiedBy = 0,
-                            NameAr = "المملكة العربية السعودية",
-                            NameEn = "Saudi Arabia"
+                            Name = "Saudi Arabia"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8291),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8292),
                             ModifiedBy = 0,
-                            NameAr = "الإمارات العربية المتحدة",
-                            NameEn = "United Arab Emirates"
+                            Name = "United Arab Emirates"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8294),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8295),
                             ModifiedBy = 0,
-                            NameAr = "الأردن",
-                            NameEn = "Jordan"
+                            Name = "Jordan"
                         });
                 });
 
@@ -1454,63 +941,43 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DescriptionAr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionEn")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("NameAr")
+                    b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8247),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8248),
                             ModifiedBy = 0,
-                            NameAr = "مشرف",
-                            NameEn = "Admin"
+                            RoleName = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8250),
                             CreatedBy = 0,
                             IsDeleted = false,
-                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedAt = new DateTime(2026, 5, 7, 7, 31, 14, 324, DateTimeKind.Utc).AddTicks(8251),
                             ModifiedBy = 0,
-                            NameAr = "عميل",
-                            NameEn = "Customer"
+                            RoleName = "Customer"
                         });
                 });
 
@@ -1525,7 +992,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CartId")
+                    b.Property<int>("CartId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1534,18 +1001,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstNameAr")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
@@ -1554,20 +1013,10 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsEmailVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastLoginAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("LastNameAr")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
@@ -1577,7 +1026,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("MiddleNameAr")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
@@ -1586,31 +1034,26 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WishlistId")
+                    b.Property<int>("WishlistId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Wishlist", b =>
@@ -1627,16 +1070,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
@@ -1650,7 +1087,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wishlist");
+                    b.ToTable("Wishlists");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.WishlistItem", b =>
@@ -1667,23 +1104,14 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SkuId")
                         .HasColumnType("int");
@@ -1697,74 +1125,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("WishlistId");
 
-                    b.ToTable("WishlistItem");
-                });
-
-            modelBuilder.Entity("Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("RatingValue")
-                        .HasPrecision(2, 1)
-                        .HasColumnType("decimal(2,1)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderItemId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Review");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Products.Category", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Products.Category", "ParentCategory")
-                        .WithMany()
-                        .HasForeignKey("ParentCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ParentCategory");
+                    b.ToTable("WishlistItems");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Product", b =>
@@ -1772,18 +1133,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.Products.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Products.Lookups.DiscountType", "DiscountType")
-                        .WithMany()
-                        .HasForeignKey("DiscountTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
-
-                    b.Navigation("DiscountType");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductImage", b =>
@@ -1822,19 +1175,23 @@ namespace ECommerce.Infrastructure.Migrations
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.SKUProductVariantOptions", b =>
                 {
                     b.HasOne("ECommerce.Domain.Entities.Products.ProductVariant", "ProductVariant")
-                        .WithMany("SKUJoinOptions")
+                        .WithMany()
                         .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("ECommerce.Domain.Entities.Products.ProductVariant", null)
+                        .WithMany("SKUJoinOptions")
+                        .HasForeignKey("ProductVariantId1");
 
                     b.HasOne("ECommerce.Domain.Entities.Products.ProductVariantOptions", "ProductVariantOptions")
                         .WithMany()
                         .HasForeignKey("ProductVariantOptionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ECommerce.Domain.Entities.Products.Sku", "Sku")
-                        .WithMany("SKUJoinOptions")
+                        .WithMany()
                         .HasForeignKey("SkuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1862,7 +1219,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.Users.Address", "Address")
                         .WithMany()
                         .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ECommerce.Domain.Entities.Sales.Lookups.OrderStatus", "OrderStatus")
@@ -1874,7 +1231,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Address");
@@ -1903,25 +1260,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Navigation("Sku");
                 });
 
-            modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Payment", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Sales.Lookups.PaymentMethod", "PaymentMethod")
-                        .WithMany()
-                        .HasForeignKey("PaymentMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Sales.Lookups.PaymentStatus", "PaymentStatus")
-                        .WithMany()
-                        .HasForeignKey("PaymentStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PaymentMethod");
-
-                    b.Navigation("PaymentStatus");
-                });
-
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Address", b =>
                 {
                     b.HasOne("ECommerce.Domain.Entities.Users.Lookups.City", "City")
@@ -1929,6 +1267,10 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ECommerce.Domain.Entities.Users.Lookups.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
 
                     b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
                         .WithOne("Address")
@@ -1938,6 +1280,8 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Navigation("City");
 
+                    b.Navigation("Country");
+
                     b.Navigation("User");
                 });
 
@@ -1946,7 +1290,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
                         .WithOne("Cart")
                         .HasForeignKey("ECommerce.Domain.Entities.Users.Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1974,7 +1318,7 @@ namespace ECommerce.Infrastructure.Migrations
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Lookups.City", b =>
                 {
                     b.HasOne("ECommerce.Domain.Entities.Users.Lookups.Country", "Country")
-                        .WithMany()
+                        .WithMany("Cities")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1998,7 +1342,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
                         .WithOne("Wishlist")
                         .HasForeignKey("ECommerce.Domain.Entities.Users.Wishlist", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -2023,33 +1367,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Navigation("Wishlist");
                 });
 
-            modelBuilder.Entity("Review", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Sales.OrderItem", "OrderItem")
-                        .WithMany()
-                        .HasForeignKey("OrderItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Products.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OrderItem");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Category", b =>
                 {
                     b.Navigation("Products");
@@ -2071,11 +1388,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Navigation("SKUJoinOptions");
                 });
 
-            modelBuilder.Entity("ECommerce.Domain.Entities.Products.Sku", b =>
-                {
-                    b.Navigation("SKUJoinOptions");
-                });
-
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Order", b =>
                 {
                     b.Navigation("OrderItems");
@@ -2086,10 +1398,14 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Navigation("CartItems");
                 });
 
+            modelBuilder.Entity("ECommerce.Domain.Entities.Users.Lookups.Country", b =>
+                {
+                    b.Navigation("Cities");
+                });
+
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.User", b =>
                 {
-                    b.Navigation("Address")
-                        .IsRequired();
+                    b.Navigation("Address");
 
                     b.Navigation("Cart")
                         .IsRequired();
