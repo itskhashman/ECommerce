@@ -4,7 +4,6 @@ using ECommerce.Application.Interface.Repository;
 using ECommerce.Domain.Entities.Products;
 using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace ECommerce.Infrastructure.Repository
 {
@@ -16,7 +15,7 @@ namespace ECommerce.Infrastructure.Repository
 
         public async Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(int categoryId)
         {
-            var Products = await _context.Products
+            var Products = await _context.Product
                 .AsNoTracking()
                 .Where(p => p.CategoryId == categoryId && !p.IsDeleted && p.IsActive)
                 .ToListAsync();
@@ -25,7 +24,7 @@ namespace ECommerce.Infrastructure.Repository
 
         public async Task<Product?> GetAllProductDetailsAsync(int productId)
         {
-            var product = await _context.Products
+            var product = await _context.Product
                 .Where(p => p.Id == productId && !p.IsDeleted && p.IsActive)
                 .Select(p => new Product
                 {
@@ -35,14 +34,19 @@ namespace ECommerce.Infrastructure.Repository
                     NameAr = p.NameAr,
                     DescriptionAr = p.DescriptionAr,
                     CategoryId = p.CategoryId,
-                    Rating = p.Rating,
-                    ReviewCount = p.ReviewCount,
                     DiscountAmount = p.DiscountAmount,
                     DiscountType = p.DiscountType,
+                    Rate = p.Rate == null ? null : new Rate
+                    {
+                        Id = p.Rate.Id,
+                        Value = p.Rate.Value,
+                        ReviewCount = p.Rate.ReviewCount
+                    },
                     ProductImages = p.ProductImages == null ? null : p.ProductImages.Select(pi => new ProductImage
                     {
                         Id = pi.Id,
-                        URL = pi.URL
+                        URL = pi.URL,
+                        IsMain = pi.IsMain,
                     }).Where(i => !i.IsDeleted).ToList(),
                     ProductVariants = p.ProductVariants == null ? null : p.ProductVariants.Select(pv => new ProductVariant
                     {

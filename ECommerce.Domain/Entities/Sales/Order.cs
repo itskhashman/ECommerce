@@ -14,7 +14,8 @@ namespace ECommerce.Domain.Entities.Sales
         public int UserId { get; set; }
         public User User { get; set; } = null!;
         [Required]
-        public int OrderNumber { get; set; }
+        [MaxLength(20)]
+        public string OrderNumber { get; set; } = null!;
         [Required]
         public decimal TotalAmount { get; set; }
         [Required]

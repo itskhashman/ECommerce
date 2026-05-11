@@ -38,8 +38,8 @@ namespace ECommerce.Infrastructure.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Product>()
-                .Property(p => p.Rating)
+            modelBuilder.Entity<Rate>()
+                .Property(p => p.Value)
                 .HasPrecision(4, 2);
 
             modelBuilder.Entity<Product>()
@@ -132,26 +132,30 @@ namespace ECommerce.Infrastructure.Data
 
         }
 
-        public DbSet<Product> Products { get; set; } = null!;
-        public DbSet<Category> Categories { get; set; } = null!;
-        public DbSet<ProductImage> ProductImages { get; set; } = null!;
-        public DbSet<ProductVariant> ProductVariants { get; set; } = null!;
-        public DbSet<ProductVariantOptions> ProductVariantOptions { get; set; } = null!;
-        public DbSet<Sku> Skus { get; set; } = null!;
-        public DbSet<SKUProductVariantOptions> SKUProductVariantOptions { get; set; } = null!;
-        public DbSet<Order> Orders { get; set; } = null!;
-        public DbSet<OrderItem> OrderItems { get; set; } = null!;
-        public DbSet<User> Users { get; set; } = null!;
-        public DbSet<Address> Addresses { get; set; } = null!;
-        public DbSet<Cart> Carts { get; set; } = null!;
-        public DbSet<CartItem> CartItems { get; set; } = null!;
-        public DbSet<Wishlist> Wishlists { get; set; } = null!;
-        public DbSet<WishlistItem> WishlistItems { get; set; } = null!;
-        public DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
-        public DbSet<Role> Roles { get; set; } = null!;
-        public DbSet<Country> Countries { get; set; } = null!;
-        public DbSet<City> Cities { get; set; } = null!;
-        public DbSet<DiscountType> DiscountTypes { get; set; } = null!;
+        public DbSet<Product> Product { get; set; } = null!;
+        public DbSet<Category> Category { get; set; } = null!;
+        public DbSet<ProductImage> ProductImage { get; set; } = null!;
+        public DbSet<ProductVariant> ProductVariant { get; set; } = null!;
+        public DbSet<ProductVariantOptions> ProductVariantOption { get; set; } = null!;
+        public DbSet<Sku> Sku { get; set; } = null!;
+        public DbSet<SKUProductVariantOptions> SKUProductVariantOption { get; set; } = null!;
+        public DbSet<Order> Order { get; set; } = null!;
+        public DbSet<OrderItem> OrderItem { get; set; } = null!;
+        public DbSet<User> User { get; set; } = null!;
+        public DbSet<Address> Address { get; set; } = null!;
+        public DbSet<Cart> Cart { get; set; } = null!;
+        public DbSet<CartItem> CartItem { get; set; } = null!;
+        public DbSet<Wishlist> Wishlist { get; set; } = null!;
+        public DbSet<WishlistItem> WishlistItem { get; set; } = null!;
+        public DbSet<OrderStatus> OrderStatus { get; set; } = null!;
+        public DbSet<Role> Role { get; set; } = null!;
+        public DbSet<Country> Country { get; set; } = null!;
+        public DbSet<City> City { get; set; } = null!;
+        public DbSet<DiscountType> DiscountType { get; set; } = null!;
+        public DbSet<Rate> Rate { get; set; } = null!;
+        public DbSet<Payment> Payment { get; set; } = null!;
+        public DbSet<PaymentMethod> PaymentMethod { get; set; } = null!;
+        public DbSet<PaymentStatus> PaymentStatus { get; set; } = null!;
     }
 
 }
