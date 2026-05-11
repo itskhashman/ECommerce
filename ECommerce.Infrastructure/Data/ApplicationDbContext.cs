@@ -43,9 +43,9 @@ namespace ECommerce.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Product>()
-                .Property(p => p.Rating)
-                .HasPrecision(4, 2);
+            modelBuilder.Entity<Review>()
+                .Property(p => p.RatingValue)
+                .HasPrecision(2, 1);
 
             modelBuilder.Entity<Product>()
                 .Property(p => p.DiscountAmount)
@@ -76,10 +76,6 @@ namespace ECommerce.Infrastructure.Data
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<OrderItem>()
-                .Property(oi => oi.Rating)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.DiscountAmount)
                 .HasPrecision(8, 2);
 
@@ -90,12 +86,11 @@ namespace ECommerce.Infrastructure.Data
             modelBuilder.Entity<SKUProductVariantOptions>()
                 .HasKey(svo => new { svo.SkuId, svo.ProductVariantId, svo.ProductVariantOptionsId });
 
-            modelBuilder.Entity<Category>()
-                .HasOne(c => c.ParentCategory)
-                .WithMany(c => c.SubCategories)
-                .HasForeignKey(c => c.ParentCategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
-            
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
             modelBuilder.Entity<OrderStatus>().HasData(
                 new OrderStatus { Id = 1, NameEn = "Pending" , NameAr = "قيد الانتظار" },
                 new OrderStatus { Id = 2, NameEn = "Confirmed", NameAr = "تم التأكيد" },
@@ -140,6 +135,20 @@ namespace ECommerce.Infrastructure.Data
                 new DiscountType { Id = 2, NameEn = "Fixed Amount", NameAr = "مبلغ ثابت" }
             );
 
+            modelBuilder.Entity<PaymentMethod>().HasData(
+                new PaymentMethod { Id = 1, NameEn = "Credit Card", NameAr = "بطاقة ائتمان" },
+                new PaymentMethod { Id = 2, NameEn = "PayPal", NameAr = "باي بال" },
+                new PaymentMethod { Id = 3, NameEn = "Cash on Delivery", NameAr = "الدفع عند الاستلام" }
+            );
+
+            modelBuilder.Entity<PaymentStatus>().HasData(
+               new PaymentStatus { Id = 1, NameEn = "Pending", NameAr = "قيد الانتظار" },
+               new PaymentStatus { Id = 2, NameEn = "Completed", NameAr = "مكتمل" },
+               new PaymentStatus { Id = 3, NameEn = "Failed", NameAr = "فشل" }
+           );
+
+
+
 
         }
 
@@ -163,6 +172,10 @@ namespace ECommerce.Infrastructure.Data
         public DbSet<Country> Country { get; set; } = null!;
         public DbSet<City> City { get; set; } = null!;
         public DbSet<DiscountType> DiscountType { get; set; } = null!;
+        public DbSet<Review> Review { get; set; } = null!;
+        public DbSet<Payment> Payment { get; set; } = null!;
+        public DbSet<PaymentMethod> PaymentMethod { get; set; } = null!;
+        public DbSet<PaymentStatus> PaymentStatus { get; set; } = null!;
     }
 
 }

@@ -10,8 +10,7 @@ namespace ECommerce.Domain.Entities.Users
         [ForeignKey("User")]
         public int UserId { get; set; }
         public User User { get; set; } = null!;
-        [Required]
-        public DateTime ExpiresAt { get; set; }
+        public DateTime? ExpiresAt { get; set; }
         public ICollection<CartItem>? CartItems { get; set; } = new List<CartItem>();
     }
 

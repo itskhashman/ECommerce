@@ -4,7 +4,6 @@ using ECommerce.Application.Interface.Repository;
 using ECommerce.Domain.Entities.Products;
 using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace ECommerce.Infrastructure.Repository
 {
@@ -35,14 +34,13 @@ namespace ECommerce.Infrastructure.Repository
                     NameAr = p.NameAr,
                     DescriptionAr = p.DescriptionAr,
                     CategoryId = p.CategoryId,
-                    Rating = p.Rating,
-                    ReviewCount = p.ReviewCount,
                     DiscountAmount = p.DiscountAmount,
                     DiscountType = p.DiscountType,
                     ProductImages = p.ProductImages == null ? null : p.ProductImages.Select(pi => new ProductImage
                     {
                         Id = pi.Id,
-                        URL = pi.URL
+                        URL = pi.URL,
+                        IsMain = pi.IsMain,
                     }).Where(i => !i.IsDeleted).ToList(),
                     ProductVariants = p.ProductVariants == null ? null : p.ProductVariants.Select(pv => new ProductVariant
                     {

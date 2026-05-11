@@ -12,15 +12,14 @@ namespace ECommerce.Domain.Entities.Users
         public int UserId { get; set; }
         public User User { get; set; } = null!;
         [Required]
+        [MaxLength(150)]
         public string Street { get; set; } = null!;
         [Required]
+        [MaxLength(10)]
         public string PostalCode { get; set; } = null!;
         [ForeignKey("City")]
         public int CityId { get; set; }
         public City? City { get; set; }
-        [ForeignKey("Country")]
-        public int? CountryId { get; set; }
-        public Country? Country { get; set; }
         public string? Label { get; set; }
         public bool IsDefault { get; set; }= true;
 
