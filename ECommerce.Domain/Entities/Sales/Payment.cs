@@ -10,8 +10,9 @@ namespace ECommerce.Domain.Entities.Sales
 {
     public class Payment : BaseEntity
     {
-        [Required]
-        public int TransactionId { get; set; }
+        [Required, MaxLength(100)]
+        [Column(TypeName = "varchar")]
+        public string TransactionId { get; set; } = null!;
         [Required]
         [ForeignKey("PaymentMethod")]
         public int PaymentMethodId { get; set; }

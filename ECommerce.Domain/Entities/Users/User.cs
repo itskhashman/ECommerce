@@ -12,12 +12,15 @@ namespace ECommerce.Domain.Entities.Users
     {
         [Required]
         [MaxLength(30)]
+        [Column(TypeName = "varchar")]
         public string FirstNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
+        [Column(TypeName = "varchar")]
         public string MiddleNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
+        [Column(TypeName = "varchar")]
         public string LastNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
@@ -30,14 +33,17 @@ namespace ECommerce.Domain.Entities.Users
         public string LastNameAr { get; set; } = null!;
         [Required , MaxLength(255)]
         [EmailAddress]
+        [Column(TypeName = "varchar")]
         public string Email { get; set; } = null!;
         [Required , MaxLength(256)]
+        [Column(TypeName = "varchar")]
         public string PasswordHash { get; set; } = null!;
         [ForeignKey("Role")]
         [Required]
         public int RoleId { get; set; }
         public Role Role { get; set; } = null!;
         [Required , MaxLength(15)]
+        [Column(TypeName = "varchar")]
         public string Phone { get; set; } = null!;
         [Required]
         public bool IsActive { get; set; } = true;

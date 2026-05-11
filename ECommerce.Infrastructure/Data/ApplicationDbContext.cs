@@ -7,6 +7,7 @@ using ECommerce.Domain.Entities.Sales.Lookups;
 using ECommerce.Domain.Entities.Users;
 using ECommerce.Domain.Entities.Users.Lookups;
 using Microsoft.EntityFrameworkCore;
+using System.Xml;
 
 namespace ECommerce.Infrastructure.Data
 {
@@ -48,7 +49,7 @@ namespace ECommerce.Infrastructure.Data
 
             modelBuilder.Entity<Sku>()
                 .Property(s => s.Price)
-                .HasPrecision(18, 2);
+                .HasPrecision(10, 2);
 
             modelBuilder.Entity<Sku>()
                 .Property(s => s.Weight)
@@ -56,19 +57,18 @@ namespace ECommerce.Infrastructure.Data
 
             modelBuilder.Entity<Order>()
                     .Property(o => o.TotalAmount)
-                    .HasPrecision(18, 2);
+                    .HasPrecision(10, 2);
 
             modelBuilder.Entity<Order>()
                     .Property(o => o.ShippingCost)
-                    .HasPrecision(18, 2);
+                    .HasPrecision(10, 2);
 
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.SubTotal)
-                .HasPrecision(18, 2);
-
+                .HasPrecision(10, 2);
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.PriceAtPurchase)
-                .HasPrecision(18, 2);
+                .HasPrecision(10, 2);
 
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.DiscountAmount)
@@ -76,7 +76,7 @@ namespace ECommerce.Infrastructure.Data
 
             modelBuilder.Entity<CartItem>()
                 .Property(oi => oi.PriceAtAddTime)
-                .HasPrecision(18, 2);
+                .HasPrecision(10, 2);
 
             modelBuilder.Entity<SKUProductVariantOptions>()
                 .HasKey(svo => new { svo.SkuId, svo.ProductVariantId, svo.ProductVariantOptionsId });

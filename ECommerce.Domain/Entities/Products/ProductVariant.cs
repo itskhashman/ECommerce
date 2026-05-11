@@ -13,6 +13,7 @@ namespace ECommerce.Domain.Entities.Products
         public string? NameAr { get; set; }
         [MaxLength(30)]
         [Required]
+        [Column(TypeName = "varchar")]
         public string NameEn { get; set; } = null!;
         [Required]
         public ICollection<ProductVariantOptions> ProductVariantOptions { get; set; } = new List<ProductVariantOptions>();

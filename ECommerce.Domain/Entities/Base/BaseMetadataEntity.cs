@@ -10,10 +10,8 @@ namespace ECommerce.Domain.Entities.Base
         public DateTime CreatedAt { get; set; }
         [Required]
         public int CreatedBy { get; set; }
-        [Required]
-        public DateTime ModifiedAt { get; set; }
-        [Required]
-        public int ModifiedBy { get; set; }
+        public DateTime? ModifiedAt { get; set; }
+        public int? ModifiedBy { get; set; }
         [Required]
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedAt { get; set; }
