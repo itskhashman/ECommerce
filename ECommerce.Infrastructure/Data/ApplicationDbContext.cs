@@ -6,15 +6,18 @@ using ECommerce.Domain.Entities.Sales;
 using ECommerce.Domain.Entities.Sales.Lookups;
 using ECommerce.Domain.Entities.Users;
 using ECommerce.Domain.Entities.Users.Lookups;
+using ECommerce.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Infrastructure.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
-
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -38,6 +41,8 @@ namespace ECommerce.Infrastructure.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Product>()
                 .Property(p => p.Rating)
                 .HasPrecision(4, 2);
@@ -85,6 +90,12 @@ namespace ECommerce.Infrastructure.Data
             modelBuilder.Entity<SKUProductVariantOptions>()
                 .HasKey(svo => new { svo.SkuId, svo.ProductVariantId, svo.ProductVariantOptionsId });
 
+            modelBuilder.Entity<Category>()
+                .HasOne(c => c.ParentCategory)
+                .WithMany(c => c.SubCategories)
+                .HasForeignKey(c => c.ParentCategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
             modelBuilder.Entity<OrderStatus>().HasData(
                 new OrderStatus { Id = 1, NameEn = "Pending" , NameAr = "قيد الانتظار" },
                 new OrderStatus { Id = 2, NameEn = "Confirmed", NameAr = "تم التأكيد" },
@@ -132,26 +143,26 @@ namespace ECommerce.Infrastructure.Data
 
         }
 
-        public DbSet<Product> Products { get; set; } = null!;
-        public DbSet<Category> Categories { get; set; } = null!;
-        public DbSet<ProductImage> ProductImages { get; set; } = null!;
-        public DbSet<ProductVariant> ProductVariants { get; set; } = null!;
-        public DbSet<ProductVariantOptions> ProductVariantOptions { get; set; } = null!;
-        public DbSet<Sku> Skus { get; set; } = null!;
-        public DbSet<SKUProductVariantOptions> SKUProductVariantOptions { get; set; } = null!;
-        public DbSet<Order> Orders { get; set; } = null!;
-        public DbSet<OrderItem> OrderItems { get; set; } = null!;
-        public DbSet<User> Users { get; set; } = null!;
-        public DbSet<Address> Addresses { get; set; } = null!;
-        public DbSet<Cart> Carts { get; set; } = null!;
-        public DbSet<CartItem> CartItems { get; set; } = null!;
-        public DbSet<Wishlist> Wishlists { get; set; } = null!;
-        public DbSet<WishlistItem> WishlistItems { get; set; } = null!;
-        public DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
-        public DbSet<Role> Roles { get; set; } = null!;
-        public DbSet<Country> Countries { get; set; } = null!;
-        public DbSet<City> Cities { get; set; } = null!;
-        public DbSet<DiscountType> DiscountTypes { get; set; } = null!;
+        public DbSet<Product> Product { get; set; } = null!;
+        public DbSet<Category> Category { get; set; } = null!;
+        public DbSet<ProductImage> ProductImage { get; set; } = null!;
+        public DbSet<ProductVariant> ProductVariant { get; set; } = null!;
+        public DbSet<ProductVariantOptions> ProductVariantOption { get; set; } = null!;
+        public DbSet<Sku> Sku { get; set; } = null!;
+        public DbSet<SKUProductVariantOptions> SKUProductVariantOption { get; set; } = null!;
+        public DbSet<Order> Order { get; set; } = null!;
+        public DbSet<OrderItem> OrderItem { get; set; } = null!;
+        public DbSet<User> User { get; set; } = null!;
+        public DbSet<Address> Address { get; set; } = null!;
+        public DbSet<Cart> Cart { get; set; } = null!;
+        public DbSet<CartItem> CartItem { get; set; } = null!;
+        public DbSet<Wishlist> Wishlist { get; set; } = null!;
+        public DbSet<WishlistItem> WishlistItem { get; set; } = null!;
+        public DbSet<OrderStatus> OrderStatus { get; set; } = null!;
+        public DbSet<Role> Role { get; set; } = null!;
+        public DbSet<Country> Country { get; set; } = null!;
+        public DbSet<City> City { get; set; } = null!;
+        public DbSet<DiscountType> DiscountType { get; set; } = null!;
     }
 
 }

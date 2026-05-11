@@ -390,16 +390,16 @@ namespace ECommerce.Infrastructure.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "NameAr",
                 table: "Roles",
-                type: "nvarchar(15)",
-                maxLength: 15,
+                type: "nvarchar(100)",
+                maxLength: 100,
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "NameEn",
                 table: "Roles",
-                type: "nvarchar(15)",
-                maxLength: 15,
+                type: "nvarchar(100)",
+                maxLength: 100,
                 nullable: false,
                 defaultValue: "");
 
@@ -632,16 +632,16 @@ namespace ECommerce.Infrastructure.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "NameAr",
                 table: "OrderStatuses",
-                type: "nvarchar(15)",
-                maxLength: 15,
+                type: "nvarchar(100)",
+                maxLength: 100,
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "NameEn",
                 table: "OrderStatuses",
-                type: "nvarchar(15)",
-                maxLength: 15,
+                type: "nvarchar(100)",
+                maxLength: 100,
                 nullable: false,
                 defaultValue: "");
 
@@ -789,16 +789,16 @@ namespace ECommerce.Infrastructure.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "NameAr",
                 table: "Countries",
-                type: "nvarchar(15)",
-                maxLength: 15,
+                type: "nvarchar(100)",
+                maxLength: 100,
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "NameEn",
                 table: "Countries",
-                type: "nvarchar(15)",
-                maxLength: 15,
+                type: "nvarchar(100)",
+                maxLength: 100,
                 nullable: false,
                 defaultValue: "");
 
@@ -839,16 +839,16 @@ namespace ECommerce.Infrastructure.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "NameAr",
                 table: "Cities",
-                type: "nvarchar(15)",
-                maxLength: 15,
+                type: "nvarchar(100)",
+                maxLength: 100,
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "NameEn",
                 table: "Cities",
-                type: "nvarchar(15)",
-                maxLength: 15,
+                type: "nvarchar(100)",
+                maxLength: 100,
                 nullable: false,
                 defaultValue: "");
 
@@ -1018,8 +1018,8 @@ namespace ECommerce.Infrastructure.Migrations
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedBy = table.Column<int>(type: "int", nullable: true),
-                    NameAr = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    NameEn = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    NameAr = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NameEn = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     DescriptionAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DescriptionEn = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -1933,8 +1933,8 @@ namespace ECommerce.Infrastructure.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "DiscountType",
                 table: "Products",
-                type: "nvarchar(15)",
-                maxLength: 15,
+                type: "nvarchar(100)",
+                maxLength: 100,
                 nullable: true);
 
             migrationBuilder.AlterColumn<DateTime>(

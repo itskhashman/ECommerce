@@ -16,7 +16,7 @@ namespace ECommerce.Infrastructure.Repository
 
         public async Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(int categoryId)
         {
-            var Products = await _context.Products
+            var Products = await _context.Product
                 .AsNoTracking()
                 .Where(p => p.CategoryId == categoryId && !p.IsDeleted && p.IsActive)
                 .ToListAsync();
@@ -25,7 +25,7 @@ namespace ECommerce.Infrastructure.Repository
 
         public async Task<Product?> GetAllProductDetailsAsync(int productId)
         {
-            var product = await _context.Products
+            var product = await _context.Product
                 .Where(p => p.Id == productId && !p.IsDeleted && p.IsActive)
                 .Select(p => new Product
                 {
