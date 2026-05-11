@@ -25,9 +25,6 @@ namespace ECommerce.Domain.Entities.Products
         public int DiscountTypeId { get; set; }
         public DiscountType DiscountType { get; set; } = null!;
         public decimal? DiscountAmount { get; set; }
-        [ForeignKey("Rate")]
-        public int? RateId { get; set; }
-        public Rate? Rate { get; set; }
         public bool IsActive { get; set; } = true;
         public ICollection<ProductImage>? ProductImages { get; set; } = new List<ProductImage>();
         public ICollection<ProductVariant>? ProductVariants { get; set; } = new List<ProductVariant>();

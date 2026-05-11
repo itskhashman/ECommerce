@@ -33,7 +33,6 @@ namespace ECommerce.Domain.Entities.Sales
         public int Quantity { get; set; }
         [Required]
         public decimal PriceAtPurchase { get; set; }
-        public decimal? Rating { get; set; }
         public decimal? DiscountAmount { get; set; }
     }
 

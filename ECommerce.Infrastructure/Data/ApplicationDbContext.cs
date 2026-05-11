@@ -38,9 +38,9 @@ namespace ECommerce.Infrastructure.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Rate>()
-                .Property(p => p.Value)
-                .HasPrecision(4, 2);
+            modelBuilder.Entity<Review>()
+                .Property(p => p.RatingValue)
+                .HasPrecision(2, 1);
 
             modelBuilder.Entity<Product>()
                 .Property(p => p.DiscountAmount)
@@ -68,10 +68,6 @@ namespace ECommerce.Infrastructure.Data
 
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.PriceAtPurchase)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<OrderItem>()
-                .Property(oi => oi.Rating)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<OrderItem>()
@@ -129,6 +125,20 @@ namespace ECommerce.Infrastructure.Data
                 new DiscountType { Id = 2, NameEn = "Fixed Amount", NameAr = "مبلغ ثابت" }
             );
 
+            modelBuilder.Entity<PaymentMethod>().HasData(
+                new PaymentMethod { Id = 1, NameEn = "Credit Card", NameAr = "بطاقة ائتمان" },
+                new PaymentMethod { Id = 2, NameEn = "PayPal", NameAr = "باي بال" },
+                new PaymentMethod { Id = 3, NameEn = "Cash on Delivery", NameAr = "الدفع عند الاستلام" }
+            );
+
+            modelBuilder.Entity<PaymentStatus>().HasData(
+               new PaymentStatus { Id = 1, NameEn = "Pending", NameAr = "قيد الانتظار" },
+               new PaymentStatus { Id = 2, NameEn = "Completed", NameAr = "مكتمل" },
+               new PaymentStatus { Id = 3, NameEn = "Failed", NameAr = "فشل" }
+           );
+
+
+
 
         }
 
@@ -152,7 +162,7 @@ namespace ECommerce.Infrastructure.Data
         public DbSet<Country> Country { get; set; } = null!;
         public DbSet<City> City { get; set; } = null!;
         public DbSet<DiscountType> DiscountType { get; set; } = null!;
-        public DbSet<Rate> Rate { get; set; } = null!;
+        public DbSet<Review> Review { get; set; } = null!;
         public DbSet<Payment> Payment { get; set; } = null!;
         public DbSet<PaymentMethod> PaymentMethod { get; set; } = null!;
         public DbSet<PaymentStatus> PaymentStatus { get; set; } = null!;

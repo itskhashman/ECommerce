@@ -36,12 +36,6 @@ namespace ECommerce.Infrastructure.Repository
                     CategoryId = p.CategoryId,
                     DiscountAmount = p.DiscountAmount,
                     DiscountType = p.DiscountType,
-                    Rate = p.Rate == null ? null : new Rate
-                    {
-                        Id = p.Rate.Id,
-                        Value = p.Rate.Value,
-                        ReviewCount = p.Rate.ReviewCount
-                    },
                     ProductImages = p.ProductImages == null ? null : p.ProductImages.Select(pi => new ProductImage
                     {
                         Id = pi.Id,

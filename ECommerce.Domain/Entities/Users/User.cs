@@ -31,6 +31,8 @@ namespace ECommerce.Domain.Entities.Users
         [Required]
         [EmailAddress]
         public string Email { get; set; } = null!;
+        [Required]
+        public string PasswordHash { get; set; } = null!;
         [ForeignKey("Role")]
         [Required]
         public int RoleId { get; set; }

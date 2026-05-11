@@ -218,6 +218,10 @@ namespace ECommerce.Infrastructure.Migrations
                 table: "OrderStatuses");
 
             migrationBuilder.DropColumn(
+                name: "Rating",
+                table: "OrderItems");
+
+            migrationBuilder.DropColumn(
                 name: "Name",
                 table: "Countries");
 
@@ -359,7 +363,7 @@ namespace ECommerce.Infrastructure.Migrations
             migrationBuilder.RenameColumn(
                 name: "ReviewCount",
                 table: "Product",
-                newName: "RateId");
+                newName: "DeletedBy");
 
             migrationBuilder.RenameIndex(
                 name: "IX_Products_CategoryId",
@@ -600,6 +604,13 @@ namespace ECommerce.Infrastructure.Migrations
                 type: "datetime2",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
+            migrationBuilder.AddColumn<string>(
+                name: "PasswordHash",
+                table: "User",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
 
             migrationBuilder.AlterColumn<string>(
                 name: "SkuCode",
@@ -888,12 +899,6 @@ namespace ECommerce.Infrastructure.Migrations
                 name: "DeletedAt",
                 table: "Product",
                 type: "datetime2",
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "DeletedBy",
-                table: "Product",
-                type: "int",
                 nullable: true);
 
             migrationBuilder.AlterColumn<DateTime>(
@@ -1509,13 +1514,16 @@ namespace ECommerce.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rate",
+                name: "Review",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<decimal>(type: "decimal(4,2)", precision: 4, scale: 2, nullable: false),
-                    ReviewCount = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    OrderItemId = table.Column<int>(type: "int", nullable: false),
+                    RatingValue = table.Column<decimal>(type: "decimal(2,1)", precision: 2, scale: 1, nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1526,7 +1534,25 @@ namespace ECommerce.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rate", x => x.Id);
+                    table.PrimaryKey("PK_Review", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Review_OrderItem_OrderItemId",
+                        column: x => x.OrderItemId,
+                        principalTable: "OrderItem",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Review_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Review_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1741,6 +1767,26 @@ namespace ECommerce.Infrastructure.Migrations
                 columns: new[] { "CreatedAt", "DeletedAt", "DeletedBy", "DescriptionAr", "DescriptionEn", "ModifiedAt", "NameAr", "NameEn" },
                 values: new object[] { new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "تم التسليم", "Delivered" });
 
+            migrationBuilder.InsertData(
+                table: "PaymentMethod",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "DeletedBy", "DescriptionAr", "DescriptionEn", "IsDeleted", "ModifiedAt", "ModifiedBy", "NameAr", "NameEn" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, null, null, null, null, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "بطاقة ائتمان", "Credit Card" },
+                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, null, null, null, null, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "باي بال", "PayPal" },
+                    { 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, null, null, null, null, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "الدفع عند الاستلام", "Cash on Delivery" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PaymentStatus",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "DeletedAt", "DeletedBy", "DescriptionAr", "DescriptionEn", "IsDeleted", "ModifiedAt", "ModifiedBy", "NameAr", "NameEn" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, null, null, null, null, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "قيد الانتظار", "Pending" },
+                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, null, null, null, null, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "مكتمل", "Completed" },
+                    { 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, null, null, null, null, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "فشل", "Failed" }
+                });
+
             migrationBuilder.UpdateData(
                 table: "Role",
                 keyColumn: "Id",
@@ -1761,11 +1807,6 @@ namespace ECommerce.Infrastructure.Migrations
                 column: "DiscountTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_RateId",
-                table: "Product",
-                column: "RateId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Category_ParentCategoryId",
                 table: "Category",
                 column: "ParentCategoryId");
@@ -1779,6 +1820,21 @@ namespace ECommerce.Infrastructure.Migrations
                 name: "IX_Payment_PaymentStatusId",
                 table: "Payment",
                 column: "PaymentStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Review_OrderItemId",
+                table: "Review",
+                column: "OrderItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Review_ProductId",
+                table: "Review",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Review_UserId",
+                table: "Review",
+                column: "UserId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Address_City_CityId",
@@ -1891,13 +1947,6 @@ namespace ECommerce.Infrastructure.Migrations
                 principalTable: "DiscountType",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Product_Rate_RateId",
-                table: "Product",
-                column: "RateId",
-                principalTable: "Rate",
-                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ProductImage_Product_ProductId",
@@ -2048,10 +2097,6 @@ namespace ECommerce.Infrastructure.Migrations
                 table: "Product");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Product_Rate_RateId",
-                table: "Product");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_ProductImage_Product_ProductId",
                 table: "ProductImage");
 
@@ -2102,7 +2147,7 @@ namespace ECommerce.Infrastructure.Migrations
                 name: "Payment");
 
             migrationBuilder.DropTable(
-                name: "Rate");
+                name: "Review");
 
             migrationBuilder.DropTable(
                 name: "PaymentMethod");
@@ -2152,10 +2197,6 @@ namespace ECommerce.Infrastructure.Migrations
 
             migrationBuilder.DropIndex(
                 name: "IX_Product_DiscountTypeId",
-                table: "Product");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Product_RateId",
                 table: "Product");
 
             migrationBuilder.DropPrimaryKey(
@@ -2236,6 +2277,10 @@ namespace ECommerce.Infrastructure.Migrations
 
             migrationBuilder.DropColumn(
                 name: "LastLoginAt",
+                table: "User");
+
+            migrationBuilder.DropColumn(
+                name: "PasswordHash",
                 table: "User");
 
             migrationBuilder.DropColumn(
@@ -2352,10 +2397,6 @@ namespace ECommerce.Infrastructure.Migrations
 
             migrationBuilder.DropColumn(
                 name: "DeletedAt",
-                table: "Product");
-
-            migrationBuilder.DropColumn(
-                name: "DeletedBy",
                 table: "Product");
 
             migrationBuilder.DropColumn(
@@ -2658,14 +2699,14 @@ namespace ECommerce.Infrastructure.Migrations
                 newName: "IX_ProductImages_ProductId");
 
             migrationBuilder.RenameColumn(
-                name: "RateId",
-                table: "Products",
-                newName: "ReviewCount");
-
-            migrationBuilder.RenameColumn(
                 name: "DiscountTypeId",
                 table: "Products",
                 newName: "TotalStock");
+
+            migrationBuilder.RenameColumn(
+                name: "DeletedBy",
+                table: "Products",
+                newName: "ReviewCount");
 
             migrationBuilder.RenameIndex(
                 name: "IX_Product_CategoryId",
@@ -3000,6 +3041,14 @@ namespace ECommerce.Infrastructure.Migrations
                 nullable: true,
                 oldClrType: typeof(DateTime),
                 oldType: "datetime2");
+
+            migrationBuilder.AddColumn<decimal>(
+                name: "Rating",
+                table: "OrderItems",
+                type: "decimal(18,2)",
+                precision: 18,
+                scale: 2,
+                nullable: true);
 
             migrationBuilder.AlterColumn<int>(
                 name: "OrderNumber",
