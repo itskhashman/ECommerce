@@ -25,7 +25,7 @@ namespace ECommerce.Infrastructure.Identity
         {
             var identityUser = new ApplicationUser
             {
-                UserName = firstNameEn + '-' + middleNameEn + '-' + lastNameEn,
+                UserName = email,
                 Email = email,
                 PhoneNumber = phone
             };
@@ -40,10 +40,16 @@ namespace ECommerce.Infrastructure.Identity
                     {
                         Email = email,
                         FirstNameAr = firstNameAr,
-                        FirstNameEn = firstNameEn,
+                        MiddleNameAr = middleNameAr,
                         LastNameAr = lastNameAr,
+                        FirstNameEn = firstNameEn,
+                        MiddleNameEn = middleNameEn,
                         LastNameEn = lastNameEn,
                         Phone = phone,
+                        PasswordHash = identityUser.PasswordHash ?? string.Empty,
+                        RoleId = 2,
+                        IsActive = true,
+                        IsEmailVerified = false,
                     };
 
                     await _userRepository.Add(domainUser);
