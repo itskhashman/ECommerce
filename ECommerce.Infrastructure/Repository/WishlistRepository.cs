@@ -14,12 +14,12 @@ namespace ECommerce.Infrastructure.Repository
         }
         public async Task AddToWishlistAsync(int wishlistId, int skuId)
         {
-            _context.WishlistItem.Add(new WishlistItem { WishlistId = wishlistId, SkuId = skuId });
+            _context.WishlistItems.Add(new WishlistItem { WishlistId = wishlistId, SkuId = skuId });
             await _context.SaveChangesAsync();
         }
         public async Task ClearWishlistAsync(int userId)
         {
-            await _context.WishlistItem
+            await _context.WishlistItems
                 .Where(wi => wi.Wishlist.UserId == userId && !wi.IsDeleted)
                 .ExecuteUpdateAsync(s => s.SetProperty(b => b.IsDeleted, true));
             await _context.SaveChangesAsync();
@@ -27,14 +27,14 @@ namespace ECommerce.Infrastructure.Repository
         }
         public async Task<Wishlist?> GetWishlistByUserIdAsync(int userId)
         {
-            return await _context.Wishlist
+            return await _context.Wishlists
                 .AsNoTracking() 
                 .Include(w => w.WishlistItems)
                 .FirstOrDefaultAsync(w => w.UserId == userId);
         }   
         public async Task RemoveFromWishlistAsync(int userId, int skuId)
         { 
-            var wishlistItem = await _context.WishlistItem
+            var wishlistItem = await _context.WishlistItems
                 .FirstOrDefaultAsync(wi => wi.Wishlist.UserId == userId && wi.SkuId == skuId && !wi.IsDeleted);
 
             if (wishlistItem != null)
