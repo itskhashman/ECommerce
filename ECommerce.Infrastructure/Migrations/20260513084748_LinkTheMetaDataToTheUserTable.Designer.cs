@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260513084748_LinkTheMetaDataToTheUserTable")]
+    partial class LinkTheMetaDataToTheUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,7 +83,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Lookups.DiscountType", b =>
@@ -136,7 +139,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.ToTable("DiscountTypes");
+                    b.ToTable("DiscountType");
 
                     b.HasData(
                         new
@@ -231,7 +234,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductImage", b =>
@@ -290,7 +293,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImage");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariant", b =>
@@ -345,7 +348,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductVariants");
+                    b.ToTable("ProductVariant");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariantOptions", b =>
@@ -407,7 +410,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("ProductVariantOptions");
+                    b.ToTable("ProductVariantOption");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.SKUProductVariantOptions", b =>
@@ -442,6 +445,9 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
 
+                    b.Property<int>("ProductVariantId")
+                        .HasColumnType("int");
+
                     b.HasKey("SkuId", "ProductVariantOptionsId");
 
                     b.HasIndex("CreatedBy");
@@ -450,9 +456,11 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
+                    b.HasIndex("ProductVariantId");
+
                     b.HasIndex("ProductVariantOptionsId");
 
-                    b.ToTable("SKUProductVariantOptions");
+                    b.ToTable("SKUProductVariantOption");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Sku", b =>
@@ -519,7 +527,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Skus");
+                    b.ToTable("Sku");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Lookups.OrderStatus", b =>
@@ -575,7 +583,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.ToTable("OrderStatuses");
+                    b.ToTable("OrderStatus");
 
                     b.HasData(
                         new
@@ -669,7 +677,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethod");
 
                     b.HasData(
                         new
@@ -754,7 +762,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.ToTable("PaymentStatuses");
+                    b.ToTable("PaymentStatus");
 
                     b.HasData(
                         new
@@ -865,7 +873,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.OrderItem", b =>
@@ -948,7 +956,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("SkuId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Payment", b =>
@@ -1006,7 +1014,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("PaymentStatusId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.ShippingRate", b =>
@@ -1016,6 +1024,10 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("BaseRate")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("CityId")
                         .HasColumnType("int");
@@ -1032,6 +1044,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int?>("DeletedBy")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("FreeShippingThreshold")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1041,7 +1057,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ShippingCost")
+                    b.Property<decimal>("RatePerKg")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
@@ -1055,7 +1071,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.ToTable("ShippingRates");
+                    b.ToTable("ShippingRate");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Address", b =>
@@ -1122,7 +1138,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Cart", b =>
@@ -1171,7 +1187,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.CartItem", b =>
@@ -1228,7 +1244,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("SkuId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItem");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Lookups.City", b =>
@@ -1289,7 +1305,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.ToTable("Cities");
+                    b.ToTable("City");
 
                     b.HasData(
                         new
@@ -1517,7 +1533,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Country");
 
                     b.HasData(
                         new
@@ -1602,7 +1618,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Role");
 
                     b.HasData(
                         new
@@ -1708,6 +1724,9 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("varchar");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
@@ -1716,30 +1735,9 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Users.UsersRoles", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersRoles");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Wishlist", b =>
@@ -1785,7 +1783,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("Wishlist");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.WishlistItem", b =>
@@ -1839,7 +1837,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("WishlistId");
 
-                    b.ToTable("WishlistItems");
+                    b.ToTable("WishlistItem");
                 });
 
             modelBuilder.Entity("Review", b =>
@@ -1901,7 +1899,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Category", b =>
@@ -2118,6 +2116,12 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasForeignKey("ModifiedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("ECommerce.Domain.Entities.Products.ProductVariant", "ProductVariant")
+                        .WithMany("SKUJoinOptions")
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("ECommerce.Domain.Entities.Products.ProductVariantOptions", "ProductVariantOptions")
                         .WithMany()
                         .HasForeignKey("ProductVariantOptionsId")
@@ -2135,6 +2139,8 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Navigation("Deleter");
 
                     b.Navigation("Modifier");
+
+                    b.Navigation("ProductVariant");
 
                     b.Navigation("ProductVariantOptions");
 
@@ -2637,30 +2643,19 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasForeignKey("ModifiedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("ECommerce.Domain.Entities.Users.Lookups.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Creator");
 
                     b.Navigation("Deleter");
 
                     b.Navigation("Modifier");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Users.UsersRoles", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Users.Lookups.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
 
                     b.Navigation("Role");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Wishlist", b =>
@@ -2805,6 +2800,8 @@ namespace ECommerce.Infrastructure.Migrations
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariant", b =>
                 {
                     b.Navigation("ProductVariantOptions");
+
+                    b.Navigation("SKUJoinOptions");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Sku", b =>

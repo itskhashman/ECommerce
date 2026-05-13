@@ -10,14 +10,14 @@ namespace ECommerce.Domain.Entities.Products
         public int ProductId { get; set; }
         public Product Product { get; set; } = null!;
         [MaxLength(30)]
-        public string? NameAr { get; set; }
+        [Required]
+        public string NameAr { get; set; } = null!;
         [MaxLength(30)]
         [Required]
         [Column(TypeName = "varchar")]
         public string NameEn { get; set; } = null!;
         [Required]
         public ICollection<ProductVariantOptions> ProductVariantOptions { get; set; } = new List<ProductVariantOptions>();
-        public ICollection<SKUProductVariantOptions> SKUJoinOptions { get; set; } = new List<SKUProductVariantOptions>();
 
     }
 }

@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260513114849_AddUsersRolesTableAndRenameTables")]
+    partial class AddUsersRolesTableAndRenameTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -442,6 +445,9 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int?>("ModifiedBy")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductVariantId")
+                        .HasColumnType("int");
+
                     b.HasKey("SkuId", "ProductVariantOptionsId");
 
                     b.HasIndex("CreatedBy");
@@ -449,6 +455,8 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("DeletedBy");
 
                     b.HasIndex("ModifiedBy");
+
+                    b.HasIndex("ProductVariantId");
 
                     b.HasIndex("ProductVariantOptionsId");
 
@@ -2118,6 +2126,11 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasForeignKey("ModifiedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("ECommerce.Domain.Entities.Products.ProductVariant", null)
+                        .WithMany("SKUJoinOptions")
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ECommerce.Domain.Entities.Products.ProductVariantOptions", "ProductVariantOptions")
                         .WithMany()
                         .HasForeignKey("ProductVariantOptionsId")
@@ -2805,6 +2818,8 @@ namespace ECommerce.Infrastructure.Migrations
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariant", b =>
                 {
                     b.Navigation("ProductVariantOptions");
+
+                    b.Navigation("SKUJoinOptions");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Sku", b =>
