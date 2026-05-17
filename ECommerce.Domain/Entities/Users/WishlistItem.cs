@@ -15,6 +15,8 @@ namespace ECommerce.Domain.Entities.Users
         [ForeignKey("Sku")]
         public int SkuId { get; set; }
         public Sku Sku { get; set; } = null!;
+        [MaxLength(500)]
+        [Column(TypeName = "varchar")]
         public string? Notes { get; set; }
     }
 
