@@ -17,7 +17,7 @@ namespace ECommerce.Infrastructure.Repository
         {
             var Products = await _context.Products
                 .AsNoTracking()
-                .Where(p => p.CategoryId == categoryId)
+                .Where(p => p.CategoryId == categoryId && !p.IsDeleted && p.IsActive)
                 .ToListAsync();
             return Products;
         }
@@ -34,17 +34,14 @@ namespace ECommerce.Infrastructure.Repository
                     NameAr = p.NameAr,
                     DescriptionAr = p.DescriptionAr,
                     CategoryId = p.CategoryId,
-                    TotalStock = p.TotalStock,
-                    DefaultPrice = p.DefaultPrice,
-                    Rating = p.Rating,
-                    ReviewCount = p.ReviewCount,
                     DiscountAmount = p.DiscountAmount,
                     DiscountType = p.DiscountType,
                     ProductImages = p.ProductImages == null ? null : p.ProductImages.Select(pi => new ProductImage
                     {
                         Id = pi.Id,
-                        URL = pi.URL
-                    }).ToList(),
+                        URL = pi.URL,
+                        IsMain = pi.IsMain,
+                    }).Where(i => !i.IsDeleted).ToList(),
                     ProductVariants = p.ProductVariants == null ? null : p.ProductVariants.Select(pv => new ProductVariant
                     {
                         Id = pv.Id,
@@ -55,14 +52,14 @@ namespace ECommerce.Infrastructure.Repository
                             Id = pvo.Id,
                             NameEn = pvo.NameEn,
                             NameAr = pvo.NameAr,
-                        }).ToList()
-                    }).ToList(),
+                        }).Where(pvo => !pvo.IsDeleted).ToList()
+                    }).Where(pv => !pv.IsDeleted).ToList(),
                     Skus = p.Skus == null ? null : p.Skus.Select(s => new Sku
                     {
                         Id = s.Id,
                         SkuCode = s.SkuCode,
                         Price = s.Price,
-                    }).ToList()
+                    }).Where(s => !s.IsDeleted && s.IsActive).ToList()
                 })
                 .FirstOrDefaultAsync();
             return product;

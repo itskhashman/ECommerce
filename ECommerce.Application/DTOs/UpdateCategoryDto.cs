@@ -27,4 +27,4 @@ namespace ECommerce.Application.DTOs
         public bool IsActive { get; set; } = true;
     }
 }
-}
+

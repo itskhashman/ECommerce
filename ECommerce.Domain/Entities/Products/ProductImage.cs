@@ -21,4 +21,3 @@ namespace ECommerce.Domain.Entities.Products
 
     }
 }
-}
