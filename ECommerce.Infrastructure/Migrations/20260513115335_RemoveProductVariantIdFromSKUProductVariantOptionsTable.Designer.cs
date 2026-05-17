@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260513115335_RemoveProductVariantIdFromSKUProductVariantOptionsTable")]
+    partial class RemoveProductVariantIdFromSKUProductVariantOptionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,10 +232,6 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("DiscountTypeId");
 
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("IsDeleted");
-
                     b.HasIndex("ModifiedBy");
 
                     b.ToTable("Products");
@@ -289,8 +288,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("DeletedBy");
-
-                    b.HasIndex("IsMain");
 
                     b.HasIndex("ModifiedBy");
 
@@ -521,16 +518,9 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("DeletedBy");
 
-                    b.HasIndex("IsActive");
-
                     b.HasIndex("ModifiedBy");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("SkuCode")
-                        .IsUnique();
-
-                    b.HasIndex("Stock");
 
                     b.ToTable("Skus");
                 });
@@ -872,9 +862,6 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
-                    b.HasIndex("OrderNumber")
-                        .IsUnique();
-
                     b.HasIndex("OrderStatusId");
 
                     b.HasIndex("PaymentId");
@@ -1021,9 +1008,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("PaymentStatusId");
-
-                    b.HasIndex("TransactionId")
-                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -1538,12 +1522,6 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.ToTable("Countries");
 
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("Countries");
-
                     b.HasData(
                         new
                         {
@@ -1622,12 +1600,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("Roles");
 
                     b.HasIndex("DeletedBy");
 
@@ -1745,17 +1717,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("DeletedBy");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("LastLoginAt");
-
                     b.HasIndex("ModifiedBy");
-
-                    b.HasIndex("Phone")
-                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -1778,8 +1740,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId", "RoleId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("UsersRoles");
                 });
@@ -2542,12 +2503,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.Users.Cart", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

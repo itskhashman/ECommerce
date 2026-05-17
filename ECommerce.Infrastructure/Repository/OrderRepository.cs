@@ -15,7 +15,7 @@ namespace ECommerce.Infrastructure.Repository
 
         public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(int userId)
         {
-            return await _context.Order
+            return await _context.Orders
                 .AsNoTracking() 
                 .Where(o => o.UserId == userId)
                 .Include(o => o.OrderItems)

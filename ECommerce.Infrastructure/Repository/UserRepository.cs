@@ -15,22 +15,31 @@ namespace ECommerce.Infrastructure.Repository
         }
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _context.User.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
         public async Task<IEnumerable<User>> GetUsersByRoleAsync(int roleId)
         {
-            return await _context.User.Where(u => u.RoleId == roleId).ToListAsync();
+            List<UsersRoles> userRoles = await _context.UsersRoles
+                .Where(ur => ur.RoleId == roleId)
+                .Include(ur => ur.User)
+                .ToListAsync();
+
+            List<User> users = await _context.Users
+                .Where(u => userRoles.Any(ur => ur.UserId == u.Id))
+                .ToListAsync();
+
+            return users;
         }
         public async Task<string?> GetUserRoleAsync(int userId)
         {
-            return await _context.User.Where(u => u.Id == userId)
-                .Include(u => u.Role)
-                .Select(u => u.Role.NameAr + " " + u.Role.NameEn)
+            return await _context.UsersRoles
+                .Where(ur => ur.User.Id == userId)
+                .Select(ur => ur.Role.NameEn)
                 .FirstOrDefaultAsync();
         }
         public async Task<User?> GetUserWithAddressesAsync(int userId)
         {
-            return await _context.User
+            return await _context.Users
                 .Where(u => u.Id == userId)
                 .Include(u => u.Address).FirstOrDefaultAsync();
         }
