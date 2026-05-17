@@ -6,8 +6,6 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddECommerceServices(builder.Configuration);
 
-builder.Services.AddRazorPages();
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -23,6 +21,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
-
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Categories}/{action=Index}/{id?}");
 app.Run();

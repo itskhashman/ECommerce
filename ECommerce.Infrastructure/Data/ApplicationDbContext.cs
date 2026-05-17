@@ -26,13 +26,16 @@ namespace ECommerce.Infrastructure.Data
             {
                 var entity = entry.Entity;
 
-                entity.ModifiedAt = DateTime.UtcNow;
-                entity.ModifiedBy = 0;
+
 
                 if (entry.State == EntityState.Added)
                 {
                     entity.CreatedAt = DateTime.UtcNow;
-                    entity.CreatedBy = 0;
+                    entity.CreatedBy = 1;
+                } else if (entry.State == EntityState.Modified)
+                {
+                    entity.ModifiedAt = DateTime.UtcNow;
+                    entity.ModifiedBy = 1;
                 }
 
             }
