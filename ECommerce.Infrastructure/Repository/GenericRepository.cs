@@ -25,16 +25,18 @@ namespace ECommerce.Infrastructure.Repository
                 return await _context.Set<T>().FindAsync(id);
         }
 
-        public async Task Add(T entity)
+        public async Task<T> Add(T entity)
         {
             _context.Set<T>().Add(entity);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
-        public async Task Update(T entity)
+        public async Task<T> Update(T entity)
         {
             _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task Delete(int id)

@@ -11,6 +11,7 @@ namespace ECommerce.Domain.Entities.Products
         public Product Product { get; set; } = null!;
         [Required]
         [MaxLength(50)]
+        [Column(TypeName = "varchar")]
         public string SkuCode { get; set; } = null!;
         [Required]
         public decimal Price { get; set; }

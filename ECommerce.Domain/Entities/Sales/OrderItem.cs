@@ -17,12 +17,14 @@ namespace ECommerce.Domain.Entities.Sales
         public int OrderItemNumber { get; set; }
         [Required]
         [MaxLength(30)]
+        [Column(TypeName = "varchar")]
         public string ProductNameEn { get; set; } = null!;
         [Required]
         [MaxLength(30)]
         public string ProductNameAr { get; set; } = null!;
         [Required]
         [MaxLength(50)]
+        [Column(TypeName = "varchar")]
         public string SkuCode { get; set; } = null!;
         public decimal SubTotal { get; set; }
         [Required]
@@ -33,7 +35,6 @@ namespace ECommerce.Domain.Entities.Sales
         public int Quantity { get; set; }
         [Required]
         public decimal PriceAtPurchase { get; set; }
-        public decimal? Rating { get; set; }
         public decimal? DiscountAmount { get; set; }
     }
 

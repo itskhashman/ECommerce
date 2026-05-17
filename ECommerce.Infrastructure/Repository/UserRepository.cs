@@ -17,7 +17,7 @@ namespace ECommerce.Infrastructure.Repository
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
-        public async Task<IEnumerable<User>> GetUsersByRoleAsync(string role)
+        public async Task<IEnumerable<User>> GetUsersByRoleAsync(int roleId)
         {
             List<UsersRoles> userRoles = await _context.UsersRoles
                 .Where(ur => ur.RoleId == roleId)

@@ -4,19 +4,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities.Products
 {
-    public class ProductVariant : BaseEntity
+    public class ProductVariantOptions : BaseEntity
     {
-        [ForeignKey("Product")]
-        public int ProductId { get; set; }
-        public Product Product { get; set; } = null!;
+        public int ProductVariantId { get; set; }
+        public ProductVariant ProductVariant { get; set; } = null!;
         [MaxLength(30)]
         [Required]
         public string NameAr { get; set; } = null!;
         [MaxLength(30)]
         [Required]
+        [Column(TypeName = "varchar")]
         public string NameEn { get; set; } = null!;
-        [Required]
-        public ICollection<ProductVariantOptions> ProductVariantOptions { get; set; } = new List<ProductVariantOptions>();
-
+        public int? SortOrder { get; set; }
+        [MaxLength(8)]
+        [Column(TypeName = "varchar")]
+        public string? HexColor { get; set; }
     }
 }

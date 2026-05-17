@@ -1,7 +1,6 @@
 ﻿
 
 using ECommerce.Application.Interface.Repository;
-using ECommerce.Domain.Entities.Sales;
 using ECommerce.Domain.Entities.Users;
 using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
