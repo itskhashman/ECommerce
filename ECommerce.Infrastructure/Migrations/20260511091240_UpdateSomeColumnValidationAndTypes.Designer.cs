@@ -4,6 +4,7 @@ using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260511091240_UpdateSomeColumnValidationAndTypes")]
+    partial class UpdateSomeColumnValidationAndTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,7 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -51,10 +54,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
@@ -65,22 +68,16 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int?>("ParentCategoryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Lookups.DiscountType", b =>
@@ -107,15 +104,15 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionEn")
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
@@ -126,17 +123,11 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("DiscountTypes");
+                    b.ToTable("DiscountType");
 
                     b.HasData(
                         new
@@ -145,6 +136,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "نسبة مئوية",
                             NameEn = "Percentage"
                         },
@@ -154,6 +147,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "مبلغ ثابت",
                             NameEn = "Fixed Amount"
                         });
@@ -188,7 +183,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("DescriptionEn")
                         .IsRequired()
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("DiscountAmount")
                         .HasPrecision(8, 2)
@@ -203,10 +198,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
@@ -217,25 +212,15 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
                     b.HasIndex("DiscountTypeId");
 
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductImage", b =>
@@ -248,7 +233,7 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("AltText")
                         .HasMaxLength(30)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -268,10 +253,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -282,21 +267,13 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("URL")
                         .IsRequired()
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("IsMain");
-
-                    b.HasIndex("ModifiedBy");
-
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImage");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariant", b =>
@@ -322,36 +299,29 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductVariants");
+                    b.ToTable("ProductVariant");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariantOptions", b =>
@@ -376,15 +346,15 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.Property<string>("HexColor")
                         .HasMaxLength(8)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(8)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
@@ -395,7 +365,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("ProductVariantId")
                         .HasColumnType("int");
@@ -405,20 +375,17 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
                     b.HasIndex("ProductVariantId");
 
-                    b.ToTable("ProductVariantOptions");
+                    b.ToTable("ProductVariantOption");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.SKUProductVariantOptions", b =>
                 {
                     b.Property<int>("SkuId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductVariantId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductVariantOptionsId")
@@ -442,23 +409,19 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
-                    b.HasKey("SkuId", "ProductVariantOptionsId");
+                    b.HasKey("SkuId", "ProductVariantId", "ProductVariantOptionsId");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
+                    b.HasIndex("ProductVariantId");
 
                     b.HasIndex("ProductVariantOptionsId");
 
-                    b.ToTable("SKUProductVariantOptions");
+                    b.ToTable("SKUProductVariantOption");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Sku", b =>
@@ -490,15 +453,15 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int?>("LowStockThreshold")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -506,7 +469,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("SkuCode")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
@@ -517,22 +480,9 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("ModifiedBy");
-
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("SkuCode")
-                        .IsUnique();
-
-                    b.HasIndex("Stock");
-
-                    b.ToTable("Skus");
+                    b.ToTable("Sku");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Lookups.OrderStatus", b =>
@@ -559,15 +509,15 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionEn")
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
@@ -578,17 +528,11 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("OrderStatuses");
+                    b.ToTable("OrderStatus");
 
                     b.HasData(
                         new
@@ -597,6 +541,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "قيد الانتظار",
                             NameEn = "Pending"
                         },
@@ -606,6 +552,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "تم التأكيد",
                             NameEn = "Confirmed"
                         },
@@ -615,6 +563,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "تم الشحن",
                             NameEn = "Shipped"
                         },
@@ -624,6 +574,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "تم التسليم",
                             NameEn = "Delivered"
                         });
@@ -653,15 +605,15 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionEn")
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
@@ -672,17 +624,11 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethod");
 
                     b.HasData(
                         new
@@ -691,6 +637,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "بطاقة ائتمان",
                             NameEn = "Credit Card"
                         },
@@ -700,6 +648,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "باي بال",
                             NameEn = "PayPal"
                         },
@@ -709,6 +659,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "الدفع عند الاستلام",
                             NameEn = "Cash on Delivery"
                         });
@@ -738,15 +690,15 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionEn")
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
@@ -757,17 +709,11 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("PaymentStatuses");
+                    b.ToTable("PaymentStatus");
 
                     b.HasData(
                         new
@@ -776,6 +722,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "قيد الانتظار",
                             NameEn = "Pending"
                         },
@@ -785,6 +733,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "مكتمل",
                             NameEn = "Completed"
                         },
@@ -794,6 +744,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "فشل",
                             NameEn = "Failed"
                         });
@@ -819,7 +771,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("CurrencyCode")
                         .IsRequired()
                         .HasMaxLength(3)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -830,20 +782,20 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("int");
@@ -852,12 +804,12 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("ShippingCost")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -866,22 +818,13 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.HasIndex("OrderNumber")
-                        .IsUnique();
-
                     b.HasIndex("OrderStatusId");
 
                     b.HasIndex("PaymentId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.OrderItem", b =>
@@ -911,10 +854,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<int>("OrderId")
@@ -924,8 +867,8 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("PriceAtPurchase")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ProductNameAr")
                         .IsRequired()
@@ -935,7 +878,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("ProductNameEn")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -943,28 +886,22 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("SkuCode")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("SkuId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("SubTotal")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
 
                     b.HasIndex("OrderId");
 
                     b.HasIndex("SkuId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Payment", b =>
@@ -990,10 +927,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("PaidAt")
@@ -1005,76 +942,16 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<int>("PaymentStatusId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TransactionId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar");
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
 
                     b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("PaymentStatusId");
 
-                    b.HasIndex("TransactionId")
-                        .IsUnique();
-
-                    b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Sales.ShippingRate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ShippingCost")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("ShippingRates");
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Address", b =>
@@ -1107,19 +984,18 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Label")
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Street")
                         .IsRequired()
@@ -1133,15 +1009,10 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("CreatedBy");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Addresses");
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Cart", b =>
@@ -1170,10 +1041,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -1181,16 +1052,10 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Cart");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.CartItem", b =>
@@ -1219,15 +1084,15 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<decimal>("PriceAtAddTime")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -1239,15 +1104,9 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
                     b.HasIndex("SkuId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItem");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Lookups.City", b =>
@@ -1277,15 +1136,15 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionEn")
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
@@ -1296,19 +1155,13 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("Cities");
+                    b.ToTable("City");
 
                     b.HasData(
                         new
@@ -1318,6 +1171,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "عمان",
                             NameEn = "Amman"
                         },
@@ -1328,6 +1183,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "الزرقاء",
                             NameEn = "Zarqa"
                         },
@@ -1338,6 +1195,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "إربد",
                             NameEn = "Irbid"
                         },
@@ -1348,6 +1207,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "الرصيفة",
                             NameEn = "Russeifa"
                         },
@@ -1358,6 +1219,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "صاحب",
                             NameEn = "Sahab"
                         },
@@ -1368,6 +1231,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "السلط",
                             NameEn = "As-Salt"
                         },
@@ -1378,6 +1243,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "العقبة",
                             NameEn = "Aqaba"
                         },
@@ -1388,6 +1255,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "مادبا",
                             NameEn = "Madaba"
                         },
@@ -1398,6 +1267,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "جرش",
                             NameEn = "Jerash"
                         },
@@ -1408,6 +1279,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "معان",
                             NameEn = "Ma'an"
                         },
@@ -1418,6 +1291,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "المفرق",
                             NameEn = "Al-Mafraq"
                         },
@@ -1428,6 +1303,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "الطفيلة",
                             NameEn = "Tafilah"
                         },
@@ -1438,6 +1315,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "عجلون",
                             NameEn = "Ajloun"
                         },
@@ -1448,6 +1327,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "الرياض",
                             NameEn = "Riyadh"
                         },
@@ -1458,6 +1339,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "جدة",
                             NameEn = "Jeddah"
                         },
@@ -1468,6 +1351,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "دبي",
                             NameEn = "Dubai"
                         },
@@ -1478,6 +1363,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "أبو ظبي",
                             NameEn = "Abu Dhabi"
                         });
@@ -1507,15 +1394,15 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionEn")
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
@@ -1526,23 +1413,11 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("Countries");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("Countries");
+                    b.ToTable("Country");
 
                     b.HasData(
                         new
@@ -1551,6 +1426,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "المملكة العربية السعودية",
                             NameEn = "Saudi Arabia"
                         },
@@ -1560,6 +1437,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "الإمارات العربية المتحدة",
                             NameEn = "United Arab Emirates"
                         },
@@ -1569,6 +1448,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "الأردن",
                             NameEn = "Jordan"
                         });
@@ -1598,15 +1479,15 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionEn")
-                        .HasColumnType("varchar(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
@@ -1617,23 +1498,11 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("NameEn")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("Roles");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("Roles");
+                    b.ToTable("Role");
 
                     b.HasData(
                         new
@@ -1642,6 +1511,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "مشرف",
                             NameEn = "Admin"
                         },
@@ -1651,6 +1522,8 @@ namespace ECommerce.Infrastructure.Migrations
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedBy = 0,
                             IsDeleted = false,
+                            ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ModifiedBy = 0,
                             NameAr = "عميل",
                             NameEn = "Customer"
                         });
@@ -1663,6 +1536,12 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1679,7 +1558,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("FirstNameAr")
                         .IsRequired()
@@ -1689,7 +1568,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("FirstNameEn")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1711,7 +1590,7 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("LastNameEn")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("MiddleNameAr")
                         .IsRequired()
@@ -1721,67 +1600,35 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<string>("MiddleNameEn")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(30)");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("varchar");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("IsActive");
-
-                    b.HasIndex("LastLoginAt");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.HasIndex("Phone")
-                        .IsUnique();
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Users.UsersRoles", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("WishlistId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId", "RoleId")
-                        .IsUnique();
-
-                    b.ToTable("UsersRoles");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Wishlist", b =>
@@ -1807,10 +1654,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -1818,16 +1665,10 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("Wishlist");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.WishlistItem", b =>
@@ -1853,15 +1694,15 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
-                        .HasColumnType("varchar");
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("SkuId")
                         .HasColumnType("int");
@@ -1871,17 +1712,11 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
                     b.HasIndex("SkuId");
 
                     b.HasIndex("WishlistId");
 
-                    b.ToTable("WishlistItems");
+                    b.ToTable("WishlistItem");
                 });
 
             modelBuilder.Entity("Review", b =>
@@ -1910,10 +1745,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("ModifiedAt")
+                    b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int>("ModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<int>("OrderItemId")
@@ -1931,76 +1766,23 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
                     b.HasIndex("OrderItemId");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Category", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Products.Category", "ParentCategory")
                         .WithMany("SubCategories")
                         .HasForeignKey("ParentCategoryId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-
                     b.Navigation("ParentCategory");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Products.Lookups.DiscountType", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Product", b =>
@@ -2011,154 +1793,56 @@ namespace ECommerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Products.Lookups.DiscountType", "DiscountType")
                         .WithMany()
                         .HasForeignKey("DiscountTypeId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Category");
 
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
                     b.Navigation("DiscountType");
-
-                    b.Navigation("Modifier");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductImage", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Products.Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-
                     b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariant", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Products.Product", "Product")
                         .WithMany("ProductVariants")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-
                     b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariantOptions", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Products.ProductVariant", "ProductVariant")
                         .WithMany("ProductVariantOptions")
                         .HasForeignKey("ProductVariantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-
                     b.Navigation("ProductVariant");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.SKUProductVariantOptions", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
+                    b.HasOne("ECommerce.Domain.Entities.Products.ProductVariant", "ProductVariant")
+                        .WithMany("SKUJoinOptions")
+                        .HasForeignKey("ProductVariantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ECommerce.Domain.Entities.Products.ProductVariantOptions", "ProductVariantOptions")
                         .WithMany()
@@ -2172,11 +1856,7 @@ namespace ECommerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
+                    b.Navigation("ProductVariant");
 
                     b.Navigation("ProductVariantOptions");
 
@@ -2185,110 +1865,13 @@ namespace ECommerce.Infrastructure.Migrations
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Sku", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Products.Product", "Product")
                         .WithMany("Skus")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Lookups.OrderStatus", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Lookups.PaymentMethod", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Lookups.PaymentStatus", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Order", b =>
@@ -2298,22 +1881,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ECommerce.Domain.Entities.Sales.Lookups.OrderStatus", "OrderStatus")
                         .WithMany()
@@ -2330,16 +1897,10 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Address");
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
 
                     b.Navigation("OrderStatus");
 
@@ -2350,22 +1911,6 @@ namespace ECommerce.Infrastructure.Migrations
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.OrderItem", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Sales.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
@@ -2378,12 +1923,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-
                     b.Navigation("Order");
 
                     b.Navigation("Sku");
@@ -2391,22 +1930,6 @@ namespace ECommerce.Infrastructure.Migrations
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Sales.Payment", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Sales.Lookups.PaymentMethod", "PaymentMethod")
                         .WithMany()
                         .HasForeignKey("PaymentMethodId")
@@ -2419,48 +1942,9 @@ namespace ECommerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-
                     b.Navigation("PaymentMethod");
 
                     b.Navigation("PaymentStatus");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Sales.ShippingRate", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Users.Lookups.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("City");
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Address", b =>
@@ -2471,68 +1955,24 @@ namespace ECommerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
+                    b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
+                        .WithOne("Address")
+                        .HasForeignKey("ECommerce.Domain.Entities.Users.Address", "UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
-                        .WithMany("Address")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("City");
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Cart", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
                         .WithOne("Cart")
                         .HasForeignKey("ECommerce.Domain.Entities.Users.Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
 
                     b.Navigation("User");
                 });
@@ -2545,28 +1985,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Products.Sku", "Sku")
                         .WithMany()
                         .HasForeignKey("SkuId")
@@ -2574,12 +1992,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Cart");
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
 
                     b.Navigation("Sku");
                 });
@@ -2592,107 +2004,10 @@ namespace ECommerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Country");
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Users.Lookups.Country", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Users.Lookups.Role", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.User", b =>
-                {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-                });
-
-            modelBuilder.Entity("ECommerce.Domain.Entities.Users.UsersRoles", b =>
                 {
                     b.HasOne("ECommerce.Domain.Entities.Users.Lookups.Role", "Role")
                         .WithMany()
@@ -2700,68 +2015,22 @@ namespace ECommerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Role");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.Wishlist", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Users.User", "User")
                         .WithOne("Wishlist")
                         .HasForeignKey("ECommerce.Domain.Entities.Users.Wishlist", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.WishlistItem", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Products.Sku", "Sku")
                         .WithMany()
                         .HasForeignKey("SkuId")
@@ -2774,12 +2043,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
-
                     b.Navigation("Sku");
 
                     b.Navigation("Wishlist");
@@ -2787,22 +2050,6 @@ namespace ECommerce.Infrastructure.Migrations
 
             modelBuilder.Entity("Review", b =>
                 {
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeletedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Modifier")
-                        .WithMany()
-                        .HasForeignKey("ModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ECommerce.Domain.Entities.Sales.OrderItem", "OrderItem")
                         .WithMany()
                         .HasForeignKey("OrderItemId")
@@ -2820,12 +2067,6 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifier");
 
                     b.Navigation("OrderItem");
 
@@ -2853,6 +2094,8 @@ namespace ECommerce.Infrastructure.Migrations
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.ProductVariant", b =>
                 {
                     b.Navigation("ProductVariantOptions");
+
+                    b.Navigation("SKUJoinOptions");
                 });
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Products.Sku", b =>
@@ -2872,7 +2115,8 @@ namespace ECommerce.Infrastructure.Migrations
 
             modelBuilder.Entity("ECommerce.Domain.Entities.Users.User", b =>
                 {
-                    b.Navigation("Address");
+                    b.Navigation("Address")
+                        .IsRequired();
 
                     b.Navigation("Cart")
                         .IsRequired();
