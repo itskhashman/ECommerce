@@ -25,7 +25,7 @@ namespace ECommerce.Infrastructure.Repository
         public async Task<Product?> GetAllProductDetailsAsync(int productId)
         {
             var product = await _context.Products
-                .Where(p => p.Id == productId)
+                .Where(p => p.Id == productId && !p.IsDeleted && p.IsActive)
                 .Select(p => new Product
                 {
                     Id = p.Id,

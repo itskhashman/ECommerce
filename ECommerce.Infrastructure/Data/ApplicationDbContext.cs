@@ -7,6 +7,8 @@ using ECommerce.Domain.Entities.Sales.Lookups;
 using ECommerce.Domain.Entities.Users;
 using ECommerce.Domain.Entities.Users.Lookups;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
+using System.Xml;
 
 namespace ECommerce.Infrastructure.Data
 {
@@ -93,8 +95,12 @@ namespace ECommerce.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
 
+            modelBuilder.Entity<ShippingRate>()
+                .Property(sh => sh.ShippingCost)
+                .HasPrecision(10, 2);
+
             modelBuilder.Entity<SKUProductVariantOptions>()
-                .HasKey(svo => new { svo.SkuId, svo.ProductVariantId, svo.ProductVariantOptionsId });
+                .HasKey(svo => new { svo.SkuId, svo.ProductVariantOptionsId });
 
             modelBuilder.Entity<SKUProductVariantOptions>()
                 .HasOne(svo => svo.Sku)
@@ -165,7 +171,92 @@ namespace ECommerce.Infrastructure.Data
                 new City { Id = 17, Name = "Abu Dhabi", CountryId = 2 }
             );
 
+            modelBuilder.Entity<DiscountType>().HasData(
+                new DiscountType { Id = 1, NameEn = "Percentage", NameAr = "نسبة مئوية" },
+                new DiscountType { Id = 2, NameEn = "Fixed Amount", NameAr = "مبلغ ثابت" }
+            );
 
+            modelBuilder.Entity<PaymentMethod>().HasData(
+                new PaymentMethod { Id = 1, NameEn = "Credit Card", NameAr = "بطاقة ائتمان" },
+                new PaymentMethod { Id = 2, NameEn = "PayPal", NameAr = "باي بال" },
+                new PaymentMethod { Id = 3, NameEn = "Cash on Delivery", NameAr = "الدفع عند الاستلام" }
+            );
+
+            modelBuilder.Entity<PaymentStatus>().HasData(
+               new PaymentStatus { Id = 1, NameEn = "Pending", NameAr = "قيد الانتظار" },
+               new PaymentStatus { Id = 2, NameEn = "Completed", NameAr = "مكتمل" },
+               new PaymentStatus { Id = 3, NameEn = "Failed", NameAr = "فشل" }
+           );
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(BaseMetadataEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    modelBuilder.Entity(entityType.ClrType)
+                        .HasOne(typeof(User), "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    modelBuilder.Entity(entityType.ClrType)
+                        .HasOne(typeof(User), "Modifier")
+                        .WithMany()
+                        .HasForeignKey("ModifiedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    modelBuilder.Entity(entityType.ClrType)
+                        .HasOne(typeof(User), "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeletedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+                }
+            }
+
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Phone)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.IsActive);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.LastLoginAt);
+
+            modelBuilder.Entity<Product>()
+                .HasIndex(x => x.IsActive);
+
+            modelBuilder.Entity<Product>()
+                .HasIndex(x => x.IsDeleted);
+
+            modelBuilder.Entity<ProductImage>()
+                .HasIndex(x => x.IsMain);
+
+            modelBuilder.Entity<Sku>()
+                .HasIndex(x => x.SkuCode)
+                .IsUnique();
+
+            modelBuilder.Entity<Sku>()
+                .HasIndex(x => x.IsActive);
+
+            modelBuilder.Entity<Sku>()
+                .HasIndex(x => x.Stock);
+
+            modelBuilder.Entity<Order>()
+                .HasIndex(x => x.OrderNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<Payment>()
+                .HasIndex(x => x.TransactionId)
+                .IsUnique();
+
+            modelBuilder.Entity<UsersRoles>()
+                .HasIndex(x => new { x.UserId, x.RoleId })
+                .IsUnique();
         }
 
         public DbSet<Product> Products { get; set; } = null!;
@@ -187,6 +278,13 @@ namespace ECommerce.Infrastructure.Data
         public DbSet<Role> Roles { get; set; } = null!;
         public DbSet<Country> Countries { get; set; } = null!;
         public DbSet<City> Cities { get; set; } = null!;
+        public DbSet<DiscountType> DiscountTypes { get; set; } = null!;
+        public DbSet<Review> Reviews { get; set; } = null!;
+        public DbSet<Payment> Payments   { get; set; } = null!;
+        public DbSet<PaymentMethod> PaymentMethods { get; set; } = null!;
+        public DbSet<PaymentStatus> PaymentStatuses { get; set; } = null!;
+        public DbSet<ShippingRate> ShippingRates { get; set; } = null!;
+        public DbSet<UsersRoles> UsersRoles { get; set; } = null!;
     }
 
 }

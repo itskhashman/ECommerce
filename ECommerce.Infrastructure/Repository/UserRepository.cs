@@ -19,11 +19,23 @@ namespace ECommerce.Infrastructure.Repository
         }
         public async Task<IEnumerable<User>> GetUsersByRoleAsync(string role)
         {
-            return await _context.Users.Where(u => u.Role.RoleName == role).ToListAsync();
+            List<UsersRoles> userRoles = await _context.UsersRoles
+                .Where(ur => ur.RoleId == roleId)
+                .Include(ur => ur.User)
+                .ToListAsync();
+
+            List<User> users = await _context.Users
+                .Where(u => userRoles.Any(ur => ur.UserId == u.Id))
+                .ToListAsync();
+
+            return users;
         }
         public async Task<string?> GetUserRoleAsync(int userId)
         {
-            return await _context.Users.Where(u => u.Id == userId).Select(u => u.Role.RoleName).FirstOrDefaultAsync();
+            return await _context.UsersRoles
+                .Where(ur => ur.User.Id == userId)
+                .Select(ur => ur.Role.NameEn)
+                .FirstOrDefaultAsync();
         }
         public async Task<User?> GetUserWithAddressesAsync(int userId)
         {
