@@ -15,17 +15,18 @@ namespace ECommerce.Domain.Entities.Products
         public string NameAr { get; set; } = null!;
         [MaxLength(30)]
         [Required]
-        [Column(TypeName = "varchar")]
         public string NameEn { get; set; } = null!;
         [Required]
         public string DescriptionAr { get; set; } = null!;
         [Required]
-        [Column(TypeName = "varchar(max)")]
         public string DescriptionEn { get; set; } = null!;
+        [Required]
         [ForeignKey("DiscountType")]
-        public int? DiscountTypeId { get; set; }
-        public DiscountType? DiscountType { get; set; }
+        public int DiscountTypeId { get; set; }
+        public DiscountType DiscountType { get; set; } = null!;
         public decimal? DiscountAmount { get; set; }
+        public decimal? Rating { get; set; }
+        public int? ReviewCount { get; set; }
         public bool IsActive { get; set; } = true;
         public ICollection<ProductImage>? ProductImages { get; set; } = new List<ProductImage>();
         public ICollection<ProductVariant>? ProductVariants { get; set; } = new List<ProductVariant>();

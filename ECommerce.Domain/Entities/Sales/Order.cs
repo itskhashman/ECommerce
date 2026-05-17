@@ -14,9 +14,7 @@ namespace ECommerce.Domain.Entities.Sales
         public int UserId { get; set; }
         public User User { get; set; } = null!;
         [Required]
-        [MaxLength(20)]
-        [Column(TypeName = "varchar")]
-        public string OrderNumber { get; set; } = null!;
+        public int OrderNumber { get; set; }
         [Required]
         public decimal TotalAmount { get; set; }
         [Required]
@@ -28,16 +26,9 @@ namespace ECommerce.Domain.Entities.Sales
         public int OrderStatusId { get; set; }
         public OrderStatus OrderStatus { get; set; } = null!;
         [Required]
-        [ForeignKey("Payment")]
-        public int PaymentId { get; set; }
-        public Payment Payment { get; set; } = null!;
-        [Required, MaxLength(3)]
-        [Column(TypeName = "varchar")]
         public string CurrencyCode { get; set; } = null!;
         [Required]
         public decimal ShippingCost { get; set; }
-        [MaxLength(500)]
-        [Column(TypeName = "varchar")]
         public string? Notes { get; set; }
         [Required]
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();

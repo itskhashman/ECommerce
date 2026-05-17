@@ -10,12 +10,9 @@ namespace ECommerce.Domain.Entities.Products
         public int ProductId { get; set; }
         public Product Product { get; set; } = null!;
         [Required]
-        [Column(TypeName = "varchar(max)")]
         public string URL { get; set; } = null!;
         [Required]
         public bool IsMain { get; set; }
-        [MaxLength(30)]
-        [Column(TypeName = "varchar")]
         public string? AltText { get; set; } = null!;
         public int? SortOrder { get; set; }
 
