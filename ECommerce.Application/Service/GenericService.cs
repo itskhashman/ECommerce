@@ -19,24 +19,24 @@ namespace ECommerce.Application.Service
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _repository.GetAll();
+            return await _repository.GetAllAsync();
         }
 
         public async Task<T> AddAsync(T entity)
         {
-            await _repository.Add(entity);
+            await _repository.AddAsync(entity);
             return entity;
         }
 
         public async Task<T> UpdateAsync(T entity)
         {
-            await _repository.Update(entity);
+            await _repository.UpdateAsync(entity);
             return entity;
         }
 
         public async Task DeleteAsync(int id)
         {
-            await _repository.Delete(id);
+            await _repository.DeleteAsync(id);
         }
     }
 }

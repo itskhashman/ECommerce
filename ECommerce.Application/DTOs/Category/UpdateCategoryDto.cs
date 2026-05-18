@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 namespace ECommerce.Application.DTOs.Category
 {
 
-    public class UpdateCategoryDto
+    public class UpdateCategoryDto : BaseDto
     {
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "The Arabic Name is Required")]
         [MaxLength(30)]
         public string NameAr { get; set; } = null!;

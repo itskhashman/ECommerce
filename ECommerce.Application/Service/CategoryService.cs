@@ -19,7 +19,7 @@ namespace ECommerce.Application.Service
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
         {
-            var categories = await _categoryRepository.GetAll();
+            var categories = await _categoryRepository.GetAllAsync();
 
             return _mapper.Map<IEnumerable<CategoryDto>>(categories);
         }
@@ -45,7 +45,7 @@ namespace ECommerce.Application.Service
         {
             var category = _mapper.Map<Category>(dto);
 
-            var addedCategory = await _categoryRepository.Add(category);
+            var addedCategory = await _categoryRepository.AddAsync(category);
 
             return _mapper.Map<CategoryDto>(addedCategory);
         }
@@ -59,13 +59,13 @@ namespace ECommerce.Application.Service
 
             _mapper.Map(dto, category);
 
-            var updatedCategory = await _categoryRepository.Update(category);
+            var updatedCategory = await _categoryRepository.UpdateAsync(category);
             return _mapper.Map<CategoryDto>(updatedCategory);
         }
 
         public async Task DeleteAsync(int id)
         {
-            await _categoryRepository.Delete(id);
+            await _categoryRepository.DeleteAsync(id);
         }
     }
 }
