@@ -21,5 +21,5 @@ public class Review : BaseEntity
     public OrderItem OrderItem { get; set; } = null!;
     [Required]
     public decimal RatingValue { get; set; }
-    public string? Comment { get; set; } 
+    public string? Comment { get; set; }
 }

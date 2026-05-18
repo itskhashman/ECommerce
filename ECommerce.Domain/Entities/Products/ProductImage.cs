@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ECommerce.Domain.Entities.Products
-{   
+{
     public class ProductImage : BaseEntity
     {
         [ForeignKey("Product")]

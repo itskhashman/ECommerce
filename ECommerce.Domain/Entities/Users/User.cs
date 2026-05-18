@@ -30,14 +30,14 @@ namespace ECommerce.Domain.Entities.Users
         [MaxLength(30)]
         [Required]
         public string LastNameAr { get; set; } = null!;
-        [Required , MaxLength(255)]
+        [Required, MaxLength(255)]
         [EmailAddress]
         [Column(TypeName = "varchar")]
         public string Email { get; set; } = null!;
-        [Required , MaxLength(256)]
+        [Required, MaxLength(256)]
         [Column(TypeName = "varchar")]
         public string PasswordHash { get; set; } = null!;
-        [Required , MaxLength(15)]
+        [Required, MaxLength(15)]
         [Column(TypeName = "varchar")]
         public string Phone { get; set; } = null!;
         [Required]

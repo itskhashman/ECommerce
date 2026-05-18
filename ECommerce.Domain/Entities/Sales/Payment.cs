@@ -2,7 +2,6 @@
 
 using ECommerce.Domain.Entities.Base;
 using ECommerce.Domain.Entities.Sales.Lookups;
-using ECommerce.Domain.Entities.Users;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

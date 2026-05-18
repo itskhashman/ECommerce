@@ -3,13 +3,14 @@
 using ECommerce.Application.Interface.Repository;
 using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace ECommerce.Infrastructure.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         public readonly ApplicationDbContext _context;
-            
+
         public GenericRepository(ApplicationDbContext context)
         {
             _context = context;
@@ -17,24 +18,26 @@ namespace ECommerce.Infrastructure.Repository
 
         public async Task<IEnumerable<T>> GetAll()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>().Where(e => EF.Property<bool>(e, "IsDeleted") == false).ToListAsync();
         }
 
         public async Task<T?> GetByIDAsync(int id)
         {
-                return await _context.Set<T>().FindAsync(id);
+            return await _context.Set<T>().FindAsync(id);
         }
 
-        public async Task Add(T entity)
+        public async Task<T> Add(T entity)
         {
             _context.Set<T>().Add(entity);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
-        public async Task Update(T entity)
+        public async Task<T> Update(T entity)
         {
             _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task Delete(int id)

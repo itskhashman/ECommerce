@@ -8,7 +8,7 @@ namespace ECommerce.Domain.Entities.Products
     {
         [ForeignKey("ParentCategory")]
         public int? ParentCategoryId { get; set; }
-        public Category ? ParentCategory { get; set; }
+        public Category? ParentCategory { get; set; }
         [Column(TypeName = "varchar(max)")]
         public string? ImageUrl { get; set; }
         [Required, MaxLength(30)]

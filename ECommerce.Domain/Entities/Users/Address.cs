@@ -24,7 +24,7 @@ namespace ECommerce.Domain.Entities.Users
         [MaxLength(30)]
         [Column(TypeName = "varchar")]
         public string? Label { get; set; }
-        public bool IsDefault { get; set; }= true;
+        public bool IsDefault { get; set; } = true;
 
     }
 

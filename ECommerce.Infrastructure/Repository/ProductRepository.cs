@@ -47,7 +47,7 @@ namespace ECommerce.Infrastructure.Repository
                         Id = pv.Id,
                         NameEn = pv.NameEn,
                         NameAr = pv.NameAr,
-                        ProductVariantOptions =  pv.ProductVariantOptions.Select(pvo => new ProductVariantOptions
+                        ProductVariantOptions = pv.ProductVariantOptions.Select(pvo => new ProductVariantOptions
                         {
                             Id = pvo.Id,
                             NameEn = pvo.NameEn,

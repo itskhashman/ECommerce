@@ -26,13 +26,16 @@ namespace ECommerce.Infrastructure.Data
             {
                 var entity = entry.Entity;
 
-                entity.ModifiedAt = DateTime.UtcNow;
-                entity.ModifiedBy = 0;
+
 
                 if (entry.State == EntityState.Added)
                 {
                     entity.CreatedAt = DateTime.UtcNow;
-                    entity.CreatedBy = 0;
+                    entity.CreatedBy = 1;
+                } else if (entry.State == EntityState.Modified)
+                {
+                    entity.ModifiedAt = DateTime.UtcNow;
+                    entity.ModifiedBy = 1;
                 }
 
             }
@@ -92,7 +95,7 @@ namespace ECommerce.Infrastructure.Data
             }
 
             modelBuilder.Entity<OrderStatus>().HasData(
-                new OrderStatus { Id = 1, NameEn = "Pending" , NameAr = "قيد الانتظار" },
+                new OrderStatus { Id = 1, NameEn = "Pending", NameAr = "قيد الانتظار" },
                 new OrderStatus { Id = 2, NameEn = "Confirmed", NameAr = "تم التأكيد" },
                 new OrderStatus { Id = 3, NameEn = "Shipped", NameAr = "تم الشحن" },
                 new OrderStatus { Id = 4, NameEn = "Delivered", NameAr = "تم التسليم" }
@@ -239,7 +242,7 @@ namespace ECommerce.Infrastructure.Data
         public DbSet<City> Cities { get; set; } = null!;
         public DbSet<DiscountType> DiscountTypes { get; set; } = null!;
         public DbSet<Review> Reviews { get; set; } = null!;
-        public DbSet<Payment> Payments   { get; set; } = null!;
+        public DbSet<Payment> Payments { get; set; } = null!;
         public DbSet<PaymentMethod> PaymentMethods { get; set; } = null!;
         public DbSet<PaymentStatus> PaymentStatuses { get; set; } = null!;
         public DbSet<ShippingRate> ShippingRates { get; set; } = null!;
