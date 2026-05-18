@@ -1,4 +1,4 @@
-﻿@model ECommerce.Application.DTOs.UpdateCategoryDto
+﻿@model ECommerce.Application.DTOs.Category.UpdateCategoryDto
 
 @{
     Layout = "_Layout";
@@ -43,7 +43,7 @@
         <div class="mb-3">
             <label asp-for="ParentCategoryId" class="form-label fw-bold">Parent Category <span class="text-danger">*</span></label>
             <select asp-for="ParentCategoryId" asp-items="ViewBag.ParentCategories" class="form-select">
-                <option value="">-- Main Category --</option>
+                <option value="">-- No Main Category --</option>
             </select>
             <span asp-validation-for="ParentCategoryId" class="text-danger small"></span>
         </div>

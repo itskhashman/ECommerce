@@ -1,11 +1,11 @@
-﻿using ECommerce.Application.DTOs;
+﻿using ECommerce.Application.DTOs.Category;
 
 namespace ECommerce.Application.Interfaces.services
 {
     public interface ICategoryService
     {
         Task<IEnumerable<CategoryDto>> GetAllAsync();
-
+        Task<IEnumerable<CategoryDto>> GetAllParentCategoriesAsync();    
         Task<CategoryDto?> GetByIdAsync(int id);
 
         Task<CategoryDto> CreateAsync(CreateCategoryDto dto);

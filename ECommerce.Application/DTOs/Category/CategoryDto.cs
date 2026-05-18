@@ -1,11 +1,7 @@
-﻿
-
-namespace ECommerce.Application.DTOs
+﻿namespace ECommerce.Application.DTOs.Category
 {
-    public class CategoryDto
+    public class CategoryDto : BaseDto
     {
-        public int Id { get; set; }
-
         public string NameAr { get; set; } = null!;
 
         public string NameEn { get; set; } = null!;

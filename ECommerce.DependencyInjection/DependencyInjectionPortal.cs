@@ -1,5 +1,6 @@
 ﻿using ECommerce.Application.Interface.Repository;
 using ECommerce.Application.Interfaces.services;
+using ECommerce.Application.Mapping;
 using ECommerce.Application.Service;
 using ECommerce.Infrastructure.Data;
 using ECommerce.Infrastructure.Repository;
@@ -19,6 +20,9 @@ public static class DependencyInjectionPortal
         services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         services.AddScoped<ICategoryService, CategoryService>();
+
+        services.AddAutoMapper(typeof(CategoryProfile).Assembly);
+
         return services;
     }
 }

@@ -1,33 +1,34 @@
-﻿using ECommerce.Application.DTOs;
+﻿using AutoMapper;
+using ECommerce.Application.DTOs.Category;
 using ECommerce.Application.Interface.Repository;
 using ECommerce.Application.Interfaces.services;
 using ECommerce.Domain.Entities.Products;
 
 namespace ECommerce.Application.Service
 {
-
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllAsync()
         {
             var categories = await _categoryRepository.GetAll();
 
-            return categories.Select(c => new CategoryDto
-            {
-                Id = c.Id,
-                NameAr = c.NameAr,
-                NameEn = c.NameEn,
-                ImageUrl = c.ImageUrl,
-                ParentCategoryId = c.ParentCategoryId,
-                IsActive = c.IsActive
-            });
+            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+        }
+
+        public async Task<IEnumerable<CategoryDto>> GetAllParentCategoriesAsync()
+        {
+            var parentCategories = await _categoryRepository.GetParentsAsync();
+
+            return _mapper.Map<IEnumerable<CategoryDto>>(parentCategories);
         }
 
         public async Task<CategoryDto?> GetByIdAsync(int id)
@@ -37,38 +38,16 @@ namespace ECommerce.Application.Service
             if (category == null)
                 return null;
 
-            return new CategoryDto
-            {
-                Id = category.Id,
-                NameAr = category.NameAr,
-                NameEn = category.NameEn,
-                ImageUrl = category.ImageUrl,
-                ParentCategoryId = category.ParentCategoryId,
-                IsActive = category.IsActive
-            };
+            return _mapper.Map<CategoryDto>(category);
         }
 
         public async Task<CategoryDto> CreateAsync(CreateCategoryDto dto)
         {
-            var category = new Category
-            {
-                NameAr = dto.NameAr,
-                NameEn = dto.NameEn,
-                ImageUrl = dto.ImageUrl,
-                ParentCategoryId = dto.ParentCategoryId,
-                IsActive = dto.IsActive
-            };
+            var category = _mapper.Map<Category>(dto);
 
-            var AddedCategory = await _categoryRepository.Add(category);
-            return new CategoryDto
-            {
-                Id = AddedCategory.Id,
-                NameAr = AddedCategory.NameAr,
-                NameEn = AddedCategory.NameEn,
-                ImageUrl = AddedCategory.ImageUrl,
-                ParentCategoryId = AddedCategory.ParentCategoryId,
-                IsActive = AddedCategory.IsActive
-            };
+            var addedCategory = await _categoryRepository.Add(category);
+
+            return _mapper.Map<CategoryDto>(addedCategory);
         }
 
         public async Task<CategoryDto> UpdateAsync(UpdateCategoryDto dto)
@@ -78,22 +57,10 @@ namespace ECommerce.Application.Service
             if (category == null)
                 throw new Exception("Category not found");
 
-            category.NameAr = dto.NameAr;
-            category.NameEn = dto.NameEn;
-            category.ImageUrl = dto.ImageUrl;
-            category.ParentCategoryId = dto.ParentCategoryId;
-            category.IsActive = dto.IsActive;
+            _mapper.Map(dto, category);
 
             var updatedCategory = await _categoryRepository.Update(category);
-            return new CategoryDto
-            {
-                Id = updatedCategory.Id,
-                NameAr = updatedCategory.NameAr,
-                NameEn = updatedCategory.NameEn,
-                ImageUrl = updatedCategory.ImageUrl,
-                ParentCategoryId = updatedCategory.ParentCategoryId,
-                IsActive = updatedCategory.IsActive
-            };
+            return _mapper.Map<CategoryDto>(updatedCategory);
         }
 
         public async Task DeleteAsync(int id)
