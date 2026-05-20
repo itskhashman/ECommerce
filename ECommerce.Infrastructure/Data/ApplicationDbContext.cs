@@ -183,6 +183,13 @@ namespace ECommerce.Infrastructure.Data
                 .HasIndex(x => x.Phone)
                 .IsUnique();
 
+            modelBuilder.Entity<Category>()
+                .HasIndex(x => x.NameAr)
+                .IsUnique();
+            modelBuilder.Entity<Category>()
+                .HasIndex(x => x.NameEn)
+                .IsUnique();
+
             modelBuilder.Entity<User>()
                 .HasIndex(x => x.IsActive);
 

@@ -23,7 +23,7 @@ namespace ECommerce.Infrastructure.Repository
 
         public async Task<T?> GetByIDAsync(int id)
         {
-            return await _context.Set<T>().Where(e => EF.Property<bool>(e,"IsDeleted") == false).FirstOrDefaultAsync();
+            return await _context.Set<T>().Where(e => EF.Property<bool>(e,"IsDeleted") == false && EF.Property<int>(e, "Id") == id).FirstOrDefaultAsync();
         }
 
         public async Task<T> AddAsync(T entity)

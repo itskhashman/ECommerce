@@ -25,7 +25,7 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="ImageFile" class="form-label fw-bold">Category Image <span class="text-danger">*</span></label>
+            <label asp-for="ImageFile" class="form-label fw-bold">Category Image</label>
 
             @if (!string.IsNullOrEmpty(Model.ImageUrl))
             {
@@ -41,7 +41,7 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="ParentCategoryId" class="form-label fw-bold">Parent Category <span class="text-danger">*</span></label>
+            <label asp-for="ParentCategoryId" class="form-label fw-bold">Parent Category</label>
             <select asp-for="ParentCategoryId" asp-items="ViewBag.ParentCategories" class="form-select">
                 <option value="">-- No Main Category --</option>
             </select>

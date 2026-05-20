@@ -12,11 +12,17 @@ namespace ECommerce.Infrastructure.Repository
         {
         }
 
-
-        public async Task<IEnumerable<Category>> GetParentsAsync()
+        public async Task<IEnumerable<Category>> GetMainCategoriesAsync()
         {
             return await _context.Categories
-                .Where(c => !c.IsDeleted && c.ParentCategoryId == null)
+                .Where(c => !c.IsDeleted && c.IsActive && c.ParentCategoryId == null)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Category>> GetSubCategoriesAsync()
+        {
+            return await _context.Categories
+                .Where(c => !c.IsDeleted && c.IsActive && c.ParentCategoryId != null)
                 .ToListAsync();
         }
 

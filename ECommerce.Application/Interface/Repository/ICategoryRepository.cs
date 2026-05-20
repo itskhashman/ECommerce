@@ -6,6 +6,7 @@ namespace ECommerce.Application.Interface.Repository
 {
     public interface ICategoryRepository : IGenericRepository<Category>
     {
-        public Task<IEnumerable<Category>> GetParentsAsync();
+        public Task<IEnumerable<Category>> GetMainCategoriesAsync();
+        public Task<IEnumerable<Category>> GetSubCategoriesAsync();
     }
 }

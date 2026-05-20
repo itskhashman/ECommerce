@@ -8,5 +8,6 @@ namespace ECommerce.Application.Interface.Repository
     {
         public Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(int categoryId);
         public Task<Product?> GetAllProductDetailsAsync(int productId);
+        public Task<IEnumerable<Product>> GetMostReviewedProductsAsync();
     }
 }

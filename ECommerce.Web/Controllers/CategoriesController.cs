@@ -19,7 +19,19 @@ namespace ECommerce.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var categories = await _categoryService.GetAllAsync();
-            return View(categories);
+
+            var rootCategories = categories
+                .Where(c => c.ParentCategoryId == null)
+                .ToList();
+
+            foreach (var parent in rootCategories)
+            {
+                parent.Children = categories
+                    .Where(c => c.ParentCategoryId == parent.Id)
+                    .ToList();
+            }
+
+            return View(rootCategories);
         }
 
         public async Task<IActionResult> Create()
@@ -69,7 +81,7 @@ namespace ECommerce.Web.Controllers
 
             TempData["NotifyMessage"] = "Category created successfully!";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
 
@@ -124,7 +136,7 @@ namespace ECommerce.Web.Controllers
 
             TempData["NotifyMessage"] = "Category updated successfully!";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
 
@@ -136,7 +148,7 @@ namespace ECommerce.Web.Controllers
 
             TempData["NotifyMessage"] = "Category deleted successfully!";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         private async Task PopulateParentCategoriesSelectList(int? currentCategoryId = null)

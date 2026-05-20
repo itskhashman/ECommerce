@@ -64,6 +64,13 @@ namespace ECommerce.Infrastructure.Repository
                 .FirstOrDefaultAsync();
             return product;
 
+        }   
+        public async Task<IEnumerable<Product>> GetMostReviewedProductsAsync() // needs update
+        {
+            var products = await _context.Products
+                .Where(p => !p.IsDeleted && p.IsActive)
+                .ToListAsync();
+            return products;
         }
     }
 }

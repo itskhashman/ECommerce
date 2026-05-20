@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ECommerce.Application.DTOs.Products.ProductDto>
+@{
+    Layout = "_Layout";
+}
+
+<body>
+    <h1> Welcome to product page</h1>
+
+    <a asp-action="Create">Add Product</a>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.NameEn</td>
+                    <td>@product.DescriptionEn</td>
+                    <td>@product.CategoryId</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@product.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@product.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@product.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</body>
