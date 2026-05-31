@@ -26,5 +26,12 @@ namespace ECommerce.Infrastructure.Repository
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Category>> GetSubCategoriesByMainCategoryIdAsync(int mainCategoryId)
+        {
+            return await _context.Categories
+                .Where(c => !c.IsDeleted && c.IsActive && c.ParentCategoryId == mainCategoryId)
+                .ToListAsync();
+        }
+
     }
 }

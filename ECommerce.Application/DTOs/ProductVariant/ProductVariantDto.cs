@@ -12,7 +12,7 @@ namespace ECommerce.Application.DTOs.ProductVariant
         [MaxLength(30)]
         [Required]
         public string NameEn { get; set; } = null!;
-        public ICollection<ProductVariantOptionsDto> ProductVariantOptions { get; set; } = new List<ProductVariantOptionsDto>();
+        public List<ProductVariantOptionsDto> ProductVariantOptions { get; set; } = new List<ProductVariantOptionsDto>();
 
 
     }

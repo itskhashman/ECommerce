@@ -2,7 +2,7 @@
 
 namespace ECommerce.Application.DTOs.Base
 {
-    public class LookupBaseEntityDto
+    public class LookupBaseEntityDto : BaseDto
     {
         [MaxLength(50)]
         [Required]

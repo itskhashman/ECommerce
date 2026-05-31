@@ -8,6 +8,8 @@ namespace ECommerce.Application.DTOs.Products
     public class ProductDto : BaseDto
     {
         public int CategoryId { get; set; }
+        public string? CategoryNameEn { get; set; }
+        public string? CategoryNameAr { get; set; }
 
         [Required]
         [MaxLength(30)]
