@@ -22,11 +22,11 @@ public class AccountController : Controller
     {
         if (!ModelState.IsValid) return View(model);
 
-        var result = await _identityService.RegisterAsync(
-            model.Email, model.Password, model.FirstNameAr, model.MiddleNameAr, model.LastNameAr,
+        var result = await _identityService.RegisterAsync(model.Username
+            , model.Email, model.Password, model.FirstNameAr, model.MiddleNameAr, model.LastNameAr,
             model.FirstNameEn, model.MiddleNameEn, model.LastNameEn, model.Phone);
 
-        if (result) return RedirectToAction("Index", "Home");
+        if (result) return RedirectToAction("Login");
 
         ModelState.AddModelError("Register Failed", "Registration failed.");
         return View(model);
@@ -39,19 +39,28 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(string email, string password, bool rememberMe)
+    public async Task<IActionResult> Login(LoginViewModel model)
     {
-        var result = await _identityService.LoginAsync(email, password, rememberMe);
-        if (result) return RedirectToAction("Index", "Home");
+        if (!ModelState.IsValid)
+        {
+            return View(model);      
+        }
 
-        ModelState.AddModelError("Login Failed", "Invalid login attempt.");
-        return View();
+        var result = await _identityService.LoginAsync(model.Email, model.Password, model.RememberMe);
+
+        if (result)
+        {
+            return RedirectToAction("Index", "Categories");
+        }
+
+        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+        return View(model);
     }
 
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
         await _identityService.LogoutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Home", "Home");
     }
 }

@@ -2,11 +2,13 @@
 using ECommerce.Application.DTOs.Category;
 using ECommerce.Application.Interfaces.services;
 using ECommerce.Web.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ECommerce.Web.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
         private readonly ICategoryService _categoryService;

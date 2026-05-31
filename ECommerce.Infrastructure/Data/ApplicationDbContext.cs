@@ -10,8 +10,6 @@ using ECommerce.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
-using System.Xml;
 
 namespace ECommerce.Infrastructure.Data
 {

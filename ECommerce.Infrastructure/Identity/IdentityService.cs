@@ -21,11 +21,11 @@ namespace ECommerce.Infrastructure.Identity
             _userRepository = userRepository;
         }
 
-        public async Task<bool> RegisterAsync(string email, string password, string firstNameAr, string middleNameAr, string lastNameAr, string firstNameEn, string middleNameEn, string lastNameEn, string phone)
+        public async Task<bool> RegisterAsync(string Username , string email, string password, string firstNameAr, string middleNameAr, string lastNameAr, string firstNameEn, string middleNameEn, string lastNameEn, string phone)
         {
             var identityUser = new ApplicationUser
             {
-                UserName = email,
+                UserName = Username,
                 Email = email,
                 PhoneNumber = phone
             };
@@ -47,12 +47,11 @@ namespace ECommerce.Infrastructure.Identity
                         LastNameEn = lastNameEn,
                         Phone = phone,
                         PasswordHash = identityUser.PasswordHash ?? string.Empty,
-                        RoleId = 2,
                         IsActive = true,
                         IsEmailVerified = false,
                     };
 
-                    await _userRepository.Add(domainUser);
+                    await _userRepository.AddAsync(domainUser);
 
                     identityUser.DomainUserId = domainUser.Id;
                     await _userManager.UpdateAsync(identityUser);
@@ -73,16 +72,24 @@ namespace ECommerce.Infrastructure.Identity
 
         public async Task<bool> LoginAsync(string email, string password, bool rememberMe)
         {
-            var result = await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: false);
+            var domainUser = await _userRepository.GetUserByEmailAsync(email);
+            if (domainUser == null)
+            {
+                return false;
+            }
+
+            var identityUser = await _userManager.FindByEmailAsync(email);
+            if (identityUser == null)
+            {
+                return false;
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(identityUser.UserName, password, rememberMe, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
-                var user = await _userRepository.GetUserByEmailAsync(email);
-                if (user != null)
-                {
-                    user.LastLoginAt = DateTime.UtcNow;
-                    await _userRepository.Update(user);
-                }
+                domainUser.LastLoginAt = DateTime.UtcNow;
+                await _userRepository.UpdateAsync(domainUser);
                 return true;
             }
 

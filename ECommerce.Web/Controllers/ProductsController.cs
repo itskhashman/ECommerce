@@ -2,15 +2,15 @@
 using ECommerce.Application.DTOs.Category;
 using ECommerce.Application.DTOs.ProductImage;
 using ECommerce.Application.DTOs.Products;
-using ECommerce.Application.DTOs.ProductVariant;
-using ECommerce.Application.DTOs.ProductVariantOption;
 using ECommerce.Application.Interfaces.services;
 using ECommerce.Web.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ECommerce.Web.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
