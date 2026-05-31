@@ -8,12 +8,14 @@ namespace ECommerce.Domain.Entities.Products
     {
         [ForeignKey("ParentCategory")]
         public int? ParentCategoryId { get; set; }
-        public Category ? ParentCategory { get; set; }
+        public Category? ParentCategory { get; set; }
+        [Column(TypeName = "varchar(max)")]
         public string? ImageUrl { get; set; }
         [Required, MaxLength(30)]
         public string NameAr { get; set; } = null!;
 
         [Required, MaxLength(30)]
+        [Column(TypeName = "varchar")]
         public string NameEn { get; set; } = null!;
         public ICollection<Category> SubCategories { get; set; } = new List<Category>();
         public ICollection<Product> Products { get; set; } = new List<Product>();

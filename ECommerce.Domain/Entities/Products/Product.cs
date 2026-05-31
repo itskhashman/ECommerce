@@ -15,10 +15,12 @@ namespace ECommerce.Domain.Entities.Products
         public string NameAr { get; set; } = null!;
         [MaxLength(30)]
         [Required]
+        [Column(TypeName = "varchar")]
         public string NameEn { get; set; } = null!;
         [Required]
         public string DescriptionAr { get; set; } = null!;
         [Required]
+        [Column(TypeName = "varchar(max)")]
         public string DescriptionEn { get; set; } = null!;
         [ForeignKey("DiscountType")]
         public int? DiscountTypeId { get; set; }

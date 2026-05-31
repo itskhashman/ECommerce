@@ -1,20 +1,16 @@
-﻿    using ECommerce.Application.Interface.Repository;
-    using ECommerce.Application.Interface.Service;
-    using ECommerce.Infrastructure.Data;
-    using ECommerce.Infrastructure.Identity;
-    using ECommerce.Infrastructure.Repository;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    namespace ECommerce.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using ECommerce.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
-    public static class DependencyInjectionPortal
+namespace ECommerce.DependencyInjection;
+
+public static class DependencyInjectionPortal
+{
+    public static IServiceCollection AddECommerceServices(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddECommerceServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
             {

@@ -1,0 +1,162 @@
+﻿@model ECommerce.Application.DTOs.Products.UpdateProductDto
+@{
+    Layout = "_Layout";
+}
+
+<div class="container mt-4" style="max-width: 600px;">
+    <h1>Edit Product</h1>
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group mb-3">
+            <label asp-for="NameEn" class="form-label">Name (English)</label><span class="text-danger">*</span>
+            <input asp-for="NameEn" class="form-control" />
+            <span asp-validation-for="NameEn" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="NameAr" class="form-label">Name (Arabic)</label><span class="text-danger">*</span>
+            <input asp-for="NameAr" class="form-control" />
+            <span asp-validation-for="NameAr" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="DescriptionEn" class="form-label">Description (English)</label><span class="text-danger">*</span>
+            <textarea asp-for="DescriptionEn" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="DescriptionEn" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="DescriptionAr" class="form-label">Description (Arabic)</label><span class="text-danger">*</span>
+            <textarea asp-for="DescriptionAr" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="DescriptionAr" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label d-block">Current Gallery</label>
+            @if (Model?.ProductImages != null && Model.ProductImages.Any())
+            {
+                <div class="d-flex flex-wrap gap-2 mb-2">
+                    @foreach (var img in Model.ProductImages)
+                    {
+                        <div class="position-relative border rounded p-1 style-container" style="width: 80px; height: 80px;">
+                            <img src="@img.URL" alt="@img.AltText" class="w-100 h-100 object-fit-cover rounded" />
+                            @if (img.IsMain)
+                            {
+                                <span class="badge bg-success position-absolute bottom-0 start-0 m-1" style="font-size: 0.6rem;">Main</span>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small">No images uploaded for this product yet.</p>
+            }
+
+            <label asp-for="ImageFiles" class="form-label mt-2">
+                Upload New Images <small class="text-muted">(Appends to current gallery)</small>
+            </label>
+            <input asp-for="ImageFiles" type="file" class="form-control" accept="image/*" multiple />
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="MainCategoryId" class="form-label">Main Category</label><span class="text-danger">*</span>
+            <select asp-for="MainCategoryId"
+                    id="MainCategoryId"
+                    class="form-select"
+                    asp-items="ViewBag.MainCategories"
+                    onchange="loadSubCategories(this.value)">
+                <option value="">-- Select Main Category --</option>
+            </select>
+            <span asp-validation-for="MainCategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="CategoryId" class="form-label">Sub Category</label><span class="text-danger">*</span>
+            <select asp-for="CategoryId" id="CategoryId" class="form-select" asp-items="ViewBag.SubCategories">
+                <option value="">-- Select Sub Category --</option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="card card-body shadow-sm border border-light rounded-3 mb-3 p-3 bg-white">
+            <label class="form-label small fw-bold text-secondary uppercase mb-2">Promotional Settings</label>
+            <div class="row g-2">
+                <div class="col-sm-6">
+                    <label asp-for="DiscountTypeId" class="form-label small text-muted mb-1">Discount Mode</label>
+                    <select asp-for="DiscountTypeId" class="form-select form-select-sm" asp-items="ViewBag.DiscountTypes">
+                        <option value="">-- No Discount --</option>
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="DiscountAmount" class="form-label small text-muted mb-1">Value/Rate</label>
+                    <input asp-for="DiscountAmount" type="number" step="0.01" class="form-control form-control-sm" placeholder="e.g., 10.00" />
+                    <span asp-validation-for="DiscountAmount" class="text-danger small"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border border-light rounded-3 mb-4">
+            <div class="card-header bg-secondary text-white py-3">
+                <h5 class="mb-0 fw-bold">Product Variants & Options</h5>
+            </div>
+            <div class="card-body p-4 bg-light" id="variantsList"></div>
+            <div class="card-footer bg-light p-3 text-center border-top-0">
+                <button type="button" class="btn btn-outline-primary" onclick="window.ProductVariantsManager.addVariant()">
+                    <i class="bi bi-plus-circle me-2"></i>Add New Variant
+                </button>
+            </div>
+        </div>
+
+        <div class="form-check mb-4">
+            <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+            <label asp-for="IsActive" class="form-check-label">Active</label>
+            <span asp-validation-for="IsActive" class="text-danger small"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/product-variants.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+             const existingVariants = @Json.Serialize(Model?.ProductVariants ?? new List<ECommerce.Application.DTOs.ProductVariant.ProductVariantDto>());
+
+             if (window.ProductVariantsManager) {
+                 if (typeof window.ProductVariantsManager.initWithData === "function") {
+                     window.ProductVariantsManager.initWithData(existingVariants);
+                 } else {
+                     window.ProductVariantsManager.init(existingVariants.length);
+                 }
+             }
+         });
+
+        function loadSubCategories(mainCategoryId) {
+            const childSelect = document.getElementById("CategoryId");
+            if (!childSelect) return;
+
+            childSelect.innerHTML = '<option value="">-- Select Sub Category --</option>';
+            if (!mainCategoryId) return;
+
+            fetch(`/Products/GetSubCategories?mainCategoryId=${mainCategoryId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Network response was not OK");
+                    return response.json();
+                })
+                .then(data => {
+                    data.forEach(subCat => {
+                        const option = document.createElement("option");
+                        option.value = subCat.id;
+                        option.textContent = subCat.name;
+                        childSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error loading cascading subcategories:", error));
+        }
+    </script>
+}

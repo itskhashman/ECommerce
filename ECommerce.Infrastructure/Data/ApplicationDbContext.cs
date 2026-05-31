@@ -10,6 +10,8 @@ using ECommerce.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
+using System.Xml;
 
 namespace ECommerce.Infrastructure.Data
 {
@@ -27,13 +29,20 @@ namespace ECommerce.Infrastructure.Data
             {
                 var entity = entry.Entity;
 
-                entity.ModifiedAt = DateTime.UtcNow;
-                entity.ModifiedBy = 0;
+
 
                 if (entry.State == EntityState.Added)
                 {
                     entity.CreatedAt = DateTime.UtcNow;
-                    entity.CreatedBy = 0;
+                    entity.CreatedBy = 1;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Property(x => x.CreatedBy).IsModified = false;
+                    entry.Property(x => x.CreatedAt).IsModified = false;
+
+                    entity.ModifiedAt = DateTime.UtcNow;
+                    entity.ModifiedBy = 1;
                 }
 
             }
@@ -53,7 +62,7 @@ namespace ECommerce.Infrastructure.Data
 
             modelBuilder.Entity<Sku>()
                 .Property(s => s.Price)
-                .HasPrecision(18, 2);
+                .HasPrecision(10, 2);
 
             modelBuilder.Entity<Sku>()
                 .Property(s => s.Weight)
@@ -61,19 +70,18 @@ namespace ECommerce.Infrastructure.Data
 
             modelBuilder.Entity<Order>()
                     .Property(o => o.TotalAmount)
-                    .HasPrecision(18, 2);
+                    .HasPrecision(10, 2);
 
             modelBuilder.Entity<Order>()
                     .Property(o => o.ShippingCost)
-                    .HasPrecision(18, 2);
+                    .HasPrecision(10, 2);
 
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.SubTotal)
-                .HasPrecision(18, 2);
-
+                .HasPrecision(10, 2);
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.PriceAtPurchase)
-                .HasPrecision(18, 2);
+                .HasPrecision(10, 2);
 
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.DiscountAmount)
@@ -81,10 +89,14 @@ namespace ECommerce.Infrastructure.Data
 
             modelBuilder.Entity<CartItem>()
                 .Property(oi => oi.PriceAtAddTime)
-                .HasPrecision(18, 2);
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<ShippingRate>()
+                .Property(sh => sh.ShippingCost)
+                .HasPrecision(10, 2);
 
             modelBuilder.Entity<SKUProductVariantOptions>()
-                .HasKey(svo => new { svo.SkuId, svo.ProductVariantId, svo.ProductVariantOptionsId });
+                .HasKey(svo => new { svo.SkuId, svo.ProductVariantOptionsId });
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
@@ -92,7 +104,7 @@ namespace ECommerce.Infrastructure.Data
             }
 
             modelBuilder.Entity<OrderStatus>().HasData(
-                new OrderStatus { Id = 1, NameEn = "Pending" , NameAr = "قيد الانتظار" },
+                new OrderStatus { Id = 1, NameEn = "Pending", NameAr = "قيد الانتظار" },
                 new OrderStatus { Id = 2, NameEn = "Confirmed", NameAr = "تم التأكيد" },
                 new OrderStatus { Id = 3, NameEn = "Shipped", NameAr = "تم الشحن" },
                 new OrderStatus { Id = 4, NameEn = "Delivered", NameAr = "تم التسليم" }
@@ -147,35 +159,110 @@ namespace ECommerce.Infrastructure.Data
                new PaymentStatus { Id = 3, NameEn = "Failed", NameAr = "فشل" }
            );
 
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(BaseMetadataEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    modelBuilder.Entity(entityType.ClrType)
+                        .HasOne(typeof(User), "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    modelBuilder.Entity(entityType.ClrType)
+                        .HasOne(typeof(User), "Modifier")
+                        .WithMany()
+                        .HasForeignKey("ModifiedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    modelBuilder.Entity(entityType.ClrType)
+                        .HasOne(typeof(User), "Deleter")
+                        .WithMany()
+                        .HasForeignKey("DeletedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+                }
+            }
 
 
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Email)
+                .IsUnique();
 
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Phone)
+                .IsUnique();
+
+            modelBuilder.Entity<Category>()
+                .HasIndex(x => x.NameAr)
+                .IsUnique();
+            modelBuilder.Entity<Category>()
+                .HasIndex(x => x.NameEn)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.IsActive);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.LastLoginAt);
+
+            modelBuilder.Entity<Product>()
+                .HasIndex(x => x.IsActive);
+
+            modelBuilder.Entity<Product>()
+                .HasIndex(x => x.IsDeleted);
+
+            modelBuilder.Entity<ProductImage>()
+                .HasIndex(x => x.IsMain);
+
+            modelBuilder.Entity<Sku>()
+                .HasIndex(x => x.SkuCode)
+                .IsUnique();
+
+            modelBuilder.Entity<Sku>()
+                .HasIndex(x => x.IsActive);
+
+            modelBuilder.Entity<Sku>()
+                .HasIndex(x => x.Stock);
+
+            modelBuilder.Entity<Order>()
+                .HasIndex(x => x.OrderNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<Payment>()
+                .HasIndex(x => x.TransactionId)
+                .IsUnique();
+
+            modelBuilder.Entity<UsersRoles>()
+                .HasIndex(x => new { x.UserId, x.RoleId })
+                .IsUnique();
         }
 
-        public DbSet<Product> Product { get; set; } = null!;
-        public DbSet<Category> Category { get; set; } = null!;
-        public DbSet<ProductImage> ProductImage { get; set; } = null!;
-        public DbSet<ProductVariant> ProductVariant { get; set; } = null!;
-        public DbSet<ProductVariantOptions> ProductVariantOption { get; set; } = null!;
-        public DbSet<Sku> Sku { get; set; } = null!;
-        public DbSet<SKUProductVariantOptions> SKUProductVariantOption { get; set; } = null!;
-        public DbSet<Order> Order { get; set; } = null!;
-        public DbSet<OrderItem> OrderItem { get; set; } = null!;
-        public DbSet<User> User { get; set; } = null!;
-        public DbSet<Address> Address { get; set; } = null!;
-        public DbSet<Cart> Cart { get; set; } = null!;
-        public DbSet<CartItem> CartItem { get; set; } = null!;
-        public DbSet<Wishlist> Wishlist { get; set; } = null!;
-        public DbSet<WishlistItem> WishlistItem { get; set; } = null!;
-        public DbSet<OrderStatus> OrderStatus { get; set; } = null!;
-        public DbSet<Role> Role { get; set; } = null!;
-        public DbSet<Country> Country { get; set; } = null!;
-        public DbSet<City> City { get; set; } = null!;
-        public DbSet<DiscountType> DiscountType { get; set; } = null!;
-        public DbSet<Review> Review { get; set; } = null!;
-        public DbSet<Payment> Payment { get; set; } = null!;
-        public DbSet<PaymentMethod> PaymentMethod { get; set; } = null!;
-        public DbSet<PaymentStatus> PaymentStatus { get; set; } = null!;
+        public DbSet<Product> Products { get; set; } = null!;
+        public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<ProductImage> ProductImages { get; set; } = null!;
+        public DbSet<ProductVariant> ProductVariants { get; set; } = null!;
+        public DbSet<ProductVariantOptions> ProductVariantOptions { get; set; } = null!;
+        public DbSet<Sku> Skus { get; set; } = null!;
+        public DbSet<SKUProductVariantOptions> SKUProductVariantOptions { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<OrderItem> OrderItems { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Address> Addresses { get; set; } = null!;
+        public DbSet<Cart> Carts { get; set; } = null!;
+        public DbSet<CartItem> CartItems { get; set; } = null!;
+        public DbSet<Wishlist> Wishlists { get; set; } = null!;
+        public DbSet<WishlistItem> WishlistItems { get; set; } = null!;
+        public DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
+        public DbSet<Role> Roles { get; set; } = null!;
+        public DbSet<Country> Countries { get; set; } = null!;
+        public DbSet<City> Cities { get; set; } = null!;
+        public DbSet<DiscountType> DiscountTypes { get; set; } = null!;
+        public DbSet<Review> Reviews { get; set; } = null!;
+        public DbSet<Payment> Payments { get; set; } = null!;
+        public DbSet<PaymentMethod> PaymentMethods { get; set; } = null!;
+        public DbSet<PaymentStatus> PaymentStatuses { get; set; } = null!;
+        public DbSet<ShippingRate> ShippingRates { get; set; } = null!;
+        public DbSet<UsersRoles> UsersRoles { get; set; } = null!;
     }
 
 }

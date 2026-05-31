@@ -1,0 +1,22 @@
+﻿using ECommerce.Domain.Entities.Users.Lookups;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ECommerce.Domain.Entities.Users
+{
+    public class UsersRoles 
+    {
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
+        [Required]
+        [ForeignKey("Role")]
+        public int RoleId { get; set; }
+        public Role Role { get; set; } = null!;
+      
+    }
+
+}
