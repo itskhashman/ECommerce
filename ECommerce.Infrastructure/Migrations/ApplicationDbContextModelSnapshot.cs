@@ -78,6 +78,12 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.HasIndex("ModifiedBy");
 
+                    b.HasIndex("NameAr")
+                        .IsUnique();
+
+                    b.HasIndex("NameEn")
+                        .IsUnique();
+
                     b.HasIndex("ParentCategoryId");
 
                     b.ToTable("Categories");
@@ -1538,12 +1544,6 @@ namespace ECommerce.Infrastructure.Migrations
 
                     b.ToTable("Countries");
 
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("Countries");
-
                     b.HasData(
                         new
                         {
@@ -1622,12 +1622,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
-
-                    b.HasIndex("DeletedBy");
-
-                    b.HasIndex("ModifiedBy");
-
-                    b.ToTable("Roles");
 
                     b.HasIndex("DeletedBy");
 
@@ -2542,12 +2536,6 @@ namespace ECommerce.Infrastructure.Migrations
                     b.HasOne("ECommerce.Domain.Entities.Users.Cart", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ECommerce.Domain.Entities.Users.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

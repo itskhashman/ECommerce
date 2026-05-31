@@ -32,8 +32,12 @@ namespace ECommerce.Infrastructure.Data
                 {
                     entity.CreatedAt = DateTime.UtcNow;
                     entity.CreatedBy = 1;
-                } else if (entry.State == EntityState.Modified)
+                }
+                else if (entry.State == EntityState.Modified)
                 {
+                    entry.Property(x => x.CreatedBy).IsModified = false;
+                    entry.Property(x => x.CreatedAt).IsModified = false;
+
                     entity.ModifiedAt = DateTime.UtcNow;
                     entity.ModifiedBy = 1;
                 }
@@ -181,6 +185,13 @@ namespace ECommerce.Infrastructure.Data
 
             modelBuilder.Entity<User>()
                 .HasIndex(x => x.Phone)
+                .IsUnique();
+
+            modelBuilder.Entity<Category>()
+                .HasIndex(x => x.NameAr)
+                .IsUnique();
+            modelBuilder.Entity<Category>()
+                .HasIndex(x => x.NameEn)
                 .IsUnique();
 
             modelBuilder.Entity<User>()
