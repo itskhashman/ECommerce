@@ -56,6 +56,10 @@ namespace ECommerce.Infrastructure.Identity
                     identityUser.DomainUserId = domainUser.Id;
                     await _userManager.UpdateAsync(identityUser);
 
+                    await _userManager.AddToRoleAsync(identityUser, "Customer");
+
+                    await _userRepository.AssignRoleToUserAsync(domainUser.Id, 2);
+
                     await _signInManager.SignInAsync(identityUser, isPersistent: false);
 
                     return true;

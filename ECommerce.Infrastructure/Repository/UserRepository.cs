@@ -43,5 +43,16 @@ namespace ECommerce.Infrastructure.Repository
                 .Where(u => u.Id == userId)
                 .Include(u => u.Address).FirstOrDefaultAsync();
         }
+
+        public async Task AssignRoleToUserAsync(int userId, int roleId)
+        {
+            var userRole = new UsersRoles
+            {
+                UserId = userId,
+                RoleId = roleId
+            };
+            await _context.UsersRoles.AddAsync(userRole);
+            await _context.SaveChangesAsync();
+        }
     }
 }

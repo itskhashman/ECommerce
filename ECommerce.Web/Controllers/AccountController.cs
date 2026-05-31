@@ -26,7 +26,7 @@ public class AccountController : Controller
             , model.Email, model.Password, model.FirstNameAr, model.MiddleNameAr, model.LastNameAr,
             model.FirstNameEn, model.MiddleNameEn, model.LastNameEn, model.Phone);
 
-        if (result) return RedirectToAction("Login");
+        if (result) return RedirectToAction("Home", "Home");
 
         ModelState.AddModelError("Register Failed", "Registration failed.");
         return View(model);
@@ -50,7 +50,7 @@ public class AccountController : Controller
 
         if (result)
         {
-            return RedirectToAction("Index", "Categories");
+            return RedirectToAction("Home", "Home");
         }
 
         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
