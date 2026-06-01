@@ -38,7 +38,7 @@
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item me-3 text-light small">
-                            <i class="bi bi-person-circle me-1 text-success"></i>IU@User.Identity.Name
+                            <i class="bi bi-person-circle me-1 text-success"></i>@User.Identity.Name
                         </li>
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
