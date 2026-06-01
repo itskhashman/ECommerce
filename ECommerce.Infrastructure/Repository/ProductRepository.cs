@@ -2,6 +2,7 @@
 
 using ECommerce.Application.Interface.Repository;
 using ECommerce.Domain.Entities.Products;
+using ECommerce.Domain.Entities.Products.Lookups;
 using ECommerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,46 +25,40 @@ namespace ECommerce.Infrastructure.Repository
 
         public async Task<Product?> GetAllProductDetailsAsync(int productId)
         {
-            var product = await _context.Products
-                .Where(p => p.Id == productId && !p.IsDeleted && p.IsActive)
-                .Select(p => new Product
-                {
-                    Id = p.Id,
-                    NameEn = p.NameEn,
-                    DescriptionEn = p.DescriptionEn,
-                    NameAr = p.NameAr,
-                    DescriptionAr = p.DescriptionAr,
-                    CategoryId = p.CategoryId,
-                    DiscountAmount = p.DiscountAmount,
-                    DiscountType = p.DiscountType,
-                    ProductImages = p.ProductImages == null ? null : p.ProductImages.Select(pi => new ProductImage
-                    {
-                        Id = pi.Id,
-                        URL = pi.URL,
-                        IsMain = pi.IsMain,
-                    }).Where(i => !i.IsDeleted).ToList(),
-                    ProductVariants = p.ProductVariants == null ? null : p.ProductVariants.Select(pv => new ProductVariant
-                    {
-                        Id = pv.Id,
-                        NameEn = pv.NameEn,
-                        NameAr = pv.NameAr,
-                        ProductVariantOptions = pv.ProductVariantOptions.Select(pvo => new ProductVariantOptions
-                        {
-                            Id = pvo.Id,
-                            NameEn = pvo.NameEn,
-                            NameAr = pvo.NameAr,
-                        }).Where(pvo => !pvo.IsDeleted).ToList()
-                    }).Where(pv => !pv.IsDeleted).ToList(),
-                    Skus = p.Skus == null ? null : p.Skus.Select(s => new Sku
-                    {
-                        Id = s.Id,
-                        SkuCode = s.SkuCode,
-                        Price = s.Price,
-                    }).Where(s => !s.IsDeleted && s.IsActive).ToList()
-                })
-                .FirstOrDefaultAsync();
-            return product;
+            return await _context.Products
+                .AsNoTracking()
+                .Include(p => p.Category)
+                .Include(p => p.DiscountType)
+                .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
+                .Include(p => p.ProductVariants.Where(pv => !pv.IsDeleted))
+                    .ThenInclude(pv => pv.ProductVariantOptions.Where(pvo => !pvo.IsDeleted))
+                .Include(p => p.Skus.Where(s => !s.IsDeleted))
+                .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
+        }
 
+        public async Task<IEnumerable<Product>> GetAllProductsWithMainImageAsync()
+        {
+            var productsList = await _context.Products
+                .Where(p => !p.IsDeleted)
+                .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted && pi.IsMain)) 
+                .ToListAsync();
+
+            return productsList;
+        }
+        public async Task<IEnumerable<Product>> GetMostReviewedProductsAsync() // needs update
+        {
+            var products = await _context.Products
+                .Where(p => !p.IsDeleted && p.IsActive)
+                .ToListAsync();
+            return products;
+        }
+
+        public async Task<IEnumerable<DiscountType>> GetDiscountTypesAsync()
+        {
+            var discountTypes = await _context.DiscountTypes
+                .Where(dt => !dt.IsDeleted)
+                .ToListAsync();
+            return discountTypes;
         }
     }
 }

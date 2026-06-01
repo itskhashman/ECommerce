@@ -24,11 +24,24 @@ namespace ECommerce.Application.Service
             return _mapper.Map<IEnumerable<CategoryDto>>(categories);
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetAllParentCategoriesAsync()
+        public async Task<IEnumerable<CategoryDto>> GetAllMainCategoriesAsync()
         {
-            var parentCategories = await _categoryRepository.GetParentsAsync();
+            var parentCategories = await _categoryRepository.GetMainCategoriesAsync();
 
             return _mapper.Map<IEnumerable<CategoryDto>>(parentCategories);
+        }
+        public async Task<IEnumerable<CategoryDto>> GetSubCategoriesByMainCategoryIdAsync(int mainCategoryId)
+        {
+            var subCategories = await _categoryRepository.GetSubCategoriesByMainCategoryIdAsync(mainCategoryId);
+            return _mapper.Map<IEnumerable<CategoryDto>>(subCategories);
+        }
+
+
+        public async Task<IEnumerable<CategoryDto>> GetAllSubCategoriesAsync()
+        {
+            var childCategories = await _categoryRepository.GetSubCategoriesAsync();
+
+            return _mapper.Map<IEnumerable<CategoryDto>>(childCategories);
         }
 
         public async Task<CategoryDto?> GetByIdAsync(int id)

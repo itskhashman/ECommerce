@@ -6,36 +6,51 @@ using ECommerce.Domain.Entities.Sales;
 using ECommerce.Domain.Entities.Sales.Lookups;
 using ECommerce.Domain.Entities.Users;
 using ECommerce.Domain.Entities.Users.Lookups;
+using ECommerce.Infrastructure.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
-using System.Xml;
+using System.Security.Claims;
 
 namespace ECommerce.Infrastructure.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options 
+            , IHttpContextAccessor httpContextAccessor)
+            : base(options)
+        {
+            _httpContextAccessor = httpContextAccessor;
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            var domainUserIdString = _httpContextAccessor.HttpContext?
+                .User?.FindFirst("DomainUserId")?.Value;
+
+            int currentUserId = int.TryParse(domainUserIdString, out var id) ? id :1;
+
             var entries = ChangeTracker.Entries<BaseEntity>()
                 .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
             foreach (var entry in entries)
             {
                 var entity = entry.Entity;
 
-
-
                 if (entry.State == EntityState.Added)
                 {
                     entity.CreatedAt = DateTime.UtcNow;
-                    entity.CreatedBy = 1;
-                } else if (entry.State == EntityState.Modified)
+                    entity.CreatedBy = currentUserId;
+                }
+                else if (entry.State == EntityState.Modified)
                 {
+                    entry.Property(x => x.CreatedBy).IsModified = false;
+                    entry.Property(x => x.CreatedAt).IsModified = false;
+
                     entity.ModifiedAt = DateTime.UtcNow;
-                    entity.ModifiedBy = 1;
+                    entity.ModifiedBy = currentUserId;
                 }
 
             }
@@ -43,6 +58,8 @@ namespace ECommerce.Infrastructure.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Review>()
                 .Property(p => p.RatingValue)
                 .HasPrecision(2, 1);
@@ -181,6 +198,13 @@ namespace ECommerce.Infrastructure.Data
 
             modelBuilder.Entity<User>()
                 .HasIndex(x => x.Phone)
+                .IsUnique();
+
+            modelBuilder.Entity<Category>()
+                .HasIndex(x => x.NameAr)
+                .IsUnique();
+            modelBuilder.Entity<Category>()
+                .HasIndex(x => x.NameEn)
                 .IsUnique();
 
             modelBuilder.Entity<User>()

@@ -13,6 +13,9 @@ namespace ECommerce.Application.Mapping
             CreateMap<CreateCategoryDto, Category>();
 
             CreateMap<UpdateCategoryDto, Category>();
+
+            CreateMap<CategoryDto, UpdateCategoryDto>();
+
         }
     }
 }

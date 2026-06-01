@@ -1,25 +1,46 @@
-﻿using ECommerce.Application.DTOs.Category;
+﻿using AutoMapper;
+using ECommerce.Application.DTOs.Category;
 using ECommerce.Application.Interfaces.services;
+using ECommerce.Web.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ECommerce.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
         private readonly ICategoryService _categoryService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IMapper _mapper;
+        private readonly IFileStorageService _fileStorageService;
 
-        public CategoriesController(ICategoryService categoryService, IWebHostEnvironment webHostEnvironment)
+        public CategoriesController(
+            ICategoryService categoryService,
+            IMapper mapper,
+            IFileStorageService fileStorageService)
         {
             _categoryService = categoryService;
-            _webHostEnvironment = webHostEnvironment;
+            _mapper = mapper;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<IActionResult> Index()
         {
             var categories = await _categoryService.GetAllAsync();
-            return View(categories);
+
+            var rootCategories = categories
+                .Where(c => c.ParentCategoryId == null)
+                .ToList();
+
+            foreach (var parent in rootCategories)
+            {
+                parent.Children = categories
+                    .Where(c => c.ParentCategoryId == parent.Id)
+                    .ToList();
+            }
+
+            return View(rootCategories);
         }
 
         public async Task<IActionResult> Create()
@@ -39,59 +60,35 @@ namespace ECommerce.Web.Controllers
 
             var createdCategory = await _categoryService.CreateAsync(dto);
 
-            if (dto.ImageFile != null && dto.ImageFile.Length > 0)
+            if (dto.ImageFile != null)
             {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "categories");
-                if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+                string safeName = string.IsNullOrWhiteSpace(dto.NameEn) ? "Category" : dto.NameEn;
+                string customName = $"{safeName}-{createdCategory.Id}";
 
-                string safeCategoryName = string.IsNullOrWhiteSpace(dto.NameEn) ? "Category" : SanitizeFileName(dto.NameEn);
-                string uniqueFileName = $"{safeCategoryName}-{createdCategory.Id}.png";
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                string fileUrl = await _fileStorageService.UploadFileAsync(dto.ImageFile, "categories", customName);
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                if (!string.IsNullOrEmpty(fileUrl))
                 {
-                    await dto.ImageFile.CopyToAsync(fileStream);
+                    createdCategory.ImageUrl = fileUrl;
+                    var updateDto = _mapper.Map<UpdateCategoryDto>(createdCategory);
+                    await _categoryService.UpdateAsync(updateDto);
                 }
-
-                createdCategory.ImageUrl = $"/uploads/categories/{uniqueFileName}";
-
-                var updateDto = new UpdateCategoryDto
-                {
-                    Id = createdCategory.Id,
-                    NameAr = createdCategory.NameAr,
-                    NameEn = createdCategory.NameEn,
-                    ImageUrl = createdCategory.ImageUrl,
-                    ParentCategoryId = createdCategory.ParentCategoryId,
-                    IsActive = createdCategory.IsActive
-                };
-                await _categoryService.UpdateAsync(updateDto);
             }
 
             TempData["NotifyMessage"] = "Category created successfully!";
-
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
-
 
         public async Task<IActionResult> Edit(int id)
         {
             var category = await _categoryService.GetByIdAsync(id);
             if (category == null) return NotFound();
 
-            var model = new UpdateCategoryDto
-            {
-                Id = category.Id,
-                NameAr = category.NameAr,
-                NameEn = category.NameEn,
-                ImageUrl = category.ImageUrl,
-                ParentCategoryId = category.ParentCategoryId,
-                IsActive = category.IsActive
-            };
+            var model = _mapper.Map<UpdateCategoryDto>(category);
 
             await PopulateParentCategoriesSelectList(category.Id);
             return View(model);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Edit(UpdateCategoryDto model)
@@ -104,30 +101,22 @@ namespace ECommerce.Web.Controllers
 
             if (model.ImageFile != null && model.ImageFile.Length > 0)
             {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "categories");
-                if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+                string safeName = string.IsNullOrWhiteSpace(model.NameEn) ? "Category" : model.NameEn;
+                string customName = $"{safeName}-{model.Id}";
 
-                string safeCategoryName = string.IsNullOrWhiteSpace(model.NameEn) ? "Category" : SanitizeFileName(model.NameEn);
-                string fileExtension = Path.GetExtension(model.ImageFile.FileName);
-                string uniqueFileName = $"{safeCategoryName}-{model.Id}{fileExtension}";
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                string fileUrl = await _fileStorageService.UploadFileAsync(model.ImageFile, "categories", customName);
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                if (!string.IsNullOrEmpty(fileUrl))
                 {
-                    await model.ImageFile.CopyToAsync(fileStream);
+                    model.ImageUrl = fileUrl;
                 }
-
-                model.ImageUrl = $"/uploads/categories/{uniqueFileName}";
             }
 
             await _categoryService.UpdateAsync(model);
 
             TempData["NotifyMessage"] = "Category updated successfully!";
-
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
@@ -135,8 +124,7 @@ namespace ECommerce.Web.Controllers
             await _categoryService.DeleteAsync(id);
 
             TempData["NotifyMessage"] = "Category deleted successfully!";
-
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         private async Task PopulateParentCategoriesSelectList(int? currentCategoryId = null)
@@ -150,15 +138,6 @@ namespace ECommerce.Web.Controllers
             }
 
             ViewBag.ParentCategories = new SelectList(parentCategories, "Id", "NameEn");
-        }
-
-        private string SanitizeFileName(string name)
-        {
-            foreach (char c in Path.GetInvalidFileNameChars())
-            {
-                name = name.Replace(c, '_');
-            }
-            return name.Replace(" ", "_"); 
         }
     }
 }
