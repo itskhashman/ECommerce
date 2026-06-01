@@ -26,7 +26,8 @@ public static class DependencyInjectionPortal
             options.Password.RequiredLength = 8;
             options.User.RequireUniqueEmail = true;
         })
-        .AddEntityFrameworkStores<ApplicationDbContext>();
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddClaimsPrincipalFactory<CustomUserClaimsPrincipalFactory>();
 
         services.ConfigureApplicationCookie(options =>
         {
@@ -42,8 +43,9 @@ public static class DependencyInjectionPortal
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IProductService, ProductService>();
 
-
         services.AddAutoMapper(typeof(CategoryProfile).Assembly);
+
+        services.AddHttpContextAccessor();
 
         return services;
     }
