@@ -1,17 +1,41 @@
-﻿using ECommerce.Application.Interface.Service;
-using ECommerce.Web.Models.ViewModels;
+﻿
+using ECommerce.Application.Interfaces;
+using ECommerce.Application.Interfaces.services;
+using ECommerce.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
 
 public class HomeController : Controller
 {
+    private readonly IHomeService _homeService;
+    private readonly ICategoryService _categoryService;
 
-    public HomeController()
+    public HomeController(IHomeService homeService, ICategoryService categoryService)
     {
+        _homeService = homeService;
+        _categoryService = categoryService;
     }
 
     [HttpGet]
-    public IActionResult Home()
+    public async Task<IActionResult> Home()
     {
-        return View();
+        var model = await _homeService.GetHomeDataAsync();
+
+        return View(model);
+    }
+    [HttpGet]
+    public async Task<IActionResult> Search(SearchViewModel viewModel)
+    {
+        var results = await _homeService.GetSearchedProductAsync(
+            viewModel.SearchString,
+            viewModel.CategoryId,
+            viewModel.MinPrice,
+            viewModel.MaxPrice,
+            viewModel.InStockOnly
+        );
+
+        viewModel.Products = results;
+        viewModel.Categories = await _categoryService.GetAllMainCategoriesAsync();
+
+        return View(viewModel);
     }
 }

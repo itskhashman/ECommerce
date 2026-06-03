@@ -13,7 +13,7 @@ namespace ECommerce.Application.Service
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
-        public ProductService(IProductRepository productRepository , IMapper mapper)
+        public ProductService(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _mapper = mapper;
@@ -45,6 +45,12 @@ namespace ECommerce.Application.Service
             if (productEntity == null) return null;
 
             return MapProductToUpdateDto(productEntity);
+        }
+        public async Task<IEnumerable<ProductDto>> GetProductsByNameAsync(string name, int? categoryId, decimal? minPrice, decimal? maxPrice, bool inStockOnly = false)
+        {
+            var products = await _productRepository.GetProductsByNameAsync(name, categoryId, minPrice, maxPrice, inStockOnly);
+
+            return _mapper.Map<IEnumerable<ProductDto>>(products);
         }
         public async Task<ProductDto?> GetByIdAsync(int id)
         {
@@ -82,7 +88,7 @@ namespace ECommerce.Application.Service
             var updatedProduct = await _productRepository.UpdateAsync(productEntity);
 
             return _mapper.Map<ProductDto>(updatedProduct);
-        }  
+        }
         public async Task DeleteAsync(int id)
         {
             await _productRepository.DeleteAsync(id);
@@ -135,7 +141,7 @@ namespace ECommerce.Application.Service
                 var orderedVariants = productVariants.OrderBy(v => v.Id).ToList();
                 if (orderedVariants.Count >= 2)
                 {
-                    var configMainVariant = orderedVariants[0]; 
+                    var configMainVariant = orderedVariants[0];
                     var configSubVariant = orderedVariants[1];
 
                     foreach (var sku in skus)

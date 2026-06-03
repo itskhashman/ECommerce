@@ -64,5 +64,37 @@ namespace ECommerce.Infrastructure.Repository
                 .ToListAsync();
             return discountTypes;
         }
+
+        public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name,int? categoryId, decimal? minPrice, decimal? maxPrice, bool inStockOnly = false)
+        {
+            var products = await _context.Products
+                .Where(p => !p.IsDeleted && p.IsActive && EF.Functions.Like(p.NameEn, $"%{name}%"))
+                .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted && pi.IsMain))
+                .Include(p => p.Skus.Where(s => !s.IsDeleted))
+                .ToListAsync();
+
+            if (minPrice.HasValue)
+            {
+                products = products.Where(p => p.Skus.Any(s => s.Price >= minPrice.Value)).ToList();
+            }
+
+            if (maxPrice.HasValue)
+            {
+                products = products.Where(p => p.Skus.Any(s => s.Price <= maxPrice.Value)).ToList();
+            }
+            if (inStockOnly)
+            {
+                products = products.Where(p => p.Skus.Any(s => s.Stock > 0)).ToList();
+            }
+            if (categoryId.HasValue)
+            {
+                products = await _context.Products
+                    .Where(p => p.Category.ParentCategoryId == categoryId.Value && !p.IsDeleted && p.IsActive && EF.Functions.Like(p.NameEn, $"%{name}%"))
+                    .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted && pi.IsMain))
+                    .Include(p => p.Skus.Where(s => !s.IsDeleted))
+                    .ToListAsync();
+            }
+            return products;
+        }
     }
 }

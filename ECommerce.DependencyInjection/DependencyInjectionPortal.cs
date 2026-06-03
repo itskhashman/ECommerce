@@ -10,6 +10,7 @@ using ECommerce.Application.Interface.Repository;
 using ECommerce.Application.Interfaces.services;
 using ECommerce.Application.Service;
 using ECommerce.Application.Mapping;
+using ECommerce.Application.Interfaces;
 
 namespace ECommerce.DependencyInjection;
 
@@ -42,6 +43,7 @@ public static class DependencyInjectionPortal
 
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IHomeService, HomeService>();
 
         services.AddAutoMapper(typeof(CategoryProfile).Assembly);
 

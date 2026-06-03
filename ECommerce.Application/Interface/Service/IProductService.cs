@@ -9,6 +9,7 @@ namespace ECommerce.Application.Interfaces.services
         Task<IEnumerable<ProductDto>> GetAllProductsWithMainImageAsync();
         Task<IEnumerable<DiscountTypeDto>> GetDiscountTypesAsync();
         Task<IEnumerable<ProductDto>> GetAllAsync();
+        Task<IEnumerable<ProductDto>> GetProductsByNameAsync(string name,int? categoryId, decimal? minPrice, decimal? maxPrice, bool inStockOnly = false);
         Task<UpdateProductDto> GetProductWithAllDetailsAsync(int productId);
         Task<ProductDto?> GetByIdAsync(int id);
         Task<ProductDto> CreateAsync(CreateProductDto product);
