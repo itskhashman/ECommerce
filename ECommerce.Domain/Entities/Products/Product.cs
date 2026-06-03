@@ -27,6 +27,8 @@ namespace ECommerce.Domain.Entities.Products
         public DiscountType? DiscountType { get; set; }
         public decimal? DiscountAmount { get; set; }
         public bool IsActive { get; set; } = true;
+        [Required]
+        public bool HasNestedVariants { get; set; }
         public ICollection<ProductImage>? ProductImages { get; set; } = new List<ProductImage>();
         public ICollection<ProductVariant>? ProductVariants { get; set; } = new List<ProductVariant>();
         public ICollection<Sku>? Skus { get; set; } = new List<Sku>();

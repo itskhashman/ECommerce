@@ -30,6 +30,7 @@ namespace ECommerce.Application.DTOs.Products
         public decimal? DiscountAmount { get; set; }
 
         public bool IsActive { get; set; } = true;
+        public bool HasNestedVariants { get; set; }
 
         public ICollection<ProductImageDto> ProductImages { get; set; } = new List<ProductImageDto>();
         public ICollection<ProductVariantDto> ProductVariants { get; set; } = new List<ProductVariantDto>();

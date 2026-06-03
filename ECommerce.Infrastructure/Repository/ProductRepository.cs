@@ -26,21 +26,25 @@ namespace ECommerce.Infrastructure.Repository
         public async Task<Product?> GetAllProductDetailsAsync(int productId)
         {
             return await _context.Products
-                .AsNoTracking()
-                .Include(p => p.Category)
-                .Include(p => p.DiscountType)
-                .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
-                .Include(p => p.ProductVariants.Where(pv => !pv.IsDeleted))
-                    .ThenInclude(pv => pv.ProductVariantOptions.Where(pvo => !pvo.IsDeleted))
-                .Include(p => p.Skus.Where(s => !s.IsDeleted))
-                .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
+                    .AsNoTracking()
+                    .AsSplitQuery()
+                    .Include(p => p.Category)
+                    .Include(p => p.DiscountType)
+                    .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
+                    .Include(p => p.ProductVariants.Where(pv => !pv.IsDeleted))
+                        .ThenInclude(pv => pv.ProductVariantOptions.Where(pvo => !pvo.IsDeleted))
+                    .Include(p => p.Skus.Where(s => !s.IsDeleted))
+                        .ThenInclude(s => s.SKUJoinOptions)
+                            .ThenInclude(jo => jo.ProductVariantOptions)
+                                .ThenInclude(pvo => pvo.ProductVariant)
+                    .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
         }
 
         public async Task<IEnumerable<Product>> GetAllProductsWithMainImageAsync()
         {
             var productsList = await _context.Products
                 .Where(p => !p.IsDeleted)
-                .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted && pi.IsMain)) 
+                .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted && pi.IsMain))
                 .ToListAsync();
 
             return productsList;
