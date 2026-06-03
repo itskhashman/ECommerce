@@ -6,10 +6,11 @@ namespace ECommerce.Application.DTOs.Category
 
     public class CreateCategoryDto
     {
+        [RegularExpression(@"^[\u0600-\u06FF\x20-\x40\x5B-\x60\x7B-\x7E]+$", ErrorMessage = "The Name Should contain Arabic letters, numbers, and symbols only")]
         [Required(ErrorMessage = "The Arabic Name is Required")]
         [MaxLength(30)]
         public string NameAr { get; set; } = null!;
-
+        [RegularExpression(@"^(?=.*[a-zA-Z])[\x20-\x7E]+$", ErrorMessage = "The Name must contain at least one English letter, and use only English letters, numbers, and symbols.")]
         [Required(ErrorMessage = "The English Name is Required")]
         [MaxLength(30)]
         public string NameEn { get; set; } = null!;

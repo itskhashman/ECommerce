@@ -4,11 +4,12 @@
 @{
     Layout = "_Layout";
 }
+
 <body>
     <div class="container mt-4" style="max-width: 600px;">
         <h2 class="mb-4">Create Category</h2>
 
-        <form asp-action="Create" method="post" class="shadow p-4 rounded bg-light">
+        <form asp-action="Create" method="post" enctype="multipart/form-data" class="shadow p-4 rounded bg-light">
 
             <div class="mb-3">
                 <label asp-for="NameAr" class="form-label fw-bold">Arabic Name <span class="text-danger">*</span></label>
@@ -29,7 +30,7 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="ParentCategoryId" class="form-label fw-bold">Parent Category (Optional)</label>
+                <label asp-for="ParentCategoryId" class="form-label fw-bold">Parent Category</label>
                 <select asp-for="ParentCategoryId" asp-items="ViewBag.ParentCategories" class="form-select">
                     <option value="">-- No Main Category --</option>
                 </select>

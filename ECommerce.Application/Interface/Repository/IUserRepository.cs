@@ -10,5 +10,7 @@ namespace ECommerce.Application.Interface.Repository
         public Task<IEnumerable<User>> GetUsersByRoleAsync(int roleId);
         public Task<string?> GetUserRoleAsync(int userId);
         public Task<User?> GetUserWithAddressesAsync(int userId);
+
+        public Task AssignRoleToUserAsync(int userId, int roleId);
     }
 }
