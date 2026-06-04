@@ -16,6 +16,7 @@ namespace ECommerce.Domain.Entities.Products
         [Required]
         [Column(TypeName = "varchar")]
         public string NameEn { get; set; } = null!;
+        public bool IsMainVariant { get; set; }
         [Required]
         public ICollection<ProductVariantOptions> ProductVariantOptions { get; set; } = new List<ProductVariantOptions>();
 
