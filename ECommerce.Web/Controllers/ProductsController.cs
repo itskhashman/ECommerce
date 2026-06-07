@@ -62,26 +62,6 @@ namespace ECommerce.Web.Controllers
                 return View(dto);
             }
 
-            if (dto.ProductVariants != null && dto.ProductVariants.Any())
-            {
-                dto.ProductVariants = dto.ProductVariants
-                    .Where(v => !string.IsNullOrEmpty(v.NameEn))
-                    .ToList();
-
-                foreach (var variant in dto.ProductVariants)
-                {
-                    if (variant.ProductVariantOptions != null)
-                    {
-                        var optionsList = variant.ProductVariantOptions.ToList();
-                        for (int i = 0; i < optionsList.Count; i++)
-                        {
-                            optionsList[i].SortOrder = i;
-                        }
-                        variant.ProductVariantOptions = optionsList;
-                    }
-                }
-            }
-
             dto.ProductImages = new List<ProductImageDto>();
             if (dto.ImageFiles != null && dto.ImageFiles.Any())
             {
@@ -110,23 +90,22 @@ namespace ECommerce.Web.Controllers
                 }
             }
 
-            await _productService.CreateAsync(dto);
+            await _productService.CreateProductWithVariantsAsync(dto);
 
-            TempData["NotifyMessage"] = "Product along with its variants created successfully!";
+            TempData["NotifyMessage"] = "Product along with its variant specifications and SKUs generated successfully!";
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> Edit(int id)
         {
-            var product = await _productService.GetByIdAsync(id);
+            var product = await _productService.GetProductWithAllDetailsAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            var model = _mapper.Map<UpdateProductDto>(product);
-            await PopulateEditDropdownsAsync(model);
+            await PopulateEditDropdownsAsync(product);
 
-            return View(model);
+            return View(product);
         }
 
         [HttpPost]

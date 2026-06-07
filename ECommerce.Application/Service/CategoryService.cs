@@ -23,6 +23,25 @@ namespace ECommerce.Application.Service
 
             return _mapper.Map<IEnumerable<CategoryDto>>(categories);
         }
+        public async Task<IEnumerable<CategoryDto>> GetAllOrderedAsync()
+        {
+            var categories = await _categoryRepository.GetAllAsync();
+
+            var categoryDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+
+            var rootCategories = categoryDto
+                .Where(c => c.ParentCategoryId == null)
+                .ToList();
+
+            foreach (var parent in rootCategories)
+            {
+                parent.Children = categoryDto
+                    .Where(c => c.ParentCategoryId == parent.Id)
+                    .ToList();
+            }
+
+            return rootCategories;
+        }
 
         public async Task<IEnumerable<CategoryDto>> GetAllMainCategoriesAsync()
         {

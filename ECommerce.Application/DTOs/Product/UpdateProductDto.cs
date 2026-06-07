@@ -1,5 +1,7 @@
 ﻿using ECommerce.Application.DTOs.ProductImage;
 using ECommerce.Application.DTOs.ProductVariant;
+using ECommerce.Application.DTOs.ProductVariant.NestedVariant;
+using ECommerce.Application.DTOs.ProductVariant.SimpleVariant;
 using ECommerce.Application.DTOs.Sku;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
@@ -41,6 +43,10 @@ namespace ECommerce.Application.DTOs.Products
         public bool IsActive { get; set; } = true;
 
         public List<ProductVariantDto> ProductVariants { get; set; } = new();
+        public List<SimpleVariantDto> SimpleProductVariants { get; set; } = new();
+        public List<NestedVariantDto> NestedProductVariants { get; set; } = new();
+        public bool HasNestedVariants { get; set; }
+
         public ICollection<ProductImageDto> ProductImages { get; set; } = new List<ProductImageDto>();
         public ICollection<SkuDto> Skus { get; set; } = new List<SkuDto>();
     }

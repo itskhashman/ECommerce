@@ -3,11 +3,14 @@
     Layout = "_Layout";
 }
 
-<div class="container mt-4" style="max-width: 600px;">
+<div class="container mt-4" style="max-width: 800px;">
     <h1>Edit Product</h1>
 
     <form asp-action="Edit" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="Id" />
+
+        <input type="hidden" id="HasNestedVariantsInput" name="HasNestedVariants" value="@(Model?.HasNestedVariants.ToString().ToLower() ?? "false")" />
+        <input type="hidden" id="VariantConfigMode" value="@(Model?.HasNestedVariants == true ? "nested" : "simple")" />
 
         <div class="form-group mb-3">
             <label asp-for="NameEn" class="form-label">Name (English)</label><span class="text-danger">*</span>
@@ -104,7 +107,7 @@
             </div>
             <div class="card-body p-4 bg-light" id="variantsList"></div>
             <div class="card-footer bg-light p-3 text-center border-top-0">
-                <button type="button" class="btn btn-outline-primary" onclick="window.ProductVariantsManager.addVariant()">
+                <button type="button" class="btn btn-outline-primary" onclick="window.ProductVariantsManager.addMainItem()">
                     <i class="bi bi-plus-circle me-2"></i>Add New Variant
                 </button>
             </div>
@@ -124,24 +127,42 @@
 @section Scripts {
     <script src="~/js/product-variants.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-             const existingVariants = @Json.Serialize(Model?.ProductVariants ?? new List<ECommerce.Application.DTOs.ProductVariant.ProductVariantDto>());
+            document.addEventListener("DOMContentLoaded", function() {
+            const mainCategorySelect = document.getElementById("MainCategoryId");
+            const savedSubCategoryId = '@Model?.CategoryId';
 
-             if (window.ProductVariantsManager) {
-                 if (typeof window.ProductVariantsManager.initWithData === "function") {
-                     window.ProductVariantsManager.initWithData(existingVariants);
-                 } else {
-                     window.ProductVariantsManager.init(existingVariants.length);
-                 }
-             }
-         });
+            if (mainCategorySelect && mainCategorySelect.value) {
+                loadSubCategories(mainCategorySelect.value, savedSubCategoryId, initializeVariantsLayout);
+            } else {
+                initializeVariantsLayout();
+            }
+        });
 
-        function loadSubCategories(mainCategoryId) {
+        function initializeVariantsLayout() {
+            const isNestedMode = @Json.Serialize(Model?.HasNestedVariants ?? false);
+
+            const existingVariants = @Json.Serialize(
+                            Model?.HasNestedVariants == true
+                                    ? Model.NestedProductVariants
+                                    : Model?.SimpleProductVariants
+                    );
+
+        console.log("Loaded Dynamic Variant Payload:", existingVariants); 
+
+            if (window.ProductVariantsManager) {
+                window.ProductVariantsManager.initWithData(existingVariants, isNestedMode);
+            }
+        }
+
+        function loadSubCategories(mainCategoryId, selectedSubCategoryId, callback) {
             const childSelect = document.getElementById("CategoryId");
             if (!childSelect) return;
 
             childSelect.innerHTML = '<option value="">-- Select Sub Category --</option>';
-            if (!mainCategoryId) return;
+            if (!mainCategoryId) {
+                if (typeof callback === "function") callback();
+                return;
+            }
 
             fetch(`/Products/GetSubCategories?mainCategoryId=${mainCategoryId}`)
                 .then(response => {
@@ -153,10 +174,20 @@
                         const option = document.createElement("option");
                         option.value = subCat.id;
                         option.textContent = subCat.name;
+
+                        if (selectedSubCategoryId && subCat.id.toString() === selectedSubCategoryId.toString()) {
+                            option.selected = true;
+                        }
+
                         childSelect.appendChild(option);
                     });
+
+                    if (typeof callback === "function") callback();
                 })
-                .catch(error => console.error("Error loading cascading subcategories:", error));
+                .catch(error => {
+                    console.error("Error loading cascading subcategories:", error);
+                    if (typeof callback === "function") callback();
+                });
         }
     </script>
 }

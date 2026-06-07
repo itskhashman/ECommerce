@@ -3,10 +3,11 @@
     Layout = "_Layout";
 }
 
-<div class="container mt-4" style="max-width: 600px;">
+<div class="container mt-4" style="max-width: 800px;">
     <h1>Create Product</h1>
 
     <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <input type="hidden" id="HasNestedVariantsInput" name="HasNestedVariants" value="false" />
         <div class="form-group mb-3">
             <label asp-for="NameEn" class="form-label">Name (English)</label><span class="text-danger">*</span>
             <input asp-for="NameEn" class="form-control" />
@@ -78,10 +79,26 @@
             <div class="card-header bg-secondary text-white py-3">
                 <h5 class="mb-0 fw-bold">Product Variants & Options</h5>
             </div>
-            <div class="card-body p-4 bg-light" id="variantsList"></div>
+            <div class="card-body p-3 bg-white border-bottom">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <label for="VariantConfigMode" class="form-label fw-bold text-dark small mb-1">
+                            Product Variant Mode
+                        </label>
+                        <select class="form-select form-select-sm fw-bold" id="VariantConfigMode" name="VariantConfigMode" onchange="window.ProductVariantsManager.switchMode(this.value)">
+                            <option value="simple" selected>Simple Structure</option>
+                            <option value="nested">Nested Structure</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4 bg-light">
+                <div id="variantsHeader"></div>
+                <div id="variantsList"></div>
+            </div>
             <div class="card-footer bg-light p-3 text-center border-top-0">
-                <button type="button" class="btn btn-outline-primary" onclick="window.ProductVariantsManager.addVariant()">
-                    <i class="bi bi-plus-circle me-2"></i>Add New Variant
+                <button type="button" class="btn btn-outline-primary" onclick="window.ProductVariantsManager.addMainItem()">
+                    <i class="bi bi-plus-circle me-2"></i>Add Variant Type
                 </button>
             </div>
         </div>
@@ -98,24 +115,22 @@
 @section Scripts {
     <script src="~/js/product-variants.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            
-        const initialVariantCount = @(Model != null && Model.ProductVariants != null ? Model.ProductVariants.Count : 0);
-
-        if (window.ProductVariantsManager) {
-            window.ProductVariantsManager.init(initialVariantCount);
-        }
-            
+        document.addEventListener("DOMContentLoaded", function () {
+            if (window.ProductVariantsManager) {
+                window.ProductVariantsManager.init("simple");
+            } else {
+                console.error("Could not load ProductVariantsManager object. Check file paths.");
+            }
         });
 
 
-                
+
         function loadSubCategories(mainCategoryId) {
             const childSelect = document.getElementById("CategoryId");
             if (!childSelect) return;
 
             childSelect.innerHTML = '<option value="">-- Select Sub Category --</option>';
-
+            
             if (!mainCategoryId) return;
 
             fetch(`/Products/GetSubCategories?mainCategoryId=${mainCategoryId}`)
@@ -132,6 +147,6 @@
                     });
                 })
                 .catch(error => console.error("Error loading cascading subcategories:", error));
-        }        
+        }
     </script>
 }

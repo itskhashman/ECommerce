@@ -1,5 +1,5 @@
 ﻿using ECommerce.Application.Interface.Service;
-using ECommerce.Web.Models.ViewModels;
+using ECommerce.Web.Models.ViewModels.Account;
 using Microsoft.AspNetCore.Mvc;
 
 public class AccountController : Controller

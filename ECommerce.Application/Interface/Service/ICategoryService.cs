@@ -6,6 +6,7 @@ namespace ECommerce.Application.Interfaces.services
     public interface ICategoryService
     {
         Task<IEnumerable<CategoryDto>> GetAllAsync();
+        Task<IEnumerable<CategoryDto>> GetAllOrderedAsync();
         Task<IEnumerable<CategoryDto>> GetAllMainCategoriesAsync();
         Task<IEnumerable<CategoryDto>> GetAllSubCategoriesAsync();
         Task<IEnumerable<CategoryDto>> GetSubCategoriesByMainCategoryIdAsync(int mainCategoryId);

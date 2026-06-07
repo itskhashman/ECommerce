@@ -121,17 +121,9 @@
                     <div class="col-sm-6">
                         <div class="border rounded p-3 bg-light h-100 d-flex flex-column justify-content-center gap-2">
 
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted small">Discount Type</span>
-                                <span class="fw-bold text-dark">
-                                    @(string.IsNullOrEmpty(Model.DiscountTypeName) ? "None" : Model.DiscountTypeName)
-                                </span>
-                            </div>
-
-                            <hr class="m-0 text-black-50 opacity-25" />
 
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted small">Amount</span>
+                                <span class="text-muted small">Discount</span>
                                 <span class="fw-bold text-dark">
                                     @if (Model.DiscountTypeId == 1 && Model.DiscountAmount.HasValue)
                                     {
