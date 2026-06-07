@@ -55,7 +55,9 @@ namespace ECommerce.Application.Service
         public async Task<ProductDto?> GetByIdAsync(int id)
         {
             var product = await _productRepository.GetAllProductDetailsAsync(id);
-            return _mapper.Map<ProductDto>(product);
+            if (product == null) return null;
+
+            return MapProductToProductDto(product);
         }
 
         public async Task<IEnumerable<DiscountTypeDto>> GetDiscountTypesAsync()
@@ -330,5 +332,134 @@ namespace ECommerce.Application.Service
 
             return productEntity;
         }
+        private ProductDto MapProductToProductDto(Product productEntity)
+        {
+            var ProductDto = _mapper.Map<ProductDto>(productEntity);
+            ProductDto.HasNestedVariants = productEntity.HasNestedVariants;
+
+            ProductDto.SimpleProductVariants = new List<SimpleVariantDto>();
+            ProductDto.NestedProductVariants = new List<NestedVariantDto>();
+
+            var productVariants = productEntity.ProductVariants ?? new List<ProductVariant>();
+            var skus = productEntity.Skus ?? new List<Sku>();
+
+            if (!productEntity.HasNestedVariants)
+            {
+                foreach (var variantEntity in productVariants)
+                {
+                    var simpleVariant = new SimpleVariantDto
+                    {
+                        Id = variantEntity.Id,
+                        NameEn = variantEntity.NameEn,
+                        NameAr = variantEntity.NameAr,
+                        Options = new List<SimpleOptionDto>()
+                    };
+
+                    foreach (var optionEntity in variantEntity.ProductVariantOptions)
+                    {
+                        var matchingSku = skus.FirstOrDefault(s => s.SKUJoinOptions != null &&
+                            s.SKUJoinOptions.Any(jo => jo.ProductVariantOptionsId == optionEntity.Id));
+
+                        if (matchingSku != null)
+                        {
+                            simpleVariant.Options.Add(new SimpleOptionDto
+                            {
+                                Id = optionEntity.Id,
+                                NameEn = optionEntity.NameEn,
+                                NameAr = optionEntity.NameAr,
+                                Price = matchingSku.Price,
+                                Stock = matchingSku.Stock
+                            });
+                        }
+                    }
+                    ProductDto.SimpleProductVariants.Add(simpleVariant);
+                }
+            }
+
+            else
+            {
+                foreach (var sku in skus)
+                {
+                    if (sku.SKUJoinOptions == null || sku.SKUJoinOptions.Count < 2)
+                        continue;
+
+                    var joinedVariantOptions = sku.SKUJoinOptions
+                        .Select(jo => jo.ProductVariantOptions)
+                        .Where(o => o != null && o.ProductVariant != null)
+                        .ToList();
+
+                    var mainOptions = joinedVariantOptions.Where(o => o.ProductVariant.IsMainVariant).ToList();
+                    var subOptions = joinedVariantOptions.Where(o => !o.ProductVariant.IsMainVariant).ToList();
+
+                    foreach (var mainOptionEntity in mainOptions)
+                    {
+                        var mainVariantEntity = mainOptionEntity.ProductVariant;
+
+                        foreach (var subOptionEntity in subOptions)
+                        {
+                            var subVariantEntity = subOptionEntity.ProductVariant;
+
+                            var nestedVariantDto = ProductDto.NestedProductVariants
+                                .FirstOrDefault(v => v.Id == mainVariantEntity.Id);
+                            if (nestedVariantDto == null)
+                            {
+                                nestedVariantDto = new NestedVariantDto
+                                {
+                                    Id = mainVariantEntity.Id,
+                                    NameEn = mainVariantEntity.NameEn,
+                                    NameAr = mainVariantEntity.NameAr,
+                                    Options = new List<NestedMainOptionDto>()
+                                };
+                                ProductDto.NestedProductVariants.Add(nestedVariantDto);
+                            }
+
+                            var mainOptionDto = nestedVariantDto.Options
+                                .FirstOrDefault(o => o.Id == mainOptionEntity.Id);
+                            if (mainOptionDto == null)
+                            {
+                                mainOptionDto = new NestedMainOptionDto
+                                {
+                                    Id = mainOptionEntity.Id,
+                                    NameEn = mainOptionEntity.NameEn,
+                                    NameAr = mainOptionEntity.NameAr,
+                                    SubVariants = new List<NestedSubVariantDto>()
+                                };
+                                nestedVariantDto.Options.Add(mainOptionDto);
+                            }
+
+                            var subVariantDto = mainOptionDto.SubVariants
+                                .FirstOrDefault(v => v.Id == subVariantEntity.Id);
+                            if (subVariantDto == null)
+                            {
+                                subVariantDto = new NestedSubVariantDto
+                                {
+                                    Id = subVariantEntity.Id,
+                                    NameEn = subVariantEntity.NameEn,
+                                    NameAr = subVariantEntity.NameAr,
+                                    SubOptions = new List<NestedSubOptionDto>()
+                                };
+                                mainOptionDto.SubVariants.Add(subVariantDto);
+                            }
+
+                            if (!subVariantDto.SubOptions.Any(o => o.Id == subOptionEntity.Id))
+                            {
+                                var SubOption = new NestedSubOptionDto
+                                {
+                                    Id = subOptionEntity.Id,
+                                    NameEn = subOptionEntity.NameEn,
+                                    NameAr = subOptionEntity.NameAr,
+                                    Price = sku.Price,
+                                    Stock = sku.Stock
+                                };
+                                subVariantDto.SubOptions.Add(SubOption);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ProductDto;
+        }
+
     }
 }

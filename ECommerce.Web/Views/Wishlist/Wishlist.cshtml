@@ -1,0 +1,104 @@
+﻿@model ECommerce.Application.DTOs.Wishlist.WishlistDto
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold text-dark">My Wishlist</h2>
+            <p class="text-muted small">Manage items you saved and want to purchase later.</p>
+            <hr />
+        </div>
+    </div>
+
+    @if (Model == null || Model.WishlistItems == null || !Model.WishlistItems.Any())
+    {
+        <div class="row justify-content-center my-5">
+            <div class="col-md-6 text-center">
+
+                <h4>Your wishlist is empty!</h4>
+                <a asp-controller="Home" asp-action="Home" class="btn btn-primary px-4 py-2 mt-2 rounded-pill shadow-sm">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var item in Model.WishlistItems)
+            {
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden position-relative product-wishlist-card">
+
+                        <button class="btn btn-light btn-sm text-danger rounded-circle shadow-sm position-absolute border-0"
+                                style="top: 12px; right: 12px; z-index: 10; width: 32px; height: 32px; display: grid; place-content: center;"
+                                onclick="removeItem(@item.ProductId)"
+                                title="Remove Item">
+                            <i class="bi bi-trash fs-6"></i>
+                        </button>
+
+                        <div class="bg-light d-flex align-items-center justify-content-center p-3" style="height: 200px; overflow: hidden;">
+                            @{
+                                var mainImg = item.Product.ProductImages?.FirstOrDefault(img => img.IsMain && !img.IsDeleted)?.URL;
+                            }
+                            <img src="@(string.IsNullOrEmpty(mainImg) ? "/images/placeholder.jpg" : mainImg)"
+                                 class="img-fluid rounded"
+                                 style="max-height: 100%; object-fit: contain;"
+                                 alt="@item.Product.NameEn" />
+                        </div>
+
+                        <div class="card-body d-flex flex-column p-3">
+                            <h6 class="card-title text-dark fw-semibold text-truncate mb-1" title="@item.Product.NameEn">
+                                @item.Product.NameEn
+                            </h6>
+
+                            <div class="mb-3">
+                                @{
+                                    var productPrice = item.Product.Skus?.FirstOrDefault()?.Price;
+                                }
+                                <span class="fs-5 fw-bold text-dark">
+                                    @(productPrice.HasValue? productPrice.Value.ToString("N2") : "0.00")
+                                </span>
+                                <span class="fs-7 fw-medium text-primary ms-1">JOD</span>
+                            </div>
+
+                            <div class="mt-auto pt-2">
+                                <button class="btn btn-outline-primary btn-sm w-100 rounded-pill py-2 fw-medium">
+                                    <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section scripts {
+    <script>
+
+        async function removeItem(productId){
+            if (!confirm("Are you sure you want to remove this item from your wishlist?")) return;
+
+            try {
+                const response = await fetch(`/api/Wishlist/RemoveFromWishlist?productId=${productId}&userId=${@Model.UserId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || 'Failed to remove item from wishlist. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while removing the item. Please try again.');
+            }
+        }
+    </script>
+}

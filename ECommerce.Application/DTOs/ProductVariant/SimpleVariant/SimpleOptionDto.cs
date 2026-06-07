@@ -1,6 +1,6 @@
 ﻿namespace ECommerce.Application.DTOs.ProductVariant.SimpleVariant
 {
-    public class SimpleOptionDto
+    public class SimpleOptionDto : BaseDto
     {
         public string NameEn { get; set; } = null!;
         public string NameAr { get; set; } = null!;

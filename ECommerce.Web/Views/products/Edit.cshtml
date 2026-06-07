@@ -154,7 +154,7 @@
             }
         }
 
-        function loadSubCategories(mainCategoryId, selectedSubCategoryId, callback) {
+           function loadSubCategories(mainCategoryId, selectedSubCategoryId = null, callback = null) {
             const childSelect = document.getElementById("CategoryId");
             if (!childSelect) return;
 
@@ -164,7 +164,7 @@
                 return;
             }
 
-            fetch(`/Products/GetSubCategories?mainCategoryId=${mainCategoryId}`)
+            fetch(`/api/Category/GetSubCategories?mainCategoryId=${mainCategoryId}`)
                 .then(response => {
                     if (!response.ok) throw new Error("Network response was not OK");
                     return response.json();
@@ -173,7 +173,8 @@
                     data.forEach(subCat => {
                         const option = document.createElement("option");
                         option.value = subCat.id;
-                        option.textContent = subCat.name;
+
+                        option.textContent = subCat.name || subCat.nameEn || "Unnamed Option";
 
                         if (selectedSubCategoryId && subCat.id.toString() === selectedSubCategoryId.toString()) {
                             option.selected = true;
@@ -188,6 +189,5 @@
                     console.error("Error loading cascading subcategories:", error);
                     if (typeof callback === "function") callback();
                 });
-        }
-    </script>
+        }</script>
 }

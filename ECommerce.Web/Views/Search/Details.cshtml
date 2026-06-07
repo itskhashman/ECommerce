@@ -1,0 +1,498 @@
+﻿@using ECommerce.Application.DTOs.Wishlist
+
+@model ECommerce.Application.DTOs.Products.ProductDto
+
+
+
+@{
+    var Images = Model.ProductImages.ToList();
+    var mainImage = Images.FirstOrDefault(img => img.IsMain);
+    var HasNested = Model.HasNestedVariants;
+    var SimpleVariants = Model.SimpleProductVariants.ToList();
+    var NestedVariants = Model.NestedProductVariants.ToList();
+}
+
+
+
+<div class="container my-5">
+
+    <div class="row g-5">
+        <div class="col-lg-5 col-md-6">
+            <div class="main-image-container border rounded-4 bg-white shadow-sm mb-3 d-flex align-items-center justify-content-center overflow-hidden position-relative" style="height: 450px; transition: all 0.3s ease;">
+                @if (mainImage != null && !string.IsNullOrEmpty(mainImage.URL))
+                {
+                    <img src="@mainImage.URL" id="mainDisplayImage" class="w-100 h-100 p-3" style="object-fit: contain;" alt="@Model.NameEn" />
+                }
+                else
+                {
+                    <div class="text-muted text-center">
+                        <span class="d-block small">No image uploaded</span>
+                    </div>
+                }
+            </div>
+            @if (Images.Count > 1)
+            {
+                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                    @foreach (var img in Images)
+                    {
+                        var isActive = img.URL == mainImage?.URL ? "border-dark shadow" : "opacity-75";
+                        <img src="@img.URL"
+                             class="rounded-3 border @isActive"
+                             style="width: 75px; height: 60px; object-fit: cover; cursor: pointer; transition: all 0.2s;"
+                             onclick="switchMainImage(this.src)" />
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-7 col-md-6">
+            <span class="badge bg-secondary-subtle text-secondary text-uppercase px-3 py-2 rounded-pill fw-bold mb-2">
+                @Model.CategoryNameEn
+            </span>
+            <h1 class="fw-extrabold text-dark fs-1 mb-2">@Model.NameEn</h1>
+
+            <div class="d-flex align-items-center flex-wrap gap-3 mb-4">
+                @if (Model.DiscountType?.Id != null)
+                {
+                    <div id="priceWithDiscountContainer" class="d-none align-items-center gap-2">
+                        <span id="priceDisplayHeader" class="fs-2 fw-extrabold text-primary">--</span>
+                        <span class="fs-5 text-primary fw-medium me-2">JOD</span>
+                        <span class="text-decoration-line-through text-muted fs-5" id="originalPriceDisplay">--</span>
+                        <span class="text-muted small me-2">JOD</span>
+                        <span class="badge bg-danger text-white rounded-pill px-2 py-1 small fw-bold">
+                            <i class="bi bi-tag-fill me-1"></i>
+                            @Model.DiscountAmount@(Model.DiscountTypeId == 1 ? "%" : " JOD")
+                        </span>
+                    </div>
+
+                    <div id="priceInitialPlaceholder" class="d-flex align-items-baseline gap-2">
+                        <span class="fs-5 fw-medium text-primary">Select variant to show price & avaliblity</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex align-items-baseline gap-2">
+                        <span id="priceDisplayHeader" class="fs-5 fw-bold text-primary">
+                            Select variant to show price & Avaliblity
+                        </span>
+                        <span id="currencyLabel" class="fs-5 text-muted d-none">JOD</span>
+                    </div>
+                }
+            </div>
+
+            <div id="stockBadgeContainer" class="mb-4 d-none">
+                <span id="stockStatusBadge" class="badge px-3 py-2 rounded-pill fw-medium border"></span>
+            </div>
+
+
+
+            <p class="text-muted mb-4 fs-6 border-bottom pb-4">@Model.DescriptionEn</p>
+
+            <div class="my-4 p-4 bg-light rounded-4 border">
+                @if (HasNested)
+                {
+                    @foreach (var mainVariant in NestedVariants)
+                    {
+                        <div class="mb-4">
+
+                            <label class="fw-bold text-dark small text-uppercase mb-2">
+                                Choose @mainVariant.NameEn
+                            </label>
+
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                @foreach (var mainOption in mainVariant.Options)
+                                {
+                                    var targetId = $"sub-group-{mainOption.Id}";
+                                    <button type="button"
+                                            class="btn btn-outline-dark px-4 py-2 rounded-3 nested-main-btn fw-medium transition-all"
+                                            onclick="toggleSubVariants(this, '@targetId')">
+                                        @mainOption.NameEn
+                                    </button>
+                                }
+                            </div>
+
+                            @foreach (var mainOption in mainVariant.Options)
+                            {
+                                var targetId = $"sub-group-{mainOption.Id}";
+                                <div id="@targetId" class="mt-2 p-3 bg-white rounded-3 border shadow-sm d-none sub-variant-container">
+                                    @foreach (var subVariant in mainOption.SubVariants)
+                                    {
+                                        <div class="mb-2">
+
+                                            <label class="fw-semibold text-secondary small text-uppercase mb-2 d-block">
+                                                Select @subVariant.NameEn
+                                            </label>
+
+                                            <div class="d-flex flex-wrap gap-2">
+                                                @foreach (var subOption in subVariant.SubOptions)
+                                                {
+                                                    <button type="button"
+                                                            class="btn btn-outline-secondary btn-sm px-3 py-2 rounded-3 nested-sub-btn text-start"
+                                                            onclick="selectSubOption(this, @subOption.Price, @subOption.Stock, '@Model.Skus.Where(sk => sk.SKUJoinOptions.Any(sku => sku.ProductVariantOptionsId == subOption.Id)).Select(sk => sk.Id).FirstOrDefault()')">
+                                                        <span class="fw-bold d-block text-dark">@subOption.NameEn</span>
+                                                        <div class="d-flex justify-content-between gap-3 mt-1 small" style="font-size: 0.72rem;">
+                                                        </div>
+                                                    </button>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                    }
+
+                }
+                else
+                {
+                    @if (SimpleVariants != null && SimpleVariants.Any())
+                    {
+                        @foreach (var variant in SimpleVariants)
+                        {
+                            <div class="mb-3 variant-group">
+
+                                <label class="fw-bold text-dark small text-uppercase mb-2 d-block">
+                                    Choose @variant.NameEn
+                                </label>
+
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach (var option in variant.Options)
+                                    {
+                                        <button type="button"
+                                                class="btn btn-outline-dark px-4 py-2 rounded-3 simple-option-btn text-start"
+                                                onclick="selectSimpleOption(this, @option.Price, @option.Stock, '@Model.Skus.Where(sk => sk.SKUJoinOptions.Any(sku => sku.ProductVariantOptionsId == option.Id)).Select(sk => sk.Id).FirstOrDefault()')">
+                                            <span class="fw-bold d-block">@option.NameEn</span>
+                                            <div class="d-flex justify-content-between gap-3 mt-1 small" style="font-size: 0.72rem;">
+                                            </div>
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+
+                <div id="quantityControlRow" class="mt-4 pt-3 border-top d-none">
+
+                    <label class="fw-bold text-dark small text-uppercase mb-2 d-block">Quantity</label>
+                    <div class="d-flex align-items-center gap-2" style="max-width: 160px;">
+
+                        <button type="button" style="max-width: 40px;" class="btn btn-outline-secondary rounded-3 px-3 py-2 fw-bold" onclick="adjustQuantity(-1)">-</button>
+
+                        <input type="number"
+                               style="max-width: 50px;"
+                               id="purchaseQuantity"
+                               class="form-control text-center fw-bold border-secondary-subtle py-2 rounded-3"
+                               value="1"
+                               min="1" />
+                        <button type="button" style="max-width: 40px;" class="btn btn-outline-secondary rounded-3 px-3 py-2 fw-bold" onclick="adjustQuantity(1)">+</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="d-flex align-items-center gap-3 mt-4 pt-2">
+
+                <button type="button"
+                        id="addToCartBtn"
+                        class="btn btn-primary btn-lg rounded-pill shadow-sm d-inline-flex align-items-center px-5 py-3 fw-bold disabled"
+                        onclick="handleCartSubmission()">
+                    <i class="bi bi-cart-plus me-2 fs-5"></i> Add to Cart
+                </button>
+
+                <button type="button"
+                        id="wishlistBtn"
+                        class="btn btn-outline-danger rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm text-center disabled"
+                        style="width: 54px; height: 54px; padding: 0; transition: all 0.2s;"
+                        onclick="handleWishlistSubmission(@ViewBag.UserId)">
+                    <i class="bi bi-heart fs-5"></i>
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+<style>
+
+    #purchaseQuantity::-webkit-outer-spin-button,
+    #purchaseQuantity::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+
+
+    #purchaseQuantity {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+
+</style>
+
+@section Scripts {
+    <script>
+        let currentSelection = {
+            skuId: null,
+            price: 0,
+            stock: 0,
+            isWishlisted: @ViewBag.IsProductWishlisted.ToString().ToLower()
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateWishlistButtonUI();
+        });
+
+        function switchMainImage(src) {
+            const mainDisplay = document.getElementById('mainDisplayImage');
+            if (mainDisplay) {
+                mainDisplay.src = src;
+            }
+        }
+
+        function toggleSubVariants(element, targetId) {
+            const parentContainer = element.parentElement;
+
+            const buttons = parentContainer.getElementsByClassName('nested-main-btn');
+            for (let btn of buttons) {
+                btn.classList.replace('btn-dark', 'btn-outline-dark');
+            }
+            element.classList.replace('btn-outline-dark', 'btn-dark');
+
+            const sectionWrapper = parentContainer.parentElement;
+            const containers = sectionWrapper.getElementsByClassName('sub-variant-container');
+            for (let box of containers) {
+                box.classList.add('d-none');
+                const subButtons = box.getElementsByClassName('nested-sub-btn');
+                for (let subBtn of subButtons) {
+                    subBtn.classList.replace('btn-secondary', 'btn-outline-secondary');
+                }
+            }
+
+            const targetBox = document.getElementById(targetId);
+            if (targetBox) {
+                targetBox.classList.remove('d-none');
+            }
+
+            resetPurchaseState();
+        }
+        function selectSubOption(element, price, stock, skuId) {
+            const rowContainer = element.parentElement;
+            const subButtons = rowContainer.getElementsByClassName('nested-sub-btn');
+            for (let btn of subButtons) {
+                btn.classList.replace('btn-secondary', 'btn-outline-secondary');
+            }
+            element.classList.replace('btn-outline-secondary', 'btn-secondary');
+
+            setFinalSelection(skuId, price, stock);
+        }
+
+        function selectSimpleOption(element, price, stock, skuId) {
+            const container = element.parentElement;
+            const buttons = container.getElementsByClassName('simple-option-btn');
+            for (let btn of buttons) {
+                btn.classList.replace('btn-dark', 'btn-outline-dark');
+            }
+            element.classList.replace('btn-outline-dark', 'btn-dark');
+
+            setFinalSelection(skuId, price, stock);
+        }
+
+        function setFinalSelection(skuId, price, stock) {
+            currentSelection.skuId = skuId;
+            currentSelection.price = price;
+            currentSelection.stock = stock;
+
+            updateWishlistButtonUI();
+
+            const qtyInput = document.getElementById('purchaseQuantity');
+            if (qtyInput) qtyInput.value = 1;
+
+            const discountValue = parseFloat("@Model.DiscountAmount") || 0;
+            const discountTypeId = parseInt("@Model.DiscountTypeId") || null;
+            const isPercentage = discountTypeId !== null && discountTypeId === 1;
+
+            let finalPrice = price;
+
+            const priceHeader = document.getElementById('priceDisplayHeader');
+            if (priceHeader) {
+                if (discountValue > 0) {
+                    if (isPercentage) {
+                        finalPrice = price - (price * (discountValue / 100));
+                    } else {
+                        finalPrice = price - discountValue;
+                    }
+
+                    const discountContainer = document.getElementById('priceWithDiscountContainer');
+                    const placeholderContainer = document.getElementById('priceInitialPlaceholder');
+                    if(discountContainer) discountContainer.classList.remove('d-none');
+                    if(placeholderContainer) placeholderContainer.classList.add('d-none');
+
+                    priceHeader.innerText = finalPrice.toFixed(2);
+
+                    const origPrice = document.getElementById('originalPriceDisplay');
+                    if(origPrice) origPrice.innerText = price.toFixed(2);
+                } else {
+                    priceHeader.innerText = price.toFixed(2);
+                    const currencyLabel = document.getElementById('currencyLabel');
+                    const priceDisplayHeader = document.getElementById('priceDisplayHeader');
+                    if (priceDisplayHeader){
+                        priceDisplayHeader.classList.remove('fs-5');
+                        priceDisplayHeader.classList.add('fs-2');
+                    }
+                    if(currencyLabel) currencyLabel.classList.remove('d-none');
+                }
+            }
+
+            const qtyRow = document.getElementById('quantityControlRow');
+            if (qtyRow) {
+                if (stock > 0) {
+                    qtyRow.classList.remove('d-none');
+                } else {
+                    qtyRow.classList.add('d-none');
+                }
+            }
+
+            evalulateStockUI();
+        }
+
+        function adjustQuantity(amount) {
+            const qtyInput = document.getElementById('purchaseQuantity');
+            let currentQty = parseInt(qtyInput.value) || 1;
+            currentQty += amount;
+
+            if (currentQty < 1) currentQty = 1;
+            if (currentQty > currentSelection.stock) currentQty = currentSelection.stock;
+
+            qtyInput.value = currentQty;
+            evalulateStockUI();
+        }
+
+        function evalulateStockUI() {
+            const badgeContainer = document.getElementById('stockBadgeContainer');
+            const statusBadge = document.getElementById('stockStatusBadge');
+            const cartBtn = document.getElementById('addToCartBtn');
+            const wishlistBtn = document.getElementById('wishlistBtn');
+            const qtyInput = document.getElementById('purchaseQuantity');
+
+            const selectedQty = qtyInput ? (parseInt(qtyInput.value) || 1) : 1;
+
+            if (badgeContainer) badgeContainer.classList.remove('d-none');
+
+            if (currentSelection.stock === 0) {
+                if (statusBadge) {
+                    statusBadge.className = "badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill fw-medium";
+                    statusBadge.innerText = "Out of Stock";
+                }
+                if (cartBtn) cartBtn.classList.add('disabled');
+                if (wishlistBtn) wishlistBtn.classList.remove('disabled');
+            } else if (selectedQty > currentSelection.stock) {
+                if (statusBadge) {
+                    statusBadge.className = "badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2 rounded-pill fw-medium";
+                    statusBadge.innerText = `Insufficient Stock (Only ${currentSelection.stock} items left)`;
+                }
+                if (cartBtn) cartBtn.classList.add('disabled');
+                if (wishlistBtn) wishlistBtn.classList.remove('disabled');
+            } else {
+                if (statusBadge) {
+                    statusBadge.className = "badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fw-medium";
+                    statusBadge.innerText = `In Stock (${currentSelection.stock} units left)`;
+                }
+                if (cartBtn) cartBtn.classList.remove('disabled');
+                if (wishlistBtn) wishlistBtn.classList.remove('disabled');
+            }
+        }
+
+        function updateWishlistButtonUI() {
+            const wishlistBtn = document.getElementById('wishlistBtn');
+            if (!wishlistBtn) return;
+
+            wishlistBtn.classList.remove('disabled');
+
+            const heartIcon = wishlistBtn.querySelector('i');
+            if (currentSelection.isWishlisted) {
+                wishlistBtn.classList.remove('btn-outline-danger');
+                wishlistBtn.classList.add('btn-danger');
+                heartIcon.className = "bi bi-heart-fill fs-5 text-white";
+            } else {
+                wishlistBtn.classList.remove('btn-danger');
+                wishlistBtn.classList.add('btn-outline-danger');
+                heartIcon.className = "bi bi-heart fs-5";
+            }
+        }
+
+        function resetPurchaseState() {
+            currentSelection.skuId = null;
+            currentSelection.price = 0;
+            currentSelection.stock = 0;
+
+            document.getElementById('priceDisplayHeader').innerText = "--";
+
+            const currencyLabel = document.getElementById('currencyLabel');
+            if(currencyLabel) currencyLabel.classList.add('d-none');
+
+            const discountContainer = document.getElementById('priceWithDiscountContainer');
+            const placeholderContainer = document.getElementById('priceInitialPlaceholder');
+            if(discountContainer) discountContainer.classList.add('d-none');
+            if(placeholderContainer) placeholderContainer.classList.remove('d-none');
+
+            document.getElementById('quantityControlRow').classList.add('d-none');
+            document.getElementById('stockBadgeContainer').classList.add('d-none');
+            document.getElementById('addToCartBtn').classList.add('disabled');
+
+            updateWishlistButtonUI();
+        }
+
+        async function handleCartSubmission() {
+            const qtyInput = document.getElementById('purchaseQuantity');
+            const qty = parseInt(qtyInput.value) || 1;
+
+            if (!currentSelection.skuId || currentSelection.stock <= 0 || qty > currentSelection.stock) return;
+
+            try {
+                const response = await fetch(`/api/Cart/AddToCart?skuId=${currentSelection.skuId}&quantity=${qty}`, {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    alert(data.message);
+                } else {
+                    alert(data.message || "Could not process request on the server.");
+                }
+            } catch (error) {
+                console.error("Cart Request Exception:", error);
+            }
+        }
+
+        async function handleWishlistSubmission(userId) {
+            const productId = "@Model.Skus.FirstOrDefault().ProductId";
+            const endpoint = currentSelection.isWishlisted ? "RemoveFromWishlist" : "AddToWishlist";
+
+            try {
+                const response = await fetch(`/api/Wishlist/${endpoint}?productId=${productId}&userId=${userId}`, {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    alert(data.message);
+                    currentSelection.isWishlisted = !currentSelection.isWishlisted;
+                    updateWishlistButtonUI();
+                } else {
+                    alert(data.message || "Could not update wishlist data.");
+                }
+            } catch (error) {
+                console.error("Wishlist Request Exception:", error);
+            }
+        }
+    </script>
+}

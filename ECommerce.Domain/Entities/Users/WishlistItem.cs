@@ -12,9 +12,9 @@ namespace ECommerce.Domain.Entities.Users
         public int WishlistId { get; set; }
         public Wishlist Wishlist { get; set; } = null!;
         [Required]
-        [ForeignKey("Sku")]
-        public int SkuId { get; set; }
-        public Sku Sku { get; set; } = null!;
+        [ForeignKey("Product")]
+        public int ProductId { get; set; }
+        public Product Product { get; set; } = null!;
         [MaxLength(500)]
         [Column(TypeName = "varchar")]
         public string? Notes { get; set; }
