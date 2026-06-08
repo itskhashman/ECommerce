@@ -19,38 +19,11 @@
                         var hasChildren = mainCategory.Children != null && mainCategory.Children.Any();
 
                         <li class="list-group-item p-0 border-bottom border-light-subtle">
-                            @if (hasChildren)
-                            {
-                                <a class="w-100 d-flex align-items-center justify-content-between py-3 px-3 
-                                    fw-semibold text-dark small border-0 shadow-none bg-transparent rounded-0 text-decoration-none"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#@targetId">
-                                    <span><i class="bi bi-folder2 text-primary mx-1"></i> @mainCategory.NameEn</span>
-                                    <i class="bi bi-chevron-down text-muted small opacity-75"></i>
-                                </a>
-                            }
-                            else
-                            {
-                                <a class="d-flex align-items-center py-3 px-3 fw-semibold text-dark small">
+                                <a class="d-flex align-items-center py-3 px-3 fw-semibold text-dark small text-decoration-none">
                                     <i class="bi bi-folder2 text-primary mx-1"></i> @mainCategory.NameEn
                                 </a>
-                            }
                         </li>
 
-                        @if (hasChildren)
-                        {
-                            <div class="collapse sub-category-collapse bg-light-subtle" id="@targetId">
-                                <div class="list-group list-group-flush border-bottom border-light-subtle small">
-                                    @foreach (var subCategory in mainCategory.Children)
-                                    {
-                                        <a class="list-group-item list-group-item-action border-0 ps-4 py-2 bg-transparent text-decoration-none">
-                                            <i class="bi bi-arrow-return-right text-primary text-muted me-2 small"></i>@subCategory.NameEn
-                                        </a>
-                                    }
-                                </div>
-                            </div>
-                        }
                     }
                 </ul>
             </div>
@@ -58,7 +31,7 @@
         <div class="col-lg-9 col-md-8">
 
             <div class="mb-4">
-                <form method="get" asp-action="Search">
+                <form method="get" asp-controller="Search" asp-action="Search">
                     <div class="input-group input-group-lg border border-light-subtle rounded-3 overflow-hidden bg-white">
                         <span class="input-group-text bg-white border-0 text-muted pe-0">
                             <i class="bi bi-search ms-1"></i>

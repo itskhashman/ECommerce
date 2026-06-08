@@ -10,12 +10,23 @@ builder.Services.AddECommerceServices(builder.Configuration);
 
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
+}
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ECommerce API");
+    });
 }
 
 app.UseHttpsRedirection();

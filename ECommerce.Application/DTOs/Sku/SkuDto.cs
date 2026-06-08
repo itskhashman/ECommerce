@@ -1,4 +1,4 @@
-﻿using ECommerce.Application.DTOs.ProductVariantOption;
+﻿using ECommerce.Application.DTOs.Products;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -7,6 +7,7 @@ namespace ECommerce.Application.DTOs.Sku
     public class SkuDto : BaseDto
     {
         public int ProductId { get; set; }
+        public ProductDto Product { get; set; } = null!;
         [Required]
         [MaxLength(50)]
         public string SkuCode { get; set; } = null!;
@@ -18,7 +19,7 @@ namespace ECommerce.Application.DTOs.Sku
         public bool IsActive { get; set; } = true;
         public decimal? Weight { get; set; }
         public int? LowStockThreshold { get; set; }
-        public ICollection<ProductVariantOptionsDto>? SKUJoinOptions { get; set; } = new List<ProductVariantOptionsDto>();
+        public ICollection<SKUProductVariantOptionsDto>? SKUJoinOptions { get; set; } = new List<SKUProductVariantOptionsDto>();
 
 
     }

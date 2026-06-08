@@ -157,12 +157,6 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSubCategories(int mainCategoryId)
-        {
-            var subCategories = await _categoryService.GetSubCategoriesByMainCategoryIdAsync(mainCategoryId);
-            return Json(subCategories.Select(c => new { id = c.Id, name = c.NameEn }));
-        }
-        [HttpGet]
         private async Task PopulateDropdownsAsync()
         {
             var mainCategories = await _categoryService.GetAllMainCategoriesAsync();

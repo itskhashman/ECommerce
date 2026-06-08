@@ -4,6 +4,7 @@ namespace ECommerce.Application.DTOs.ProductVariantOption
 {
     public class ProductVariantOptionsDto : BaseDto
     {
+        [Required]
         public int ProductVariantId { get; set; }
         [Required]
         [MaxLength(30)]

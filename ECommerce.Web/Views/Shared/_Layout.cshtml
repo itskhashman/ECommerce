@@ -34,12 +34,30 @@
                         </li>
                     </ul>
                 }
+
                 <ul class="navbar-nav ms-auto align-items-center">
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
-                        <li class="nav-item me-3 text-light small">
-                            <i class="bi bi-person-circle me-1 text-success"></i>@User.Identity.Name
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <li class="nav-item me-3">
+                                <a class="nav-link text-light position-relative p-1" asp-controller="Wishlist" asp-action="Wishlist" title="My Wishlist">
+                                    <i class="bi bi-heart fs-5 text-danger"></i>
+                                </a>
+                            </li>
+
+                            <li class="nav-item me-4">
+                                <a class="nav-link text-light position-relative p-1" asp-controller="Cart" asp-action="Index" title="My Cart">
+                                    <i class="bi bi-cart3 fs-5 text-info"></i>
+                                </a>
+                            </li>
+                        }
+
+                        <li class="nav-item me-3 text-light small d-flex align-items-center">
+                            <i class="bi bi-person-circle me-1 text-success fs-6"></i>
+                            <span>@User.Identity.Name</span>
                         </li>
+
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-outline-danger btn-sm px-3 fw-medium">

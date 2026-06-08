@@ -33,6 +33,7 @@ public static class DependencyInjectionPortal
         services.ConfigureApplicationCookie(options =>
         {
             options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Login";
         });
 
         services.AddScoped<IIdentityService, IdentityService>();
@@ -40,10 +41,13 @@ public static class DependencyInjectionPortal
 
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IWishlistRepository, WishlistRepository>();
 
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IHomeService, HomeService>();
+        services.AddScoped<ISearchService, SearchService>();
+        services.AddScoped<IWishlistService, WishlistService>();
 
         services.AddAutoMapper(typeof(CategoryProfile).Assembly);
 
