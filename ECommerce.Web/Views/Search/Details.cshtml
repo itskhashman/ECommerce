@@ -197,8 +197,8 @@
 
                 <button type="button"
                         id="addToCartBtn"
-                        class="btn btn-primary btn-lg rounded-pill shadow-sm d-inline-flex align-items-center px-5 py-3 fw-bold disabled"
-                        onclick="handleCartSubmission()">
+                        class="btn btn-dark btn-lg rounded-pill shadow-sm d-inline-flex align-items-center px-5 py-3 fw-bold disabled"
+                        onclick="handleCartSubmission(@ViewBag.UserId)">
                     <i class="bi bi-cart-plus me-2 fs-5"></i> Add to Cart
                 </button>
 
@@ -449,15 +449,22 @@
             updateWishlistButtonUI();
         }
 
-        async function handleCartSubmission() {
+
+                
+        async function handleCartSubmission(userId) {
             const qtyInput = document.getElementById('purchaseQuantity');
             const qty = parseInt(qtyInput.value) || 1;
 
-            if (!currentSelection.skuId || currentSelection.stock <= 0 || qty > currentSelection.stock) return;
+            if (!currentSelection.skuId || currentSelection.stock <= 0 || qty > currentSelection.stock) {
+                return;
+            }
 
             try {
-                const response = await fetch(`/api/Cart/AddToCart?skuId=${currentSelection.skuId}&quantity=${qty}`, {
-                    method: 'POST'
+                const response = await fetch(`/api/Cart/AddToCart/${userId}?skuId=${currentSelection.skuId}&quantity=${qty}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
 
                 const data = await response.json();

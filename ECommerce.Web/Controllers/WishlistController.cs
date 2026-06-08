@@ -15,7 +15,6 @@ public class WishlistController : Controller
     public async Task<IActionResult> Wishlist()
     {
         var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;
-
         int userId = int.TryParse(domainUserIdClaim, out int parsedUserId) ? parsedUserId : 1;
         
         var wishlist = await _wishlistService.GetWishlistByUserIdAsync(userId);

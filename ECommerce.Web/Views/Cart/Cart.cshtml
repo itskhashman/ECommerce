@@ -1,0 +1,230 @@
+﻿@model ECommerce.Application.DTOs.Cart.CartDto
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+
+    var subtotal = Model?.CartItems?.Sum(item => item.Sku.Price * item.Quantity) ?? 0;
+
+    var totalDiscount = Model?.CartItems?.Sum(item => ((item.Sku.Price - item.PriceAtAddTime) * item.Quantity)) ?? 0;
+
+    var finalTotal = subtotal - totalDiscount;
+}
+
+<div class="container my-5">
+
+    @if (Model == null || Model.CartItems == null || !Model.CartItems.Any())
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center py-5 bg-white">
+                <h3 class="fw-bold text-dark mb-2">Your Cart is Empty</h3>
+                <p class="text-secondary small mb-4 px-4">
+                    Looks like you haven't added anything to your cart yet. Explore our latest arrivals and find something special!
+                </p>
+                <a href="/" class="btn btn-dark rounded-0 px-5 py-2 fw-bold text-uppercase">
+                    Start Shopping
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row mb-4">
+            <div class="col-12 text-center text-muted small fw-bold text-uppercase">
+                <span class="text-dark border-bottom border-2 border-dark pb-1">Cart</span>
+                <span class="mx-2">&gt;</span> Place Order
+                <span class="mx-2">&gt;</span> Pay
+                <span class="mx-2">&gt;</span> Order Complete
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-lg-8">
+                <div class="card border rounded-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <label class="form-check-label fw-bold text-uppercase text-dark fs-5" for="selectAll">
+                                All Items (@Model.CartItems.Count)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0">
+                        @foreach (var item in Model.CartItems)
+                        {
+                            if (item?.Sku?.Product == null) continue;
+
+                            <div class="p-3 border-bottom">
+                                <div class="row g-3 align-items-start">
+
+                                    <div class="col-3 col-sm-2 d-flex align-items-center justify-content-between">
+                                        <div class="border bg-light overflow-hidden w-100" style="aspect-ratio: 3/4;">
+                                            @if (item.Sku.Product.ProductImages != null && item.Sku.Product.ProductImages.Any())
+                                            {
+                                                <img src="@item.Sku.Product.ProductImages.Where(img => img.IsMain).First().URL" class="w-100 h-100 img-fluid" style="object-fit: cover;" alt="@item.Sku.Product.NameEn">
+                                            }
+                                            else
+                                            {
+                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted small bg-secondary-subtle">No Img</div>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="col-9 col-sm-10">
+
+                                        <p class="small text-secondary mb-1 lh-sm text-wrap">
+                                            <strong class="text-dark ">@item.Sku.Product.NameEn</strong> <br> @item.Sku.Product.DescriptionEn
+                                        </p>
+
+                                        <div class="my-2">
+                                            <span class="badge bg-light text-dark border rounded-pill px-2 py-1 small fw-normal">
+                                                @item.Sku.SkuCode
+                                            </span>
+                                        </div>
+
+                                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-3">
+                                            <div>
+                                                <span class="fw-bolder text-danger fs-5 font-monospace">JOD @item.PriceAtAddTime.ToString("F2")</span>
+                                                @if (item.Sku.Product.DiscountAmount > 0)
+                                                {
+                                                    <span class="text-decoration-line-through text-muted small ms-2 font-monospace">JOD @(item.Sku.Price)</span>
+                                                }
+                                            </div>
+
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="input-group input-group-sm" style="max-width: 90px;">
+                                                    <button class="btn btn-outline-secondary px-2"
+                                                            type="button"
+                                                            onclick="changeQuantity(@Model.UserId, @item.SkuId, -1)">
+                                                        -
+                                                    </button>
+
+                                                    <input type="text"
+                                                           class="form-control bg-white text-center font-monospace px-1"
+                                                           id="qty-@item.SkuId"
+                                                           value="@item.Quantity"
+                                                           readonly
+                                                           data-max-stock="@item.Sku.Stock">
+
+                                                    <button class="btn btn-outline-secondary px-2"
+                                                            type="button"
+                                                            onclick="changeQuantity(@Model.UserId, @item.SkuId, 1)">
+                                                        +
+                                                    </button>
+                                                </div>
+
+                                                <div class="d-flex gap-2">
+                                                    <button type="button"
+                                                            class="btn btn-lg btn-link text-danger p-0 border-0"
+                                                            onclick="removeItemFromCart(@Model.UserId, @item.SkuId)">
+                                                        <i class="bi bi-trash3"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border rounded-0 shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold text-dark mb-3">Order Summary</h5>
+
+                        <div class="d-flex justify-content-between mb-2 small text-dark fw-bold">
+                            <span>Total Price:</span>
+                            <span class="font-monospace">JOD @subtotal.ToString("F2")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 small text-success fw-bold">
+                            <span>Promotions:</span>
+                            <span class="font-monospace">-JOD @totalDiscount.ToString("F2")</span>
+                        </div>
+
+                        <hr class="my-3">
+
+                        <div class="d-flex justify-content-between align-items-baseline mb-4">
+                            <span class="fw-bold text-dark m-0 fs-5">Estimated Price:</span>
+                            <div class="text-end">
+                                <span class="fw-bolder text-danger fs-3 font-monospace m-0 d-block">JOD @finalTotal.ToString("F2")</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-dark w-100 rounded-0 py-3 fw-bold text-uppercase mb-2">
+                            Checkout Now (@Model.CartItems.Sum(i => i.Quantity))
+                        </button>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+@section Scripts{
+    <script>
+        async function changeQuantity(userId, skuId, direction) {
+            const input = document.getElementById(`qty-${skuId}`);
+            const maxStock = parseInt(input.getAttribute('data-max-stock')) || 10;
+            let currentQty = parseInt(input.value) || 1;
+
+            let targetQty = currentQty + direction;
+
+            if (targetQty < 1) {
+                if(confirm("Remove this item from your shopping cart?")) {
+                    await removeItemFromCart(userId, skuId);
+                }
+                return;
+            }
+
+            if (targetQty > maxStock) {
+                alert(`Sorry, you can only purchase a maximum of ${maxStock} items.`);
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/Cart/UpdateQuantity/${userId}/${skuId}?quantity=${targetQty}`, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    input.value = targetQty;
+                    location.reload();
+                } else {
+                    alert(data.message || "Failed to adjust cart quantities.");
+                }
+            } catch (error) {
+                console.error("Error modifying quantity:", error);
+            }
+        }
+
+        async function removeItemFromCart(userId, skuId) {
+            try {
+                const response = await fetch(`/api/Cart/RemoveItem/${userId}/${skuId}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || "Could not completely remove item.");
+                }
+            } catch (error) {
+                console.error("Error removing item:", error);
+            }
+        }
+    </script>
+
+}

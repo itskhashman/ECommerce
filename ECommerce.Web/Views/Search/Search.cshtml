@@ -16,7 +16,7 @@
                            value="@Model.SearchString"
                            class="form-control border-secondary-subtle"
                            placeholder="Search for products" />
-                    <button class="btn btn-primary px-4" type="submit">
+                    <button class="btn btn-dark px-4" type="submit">
                         <i class="bi bi-search me-1"></i> Search
                     </button>
                 </div>
@@ -30,10 +30,10 @@
 
                 <input type="hidden" name="searchString" value="@Model.SearchString" />
 
-                <div class="card shadow-sm border-0 p-4 bg-white">
+                <div class="card border rounded-0 shadow-sm p-4 bg-white">
                     <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
                         <h5 class="fw-bold text-dark m-0">
-                            <i class="bi bi-sliders2-vertical me-2 text-primary"></i>Filters
+                            <i class="bi bi-sliders2-vertical me-2 text-dark"></i>Filters
                         </h5>
                     </div>
 
@@ -105,17 +105,14 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-outline-primary w-100 btn-sm mt-3 fw-semibold">Apply Filters</button>
+                    <button type="submit" class="btn btn-outline-dark w-100 btn-sm mt-3 fw-semibold">Apply Filters</button>
                 </div>
             </form>
         </div>
 
-        <div class="col-md-8  shadow-sm">
+        <div class="col-md-8 card border rounded-0 shadow-sm py-2">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-muted small">Showing <strong>@Model.Products.Count()</strong> items</span>
-                <a asp-controller="Home" asp-action="Home" class="btn btn-outline-secondary btn-sm px-3 rounded-pill">
-                    <i class="bi bi-arrow-left me-1"></i> Back Home
-                </a>
             </div>
 
             @if (!Model.Products.Any())
@@ -133,7 +130,7 @@
                         var firstPrice = product.Skus?.OrderBy(s => s.Price).FirstOrDefault()?.Price;
 
                         <div class="col">
-                            <a asp-action="Details" asp-route-productId="@product.Id" class="card h-100 shadow-sm border-0 position-relative">
+                            <a asp-action="Details" asp-route-productId="@product.Id" class="card h-100 shadow-sm border-0 position-relative text-decoration-none">
                                 <div class="bg-light overflow-hidden" style="height: 200px;">
                                     @if (!string.IsNullOrEmpty(mainImgUrl))
                                     {

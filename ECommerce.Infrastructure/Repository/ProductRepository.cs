@@ -22,7 +22,13 @@ namespace ECommerce.Infrastructure.Repository
                 .ToListAsync();
             return Products;
         }
-
+        public async Task<Product?> GetProductBySkuId(int skuId)
+        {
+            return await _context.Products
+                .AsNoTracking()
+                .Include(p => p.Skus.Where(s => !s.IsDeleted && s.Id == skuId))
+                .FirstOrDefaultAsync(p => p.Skus.Any(s => s.Id == skuId) && !p.IsDeleted);
+        }
         public async Task<Product?> GetAllProductDetailsAsync(int productId)
         {
             return await _context.Products

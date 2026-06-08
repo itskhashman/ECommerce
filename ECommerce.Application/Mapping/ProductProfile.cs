@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ECommerce.Application.DTOs.Cart;
 using ECommerce.Application.DTOs.Lookups;
 using ECommerce.Application.DTOs.ProductImage;
 using ECommerce.Application.DTOs.Products;
@@ -40,8 +41,13 @@ namespace ECommerce.Application.Mapping
             CreateMap<CreateProductVariantOptionDto, ProductVariantOptions>();
             CreateMap<CreateSkuDto, Sku>();
 
-            CreateMap<WishlistDto , Wishlist>().ReverseMap();
-            CreateMap<WishlistItemDto , WishlistItem>().ReverseMap();
+            CreateMap<WishlistDto, Wishlist>().ReverseMap();
+            CreateMap<WishlistItemDto, WishlistItem>().ReverseMap();
+
+            CreateMap<Cart, CartDto>();
+
+            CreateMap<CartItem, CartItemDto>();
+
         }
     }
 }

@@ -42,12 +42,14 @@ public static class DependencyInjectionPortal
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IWishlistRepository, WishlistRepository>();
+        services.AddScoped<ICartRepository, CartRepository>();
 
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IHomeService, HomeService>();
         services.AddScoped<ISearchService, SearchService>();
         services.AddScoped<IWishlistService, WishlistService>();
+        services.AddScoped<ICartService, CartService>();
 
         services.AddAutoMapper(typeof(CategoryProfile).Assembly);
 
