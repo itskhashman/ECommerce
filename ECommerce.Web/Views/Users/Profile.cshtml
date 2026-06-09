@@ -377,8 +377,8 @@
                 };
 
                 const dynamicEndpoint = isEditMode
-                    ? `/api/Addresses/Edit/${userId}`
-                    : `/api/Addresses/Add/${userId}`;
+                    ? `/api/Address/Edit/${userId}`
+                    : `/api/Address/Add/${userId}`;
                 try {
                     const response = await fetch(dynamicEndpoint, {
                         method: 'POST',
@@ -409,7 +409,7 @@
             }
 
             try {
-                const response = await fetch(`/api/Addresses/Delete/${userId}/${addressId}`, {
+                const response = await fetch(`/api/Address/Delete/${userId}/${addressId}`, {
                     method: 'DELETE'
                 });
 

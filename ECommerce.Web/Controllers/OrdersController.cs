@@ -36,13 +36,6 @@ namespace ECommerce.Web.Controllers
                 return NotFound();
             }
 
-            var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;
-            var userId = int.TryParse(domainUserIdClaim, out int outUserId) ? outUserId : 1;
-            if (order.UserId != userId)
-            {
-                return Forbid();
-            }
-
             return View(order);
         }
         [HttpGet("Checkout/PlaceOrder")]
@@ -96,6 +89,14 @@ namespace ECommerce.Web.Controllers
         public async Task<IActionResult> Success(int orderId)
         {
             var order = await _orderService.GetOrderWithDetailsAsync(orderId);
+            if (order == null) return NotFound();
+
+            return View(order);
+        }
+        [HttpGet("Manage/Orders")]
+        public async Task<IActionResult> Manage()
+        {
+            var order = await _orderService.GetAllOrdersAsync();
             if (order == null) return NotFound();
 
             return View(order);

@@ -27,19 +27,24 @@
                                 <td>@order.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
                                 <td class="fw-semibold text-success">JOD @order.TotalAmount</td>
                                 <td>
+                                    @if (order.IsDeleted)
+                                    {
+                                        <span class="badge rounded-pill bg-danger">Canceled</span>
+
+                                    }else 
                                     @switch (order.OrderStatusId) 
                                     {
-                                        case 1: 
-                                                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning px-3 py-2">@order.OrderStatus?.NameEn</span>
+                                            case 1:
+                                                <span class="badge rounded-pill bg-warning text-dark">@order.OrderStatus?.NameEn </span>
                                             break;
-                                        case 2: 
-                                                <span class="badge rounded-pill bg-info bg-opacity-10 text-info px-3 py-2">@order.OrderStatus?.NameEn</span>
+                                            case 2:
+                                                <span class="badge rounded-pill bg-info text-dark">@order.OrderStatus?.NameEn </span>
                                             break;
-                                        case 3: 
-                                                <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary px-3 py-2">@order.OrderStatus?.NameEn</span>
+                                            case 3:
+                                                <span class="badge rounded-pill bg-primary">@order.OrderStatus?.NameEn </span>
                                             break;
                                         case 4:
-                                                <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2">@order.OrderStatus?.NameEn</span>
+                                                <span class="badge rounded-pill bg-success">@order.OrderStatus?.NameEn </span>
                                             break;
                                         default:
                                             break;
