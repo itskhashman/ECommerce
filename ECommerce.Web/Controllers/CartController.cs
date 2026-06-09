@@ -1,41 +1,24 @@
 ﻿
 using ECommerce.Application.Interfaces;
-using ECommerce.Application.Interfaces.services;
-using ECommerce.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
 
 public class CartController : Controller
 {
-    private readonly IHomeService _homeService;
-    private readonly ICategoryService _categoryService;
+    private readonly ICartService _cartService;
 
-    public CartController(IHomeService homeService, ICategoryService categoryService)
+    public CartController(ICartService cartService)
     {
-        _homeService = homeService;
-        _categoryService = categoryService;
+        _cartService = cartService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Home()
+    [HttpGet("Cart")]
+    public async Task<IActionResult> Cart()
     {
-        var model = await _homeService.GetHomeDataAsync();
+        var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;
+        int userId = int.TryParse(domainUserIdClaim, out int parsedUserId) ? parsedUserId : 1;
+
+        var model = await _cartService.GetCartByUserIdAsync(userId);
 
         return View(model);
-    }
-    [HttpGet]
-    public async Task<IActionResult> Search(SearchViewModel viewModel)
-    {
-        var results = await _homeService.GetSearchedProductAsync(
-            viewModel.SearchString,
-            viewModel.CategoryId,
-            viewModel.MinPrice,
-            viewModel.MaxPrice,
-            viewModel.InStockOnly
-        );
-
-        viewModel.Products = results;
-        viewModel.Categories = await _categoryService.GetAllMainCategoriesAsync();
-
-        return View(viewModel);
     }
 }

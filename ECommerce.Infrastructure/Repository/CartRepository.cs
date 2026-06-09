@@ -10,7 +10,7 @@ namespace ECommerce.Infrastructure.Repository
         public CartRepository(ApplicationDbContext context) : base(context)
         {
         }
-        public async Task<IEnumerable<Cart>> GetCartWithItemsAsync(int userId)
+        public async Task<Cart> GetCartByIdWithItemsAsync(int userId)
         {
             return await _context.Carts
                 .AsNoTracking()
@@ -19,15 +19,62 @@ namespace ECommerce.Infrastructure.Repository
                 .ThenInclude(oi => oi.Sku)
                         .ThenInclude(s => s.Product)
                             .ThenInclude(p => p.ProductImages)
-                .ToListAsync();
+                .FirstOrDefaultAsync();
         }
-        public async Task RemoveItemFromCartAsync(int cartId, int skuId)
+        public async Task<Cart> AddItemToCartAsync(int cartId, int skuId, int quantity)
+        {
+            var existingCartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cartId && ci.SkuId == skuId);
+            if (existingCartItem != null)
+            {
+                if (existingCartItem.IsDeleted)
+                    existingCartItem.Quantity = quantity;
+                else
+                    existingCartItem.Quantity += quantity;
+                existingCartItem.IsDeleted = false;
+                _context.CartItems.Update(existingCartItem);
+            }
+            else
+            {
+                var discount = await _context.Products.Where(p => p.Skus.Any(s => s.Id == skuId))
+                    .Select(p => new { p.DiscountTypeId, p.DiscountAmount }).FirstOrDefaultAsync();
+
+                var price = await _context.Products.Where(p => p.Skus.Any(s => s.Id == skuId))
+                    .Select(p => p.Skus.FirstOrDefault(s => s.Id == skuId).Price).FirstOrDefaultAsync();
+
+                if (discount != null && discount.DiscountAmount.HasValue)
+                {
+                    if (discount.DiscountTypeId == 1)
+                    {
+                        price = price * (1 - discount.DiscountAmount.Value / 100);
+                    }
+                    else if (discount.DiscountTypeId == 2)
+                    {
+                        price = price - discount.DiscountAmount.Value;
+                    }
+                }
+
+                var newCartItem = new CartItem
+                {
+                    CartId = cartId,
+                    SkuId = skuId,
+                    Quantity = quantity,
+                    IsDeleted = false,
+                    PriceAtAddTime = price
+                };
+                await _context.CartItems.AddAsync(newCartItem);
+            }
+            await _context.SaveChangesAsync();
+            return await _context.Carts.Include(c => c.CartItems).FirstOrDefaultAsync(c => c.Id == cartId);
+        }
+        public async Task<Cart> RemoveItemFromCartAsync(int cartId, int skuId)
         {
             await _context.CartItems.Where(ci => ci.CartId == cartId && ci.SkuId == skuId).ExecuteUpdateAsync(ci => ci.SetProperty(c => c.IsDeleted, true));
+            return await _context.Carts.Include(c => c.CartItems).FirstOrDefaultAsync(c => c.Id == cartId);
         }
-        public async Task UpdateCartItemQuantityAsync(int cartId, int skuId, int quantity)
+        public async Task<Cart> UpdateCartItemQuantityAsync(int cartId, int skuId, int quantity)
         {
             await _context.CartItems.Where(ci => ci.CartId == cartId && ci.SkuId == skuId).ExecuteUpdateAsync(ci => ci.SetProperty(c => c.Quantity, quantity));
+            return await _context.Carts.Include(c => c.CartItems).FirstOrDefaultAsync(c => c.Id == cartId);
         }
         public async Task ClearCartAsync(int cartId)
         {

@@ -1,0 +1,21 @@
+﻿@model ECommerce.Application.DTOs.Order.OrderDto
+
+<div class="container">
+    <div class="row md-4">
+        @await Html.PartialAsync("_CheckoutSteps", "Complete")
+    </div>
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-7 text-center">
+            <div class="card p-5 border-success shadow-sm">
+                <h1 class="text-success display-4"> Thank You!</h1>
+                <p class="lead mt-3">Your order has been placed successfully.</p>
+                <hr />
+                <p class="mb-1">Order Reference:</p>
+                <h4 class="text-dark font-monospace mb-4">@Model.OrderNumber</h4>
+
+                <a href="/Home" class="btn btn-outline-dark px-5 mt-3">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,10 +2,8 @@
 using ECommerce.Application.DTOs.Wishlist;
 using ECommerce.Application.Interfaces;
 using ECommerce.Application.Interfaces.services;
-using ECommerce.Domain.Entities.Users;
 using ECommerce.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 public class SearchController : Controller
 {
     private readonly ISearchService _searchService;

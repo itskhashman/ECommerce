@@ -1,28 +1,32 @@
 ﻿@model ECommerce.Application.DTOs.Wishlist.WishlistDto
 
 <div class="container my-5">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h2 class="fw-bold text-dark">My Wishlist</h2>
-            <p class="text-muted small">Manage items you saved and want to purchase later.</p>
-            <hr />
-        </div>
-    </div>
+
 
     @if (Model == null || Model.WishlistItems == null || !Model.WishlistItems.Any())
     {
-        <div class="row justify-content-center my-5">
-            <div class="col-md-6 text-center">
-
-                <h4>Your wishlist is empty!</h4>
-                <a asp-controller="Home" asp-action="Home" class="btn btn-primary px-4 py-2 mt-2 rounded-pill shadow-sm">
-                    Continue Shopping
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center py-5 bg-white">
+                <h3 class="fw-bold text-dark mb-2">Your Wishlist is Empty</h3>
+                <p class="text-secondary small mb-4 px-4">
+                    Looks like you haven't added anything to your wishlist yet. Explore our latest arrivals and find something special!
+                </p>
+                <a href="/" class="btn btn-dark rounded-0 px-5 py-2 fw-bold text-uppercase">
+                    Start Shopping
                 </a>
             </div>
         </div>
     }
     else
     {
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="fw-bold text-dark">My Wishlist</h2>
+                <p class="text-muted small">Manage items you saved and want to purchase later.</p>
+                <hr />
+            </div>
+        </div>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             @foreach (var item in Model.WishlistItems)
             {
@@ -32,7 +36,7 @@
                         <button class="btn btn-light btn-sm text-danger rounded-circle shadow-sm position-absolute border-0"
                                 style="top: 12px; right: 12px; z-index: 10; width: 32px; height: 32px; display: grid; place-content: center;"
                                 onclick="removeItem(@item.ProductId)"
-                                title="Remove Item">
+                                >
                             <i class="bi bi-trash fs-6"></i>
                         </button>
 
@@ -62,7 +66,7 @@
                             </div>
 
                             <div class="mt-auto pt-2">
-                                <button class="btn btn-outline-primary btn-sm w-100 rounded-pill py-2 fw-medium">
+                                <button class="btn btn-outline-dark btn-sm w-100 rounded-pill py-2 fw-medium">
                                     <i class="bi bi-cart-plus me-1"></i> Add to Cart
                                 </button>
                             </div>
