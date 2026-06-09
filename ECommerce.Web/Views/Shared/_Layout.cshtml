@@ -53,10 +53,9 @@
                             </li>
                         }
 
-                        <li class="nav-item me-3 text-light small d-flex align-items-center">
-                            <i class="bi bi-person-circle me-1 text-success fs-6"></i>
-                            <span>@User.Identity.Name</span>
-                        </li>
+                        <a class="nav-item me-4" asp-controller="Users" asp-action="Profile">
+                            <i class="bi bi-person-circle me-1 text-success fs-5"></i>
+                        </a>
 
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">

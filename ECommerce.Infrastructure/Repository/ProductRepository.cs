@@ -71,12 +71,12 @@ namespace ECommerce.Infrastructure.Repository
             return discountTypes;
         }
 
-        public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name,int? categoryId, decimal? minPrice, decimal? maxPrice, bool inStockOnly = false)
+        public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name, int? categoryId, decimal? minPrice, decimal? maxPrice, bool inStockOnly = false)
         {
             var products = await _context.Products
                 .Where(p => !p.IsDeleted && p.IsActive && EF.Functions.Like(p.NameEn, $"%{name}%"))
                 .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted && pi.IsMain))
-                .Include(p => p.Skus.Where(s => !s.IsDeleted))
+                .Include(p => p.Skus.Where(s => !s.IsDeleted && s.Stock > 0))
                 .ToListAsync();
 
             if (minPrice.HasValue)
@@ -101,6 +101,16 @@ namespace ECommerce.Infrastructure.Repository
                     .ToListAsync();
             }
             return products;
+        }
+        public async Task UpdateProductStockAsync(int skuId, int quantity)
+        {
+            var skusToUpdate = await _context.Skus
+                .Where(s => s.Id == skuId)
+                .FirstOrDefaultAsync();
+
+            skusToUpdate.Stock -= quantity;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

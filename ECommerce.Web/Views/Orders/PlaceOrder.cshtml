@@ -1,0 +1,127 @@
+﻿@model ECommerce.Web.Models.ViewModels.Checkout.CheckoutViewModel
+
+<div class="container py-4">
+    <div class="row mb-4">
+        @await Html.PartialAsync("_CheckoutSteps", "PlaceOrder")
+    </div>
+
+    <form asp-controller="Orders" asp-action="PlaceOrderSubmit" method="post" class="row">
+
+        <div class="col-md-7">
+
+            <h4 class="mb-3">Select Shipping Address</h4>
+            <div class="row g-3 mb-4">
+                @if (Model.UserAddresses != null && Model.UserAddresses.Any())
+                {
+                    @foreach (var addr in Model.UserAddresses)
+                    {
+                        <div class="col-12">
+                            <label class="card p-3 border h-100 style-clickable-card custom-addr-card" style="cursor: pointer;">
+                                <div class="d-flex w-100 align-items-start">
+                                    <div class="pt-1 pe-3">
+                                        <input type="radio" name="AddressId" value="@addr.Id" @(Model.AddressId == addr.Id ? "checked" : "") required />
+                                    </div>
+                                    <div>
+                                        <span class="fw-bold d-block">@addr.Label</span>
+                                        <span class="text-muted small">
+                                            @addr.Street, @(addr.City?.NameEn ?? "No City"), @(addr.City?.Country?.NameEn ?? "")
+                                        </span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <div class="alert alert-warning">
+                            No addresses found. <a href="/Account/Addresses" class="alert-link">Add a new address</a> before checking out.
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <h4 class="mb-3">Payment Method</h4>
+            <div class="card p-4 shadow-sm mb-4">
+                <div class="d-flex gap-4 mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="PaymentId" id="payCash" value="1" @(Model.PaymentId == 1 ? "checked" : "") onclick="toggleCardFields(false)">
+                        <label class="form-check-label fw-bold" for="payCash">
+                            💵 Cash on Delivery
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="PaymentId" id="payCard" value="2" @(Model.PaymentId == 2 ? "checked" : "") onclick="toggleCardFields(true)">
+                        <label class="form-check-label fw-bold" for="payCard">
+                            💳 Visa / Mastercard
+                        </label>
+                    </div>
+                </div>
+
+                <div id="creditCardUiSection" style="display: none;" class="border-top pt-3">
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Cardholder Name</label>
+                        <input type="text" id="cardName" class="form-control" placeholder="John Doe" />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label small text-muted">Card Number</label>
+                            <input type="text" id="cardNumber" class="form-control" placeholder="0000 0000 0000 0000" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label small text-muted">CVV / CVC</label>
+                            <input type="password" id="cardCvv" class="form-control" placeholder="***" maxlength="3" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <h4 class="mb-3">Order Summary</h4>
+            <div class="card p-3 shadow-sm">
+                <ul class="list-group list-group-flush mb-3">
+                    @if (Model.Cart?.CartItems != null)
+                    {
+                        @foreach (var item in Model.Cart.CartItems)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 bg-transparent">
+                                <div>
+                                    <h6 class="my-0 small fw-bold">@item.Sku?.Product?.NameEn</h6>
+                                    <small class="text-muted">Qty: @item.Quantity</small>
+                                </div>
+                                <span class="text-dark fw-semibold">$@(item.PriceAtAddTime* item.Quantity)</span>
+                            </li>
+                        }
+                    }
+                </ul>
+                <button type="submit" class="btn btn-dark w-100 btn-lg shadow-sm">Place Order Now</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleCardFields(show) {
+            const cardSection = document.getElementById("creditCardUiSection");
+            const inputs = cardSection.querySelectorAll("input");
+
+            if (show) {
+                cardSection.style.display = "block";
+                inputs.forEach(i => i.setAttribute("required", "required"));
+            } else {
+                cardSection.style.display = "none";
+                inputs.forEach(i => i.removeAttribute("required"));
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var cardRadio = document.getElementById("payCard");
+            if(cardRadio && cardRadio.checked) {
+                toggleCardFields(true);
+            }
+        });
+    </script>
+}

@@ -11,7 +11,7 @@ public class WishlistController : Controller
         _wishlistService = wishlistService;
     }
 
-    [HttpGet]
+    [HttpGet("Wishlist")]
     public async Task<IActionResult> Wishlist()
     {
         var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;

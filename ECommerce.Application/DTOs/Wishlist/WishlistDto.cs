@@ -1,13 +1,13 @@
 ﻿
 
-using ECommerce.Domain.Entities.Users;
+using ECommerce.Application.DTOs.User;
 
 namespace ECommerce.Application.DTOs.Wishlist
 {
     public class WishlistDto : BaseDto
     {
         public int UserId { get; set; }
-        public User User { get; set; } = null!;
+        public UserDto User { get; set; } = null!;
         public ICollection<WishlistItemDto>? WishlistItems { get; set; } = new List<WishlistItemDto>();
     }
 }

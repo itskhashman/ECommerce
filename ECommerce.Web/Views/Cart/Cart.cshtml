@@ -1,12 +1,9 @@
 ﻿@model ECommerce.Application.DTOs.Cart.CartDto
-
 @{
     ViewData["Title"] = "Shopping Cart";
 
     var subtotal = Model?.CartItems?.Sum(item => item.Sku.Price * item.Quantity) ?? 0;
-
     var totalDiscount = Model?.CartItems?.Sum(item => ((item.Sku.Price - item.PriceAtAddTime) * item.Quantity)) ?? 0;
-
     var finalTotal = subtotal - totalDiscount;
 }
 
@@ -29,21 +26,15 @@
     else
     {
         <div class="row mb-4">
-            <div class="col-12 text-center text-muted small fw-bold text-uppercase">
-                <span class="text-dark border-bottom border-2 border-dark pb-1">Cart</span>
-                <span class="mx-2">&gt;</span> Place Order
-                <span class="mx-2">&gt;</span> Pay
-                <span class="mx-2">&gt;</span> Order Complete
-            </div>
+            @await Html.PartialAsync("_CheckoutSteps", "Cart")
         </div>
 
         <div class="row g-4">
-
             <div class="col-lg-8">
                 <div class="card border rounded-0 shadow-sm mb-4">
                     <div class="card-header bg-white border-bottom py-3">
                         <div class="d-flex align-items-center justify-content-between">
-                            <label class="form-check-label fw-bold text-uppercase text-dark fs-5" for="selectAll">
+                            <label class="form-check-label fw-bold text-uppercase text-dark fs-5">
                                 All Items (@Model.CartItems.Count)
                             </label>
                         </div>
@@ -61,7 +52,9 @@
                                         <div class="border bg-light overflow-hidden w-100" style="aspect-ratio: 3/4;">
                                             @if (item.Sku.Product.ProductImages != null && item.Sku.Product.ProductImages.Any())
                                             {
-                                                <img src="@item.Sku.Product.ProductImages.Where(img => img.IsMain).First().URL" class="w-100 h-100 img-fluid" style="object-fit: cover;" alt="@item.Sku.Product.NameEn">
+                                                var mainImage = item.Sku.Product.ProductImages.FirstOrDefault(img => img.IsMain)
+                                                ?? item.Sku.Product.ProductImages.First();
+                                                <img src="@mainImage.URL" class="w-100 h-100 img-fluid" style="object-fit: cover;" alt="@item.Sku.Product.NameEn">
                                             }
                                             else
                                             {
@@ -71,7 +64,6 @@
                                     </div>
 
                                     <div class="col-9 col-sm-10">
-
                                         <p class="small text-secondary mb-1 lh-sm text-wrap">
                                             <strong class="text-dark ">@item.Sku.Product.NameEn</strong> <br> @item.Sku.Product.DescriptionEn
                                         </p>
@@ -85,9 +77,9 @@
                                         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-3">
                                             <div>
                                                 <span class="fw-bolder text-danger fs-5 font-monospace">JOD @item.PriceAtAddTime.ToString("F2")</span>
-                                                @if (item.Sku.Product.DiscountAmount > 0)
+                                                @if (item.Sku.Price > item.PriceAtAddTime)
                                                 {
-                                                    <span class="text-decoration-line-through text-muted small ms-2 font-monospace">JOD @(item.Sku.Price)</span>
+                                                    <span class="text-decoration-line-through text-muted small ms-2 font-monospace">JOD @item.Sku.Price.ToString("F2")</span>
                                                 }
                                             </div>
 
@@ -115,16 +107,17 @@
 
                                                 <div class="d-flex gap-2">
                                                     <button type="button"
-                                                            class="btn btn-lg btn-link text-danger p-0 border-0"
+                                                            class="btn btn-link text-danger p-0 border-0"
                                                             onclick="removeItemFromCart(@Model.UserId, @item.SkuId)">
-                                                        <i class="bi bi-trash3"></i>
+                                                        <i class="bi bi-trash3"></i> Remove
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
+
                                 </div>
+
                             </div>
                         }
                     </div>
@@ -154,11 +147,9 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-dark w-100 rounded-0 py-3 fw-bold text-uppercase mb-2">
+                        <a asp-controller="Orders" asp-action="PlaceOrder" class="btn btn-dark w-100 rounded-0 py-3 fw-bold text-uppercase mb-2">
                             Checkout Now (@Model.CartItems.Sum(i => i.Quantity))
-                        </button>
-
-
+                        </a>
                     </div>
                 </div>
             </div>
@@ -167,7 +158,7 @@
     }
 </div>
 
-@section Scripts{
+@section Scripts {
     <script>
         async function changeQuantity(userId, skuId, direction) {
             const input = document.getElementById(`qty-${skuId}`);
@@ -226,5 +217,4 @@
             }
         }
     </script>
-
 }

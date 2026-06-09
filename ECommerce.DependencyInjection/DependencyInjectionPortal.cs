@@ -43,6 +43,8 @@ public static class DependencyInjectionPortal
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IWishlistRepository, WishlistRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IProductService, ProductService>();
@@ -50,6 +52,8 @@ public static class DependencyInjectionPortal
         services.AddScoped<ISearchService, SearchService>();
         services.AddScoped<IWishlistService, WishlistService>();
         services.AddScoped<ICartService, CartService>();
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IUserService, UserService>();
 
         services.AddAutoMapper(typeof(CategoryProfile).Assembly);
 

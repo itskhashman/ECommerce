@@ -14,5 +14,6 @@ namespace ECommerce.Application.Interface.Repository
         public Task<IEnumerable<Product>> GetMostReviewedProductsAsync();
         public Task<IEnumerable<Product>> GetAllProductsWithMainImageAsync();
         public Task<IEnumerable<DiscountType>> GetDiscountTypesAsync();
+        public Task UpdateProductStockAsync(int skuId, int quantity);
     }
 }

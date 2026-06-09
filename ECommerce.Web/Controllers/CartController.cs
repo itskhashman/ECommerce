@@ -11,7 +11,7 @@ public class CartController : Controller
         _cartService = cartService;
     }
 
-    [HttpGet]
+    [HttpGet("Cart")]
     public async Task<IActionResult> Cart()
     {
         var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;
