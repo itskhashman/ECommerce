@@ -7,6 +7,7 @@ namespace ECommerce.Application.Interfaces
 {
     public interface IUserService
     {
+        public Task<IEnumerable<UserDto>?> GetAllUsersAsync();
         public Task<UserDto?> GetUserByEmailAsync(string email);
         public Task<IEnumerable<UserDto>> GetUsersByRoleAsync(int roleId);
         public Task<string?> GetUserRoleAsync(int userId);

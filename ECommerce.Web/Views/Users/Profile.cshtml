@@ -55,7 +55,7 @@
             {
                 <div class="list-group rounded-0 shadow-sm mt-3 small">
                     <a asp-controller="Orders" asp-action="Index" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3">
-                        <span>📦 My Orders</span>
+                        <span>My Orders</span>
                         <i class="bi bi-chevron-right small text-muted"></i>
                     </a>
                 </div>
@@ -205,6 +205,19 @@
                         </div>
                     </div>
 
+                    <div class="d-none">
+                        @{
+                            var currentRoleId = Model?.UserRoles?.FirstOrDefault()?.RoleId ?? 2;
+                        }
+                        <select id="profRoleId">
+                            <option value="1" selected="@(currentRoleId == 1)">Admin</option>
+                            <option value="2" selected="@(currentRoleId == 2)">Customer</option>
+                        </select>
+
+                        <input type="checkbox" id="profIsActive" @(Model?.IsActive == true ? "checked" : "") />
+                        <input type="checkbox" id="profIsEmailVerified" @(Model?.IsEmailVerified == true ? "checked" : "") />
+                    </div>
+
                     <h6 class="fw-bold text-secondary text-uppercase small border-bottom pb-1 mb-3">Contact Configuration</h6>
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -326,7 +339,10 @@
                 FirstNameAr: document.getElementById('profFirstAr').value,
                 MiddleNameAr: document.getElementById('profMiddleAr').value,
                 LastNameAr: document.getElementById('profLastAr').value,
-                Phone: document.getElementById('profPhone').value
+                Phone: document.getElementById('profPhone').value,
+                RoleId: parseInt(document.getElementById('profRoleId').value) || null,
+                IsActive: document.getElementById('profIsActive').checked,
+                IsEmailVerified: document.getElementById('profIsEmailVerified').checked
             };
 
             const profileApiEndpoint = `/api/User/Edit/${userId}`;

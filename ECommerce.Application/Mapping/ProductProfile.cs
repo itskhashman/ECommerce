@@ -40,11 +40,13 @@ namespace ECommerce.Application.Mapping
             CreateMap<City, CityDto>().ReverseMap();
             CreateMap<Country, CountryDto>().ReverseMap();
             CreateMap<Role, RoleDto>().ReverseMap();
+            CreateMap<UsersRoles, UsersRolesDto>().ReverseMap();
 
             CreateMap<CreateProductDto, Product>().ReverseMap();
 
             CreateMap<UpdateProductDto, Product>().ReverseMap();
             CreateMap<ProductDto, UpdateProductDto>().ReverseMap();
+            CreateMap<CreateProductDto, UpdateProductDto>().ReverseMap();
 
             CreateMap<CreateProductVariantDto, ProductVariant>().ReverseMap();
             CreateMap<CreateProductVariantOptionDto, ProductVariantOptions>().ReverseMap();

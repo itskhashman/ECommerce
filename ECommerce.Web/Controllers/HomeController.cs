@@ -1,7 +1,6 @@
 ﻿
 using ECommerce.Application.Interfaces;
 using ECommerce.Application.Interfaces.services;
-using ECommerce.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
 
 public class HomeController : Controller
@@ -21,21 +20,5 @@ public class HomeController : Controller
         var model = await _homeService.GetHomeDataAsync();
 
         return View(model);
-    }
-    [HttpGet]
-    public async Task<IActionResult> Search(SearchViewModel viewModel)
-    {
-        var results = await _homeService.GetSearchedProductAsync(
-            viewModel.SearchString,
-            viewModel.CategoryId,
-            viewModel.MinPrice,
-            viewModel.MaxPrice,
-            viewModel.InStockOnly
-        );
-
-        viewModel.Products = results;
-        viewModel.Categories = await _categoryService.GetAllMainCategoriesAsync();
-
-        return View(viewModel);
     }
 }

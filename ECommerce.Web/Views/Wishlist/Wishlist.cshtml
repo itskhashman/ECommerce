@@ -1,5 +1,7 @@
 ﻿@model ECommerce.Application.DTOs.Wishlist.WishlistDto
-
+@{
+    ViewData["Title"] = "My Wishlist";
+}
 <div class="container my-5">
 
 
@@ -11,7 +13,7 @@
                 <p class="text-secondary small mb-4 px-4">
                     Looks like you haven't added anything to your wishlist yet. Explore our latest arrivals and find something special!
                 </p>
-                <a href="/" class="btn btn-dark rounded-0 px-5 py-2 fw-bold text-uppercase">
+                <a asp-controller="Home" asp-action="Home" class="btn btn-dark rounded-0 px-5 py-2 fw-bold text-uppercase">
                     Start Shopping
                 </a>
             </div>
@@ -84,8 +86,9 @@
         async function removeItem(productId){
             if (!confirm("Are you sure you want to remove this item from your wishlist?")) return;
 
+            var userId = @Model?.UserId ?? 0;
             try {
-                const response = await fetch(`/api/Wishlist/RemoveFromWishlist?productId=${productId}&userId=${@Model.UserId}`, {
+                const response = await fetch(`/api/Wishlist/RemoveFromWishlist?productId=${productId}&userId=${userId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

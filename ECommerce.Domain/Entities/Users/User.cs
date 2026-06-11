@@ -47,6 +47,7 @@ namespace ECommerce.Domain.Entities.Users
         public DateTime? LastLoginAt { get; set; }
         public ICollection<Order>? Orders { get; set; } = new List<Order>();
         public ICollection<Address>? Address { get; set; } = new List<Address>();
+        public ICollection<UsersRoles> UserRoles { get; set; } = new List<UsersRoles>();
         public Cart Cart { get; set; } = null!;
         public Wishlist Wishlist { get; set; } = null!;
     }

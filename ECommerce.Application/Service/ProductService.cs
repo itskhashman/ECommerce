@@ -85,7 +85,9 @@ namespace ECommerce.Application.Service
         }
         public async Task<ProductDto> UpdateAsync(UpdateProductDto product)
         {
-            var productEntity = _mapper.Map<Product>(product);
+            var createProduct = _mapper.Map<CreateProductDto>(product);
+
+            var productEntity = MapCreateDtoToProductEntity(createProduct);
 
             var updatedProduct = await _productRepository.UpdateAsync(productEntity);
 

@@ -1,5 +1,6 @@
 ﻿using ECommerce.Application.Interfaces;
 using ECommerce.Web.Models.ViewModels.Checkout;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.Web.Controllers
@@ -17,6 +18,7 @@ namespace ECommerce.Web.Controllers
             _userService = userService;
         }
         [HttpGet("Orders")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Index()
         {
             var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;
@@ -28,6 +30,7 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpGet("Orders/Details/{id}")]
+        [Authorize(Roles ="Admin,Customer")]
         public async Task<IActionResult> Details(int id)
         {
             var order = await _orderService.GetOrderWithDetailsAsync(id);
@@ -39,6 +42,7 @@ namespace ECommerce.Web.Controllers
             return View(order);
         }
         [HttpGet("Checkout/PlaceOrder")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> PlaceOrder()
         {
             var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;
@@ -64,6 +68,7 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpPost("Checkout/PlaceOrderSubmit")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> PlaceOrderSubmit(CheckoutViewModel model)
         {
             var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;
@@ -86,6 +91,7 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpGet("Checkout/Success/{orderId}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Success(int orderId)
         {
             var order = await _orderService.GetOrderWithDetailsAsync(orderId);

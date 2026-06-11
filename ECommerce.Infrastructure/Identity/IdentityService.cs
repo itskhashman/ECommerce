@@ -2,6 +2,7 @@
 using ECommerce.Application.Interface.Service;
 using ECommerce.Domain.Entities.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Infrastructure.Identity
 {
@@ -19,13 +20,18 @@ namespace ECommerce.Infrastructure.Identity
             _userManager = userManager;
             _signInManager = signInManager;
             _userRepository = userRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<bool> RegisterAsync(string Username , string email, string password, string firstNameAr, string middleNameAr, string lastNameAr, string firstNameEn, string middleNameEn, string lastNameEn, string phone)
+        public async Task<bool> RegisterAsync(
+        string username, string email, string password,
+        string firstNameAr, string middleNameAr, string lastNameAr,
+        string firstNameEn, string middleNameEn, string lastNameEn,
+        string phone, int roleId, string roleName)
         {
             var identityUser = new ApplicationUser
             {
-                UserName = Username,
+                UserName = username,
                 Email = email,
                 PhoneNumber = phone
             };
@@ -56,11 +62,9 @@ namespace ECommerce.Infrastructure.Identity
                     identityUser.DomainUserId = domainUser.Id;
                     await _userManager.UpdateAsync(identityUser);
 
-                    await _userManager.AddToRoleAsync(identityUser, "Customer");
+                    await _userManager.AddToRoleAsync(identityUser, roleName);
 
-                    await _userRepository.AssignRoleToUserAsync(domainUser.Id, 2);
-
-                    await _signInManager.SignInAsync(identityUser, isPersistent: false);
+                    await _userRepository.AssignRoleToUserAsync(domainUser.Id, roleId);
 
                     return true;
                 }
@@ -73,7 +77,25 @@ namespace ECommerce.Infrastructure.Identity
 
             return false;
         }
+        public async Task<bool> DeleteAsync(int userId)
+        {
+            var domainResult = await _userRepository.SoftDeleteUserAsync(userId);
+            if (!domainResult) return false;
 
+            var identityUser = await _userManager.Users.FirstOrDefaultAsync(u => u.DomainUserId == userId);
+            if (identityUser != null)
+            {
+                identityUser.LockoutEnabled = true;
+                identityUser.LockoutEnd = DateTimeOffset.MaxValue;
+
+                await _userManager.UpdateSecurityStampAsync(identityUser);
+
+                var identityResult = await _userManager.UpdateAsync(identityUser);
+                return identityResult.Succeeded;
+            }
+
+            return true;
+        }
         public async Task<bool> LoginAsync(string email, string password, bool rememberMe)
         {
             var domainUser = await _userRepository.GetUserByEmailAsync(email);
