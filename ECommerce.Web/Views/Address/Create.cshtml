@@ -1,58 +1,70 @@
-﻿@model ECommerce.Application.DTOs.Address.AddressDto
+﻿@using System.Globalization
+@model ECommerce.Application.DTOs.Address.AddressDto
+
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Add New Address";
+    var isArabic = CultureInfo.CurrentCulture.Name.StartsWith("ar");
+    ViewData["Title"] = Localizer["AddNewAddressTitle"];
 }
 
-<div class="container my-5" style="max-width: 600px;">
+<div class="container my-5" style="max-width: 600px;" dir="@(isArabic ? "rtl" : "ltr")">
     <div class="card border rounded-0 shadow-sm bg-white">
         <div class="card-header bg-dark text-white py-3 rounded-0">
-            <h5 class="m-0 text-uppercase small fw-bold"><i class="bi bi-geo-alt-fill me-2"></i>Create Shipping Address</h5>
+            <h5 class="m-0 text-uppercase small fw-bold">
+                <i class="bi bi-geo-alt-fill me-2"></i>@Localizer["CreateShippingAddressHeader"]
+            </h5>
         </div>
         <form asp-controller="Address" asp-action="Create" method="post" class="p-4">
             <input type="hidden" asp-for="UserId" />
             <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
 
             <div class="mb-3">
-                <label class="form-label small fw-bold text-muted text-uppercase mb-1">Address Label Tag</label>
-                <input type="text" asp-for="Label" class="form-control rounded-0 small" placeholder="e.g. Home, Office, Warehouse" required />
+                <label class="form-label small fw-bold text-muted text-uppercase mb-1">@Localizer["AddressLabelTag"]</label>
+                <input type="text" asp-for="Label" class="form-control rounded-0 small" placeholder="@Localizer["AddressLabelPlaceholder"]" required />
                 <span asp-validation-for="Label" class="text-danger small"></span>
             </div>
 
             <div class="mb-3">
-                <label class="form-label small fw-bold text-muted text-uppercase mb-1">Street / Building Address Details</label>
-                <input type="text" asp-for="Street" class="form-control rounded-0 small" placeholder="Street name, Building number, Apartment number" required />
+                <label class="form-label small fw-bold text-muted text-uppercase mb-1">@Localizer["StreetBuildingDetails"]</label>
+                <input type="text" asp-for="Street" class="form-control rounded-0 small" placeholder="@Localizer["StreetBuildingPlaceholder"]" required />
                 <span asp-validation-for="Street" class="text-danger small"></span>
             </div>
 
             <div class="row g-3 mb-4">
                 <div class="col-sm-7">
-                    <label class="form-label small fw-bold text-muted text-uppercase mb-1">City Location</label>
+                    <label class="form-label small fw-bold text-muted text-uppercase mb-1">@Localizer["CityLocation"]</label>
                     <select asp-for="CityId" class="form-select rounded-0 small" required>
-                        <option value="" disabled selected>-- Select City --</option>
+                        <option value="" disabled selected>@Localizer["SelectCityDefaultOption"]</option>
                         @if (ViewBag.Cities != null)
                         {
                             foreach (var city in ViewBag.Cities)
                             {
-                                <option value="@city.Id">@city.NameEn</option>
+                                <option value="@city.Id.ToString(CultureInfo.InvariantCulture)">
+                                    @(isArabic? city.NameAr: city.NameEn)
+                                </option>
                             }
                         }
                     </select>
                     <span asp-validation-for="CityId" class="text-danger small"></span>
                 </div>
                 <div class="col-sm-5">
-                    <label class="form-label small fw-bold text-muted text-uppercase mb-1">Postal Code / Zip</label>
+                    <label class="form-label small fw-bold text-muted text-uppercase mb-1">@Localizer["PostalCodeZip"]</label>
                     <input type="text" asp-for="PostalCode" class="form-control rounded-0 small font-monospace" placeholder="11110" required />
                     <span asp-validation-for="PostalCode" class="text-danger small"></span>
                 </div>
             </div>
 
-                <input type="checkbox" asp-for="IsDefault" class="form-check-input rounded-0 d-none" value="false" />
+            <input type="checkbox" asp-for="IsDefault" class="form-check-input rounded-0 d-none" value="false" />
 
 
             <div class="pt-3 border-top d-flex justify-content-end gap-2">
-                <a asp-controller="Profile" asp-action="MyProfile" class="btn btn-outline-secondary rounded-0 text-uppercase small px-4">Back</a>
-                <button type="submit" class="btn btn-dark rounded-0 text-uppercase small px-4">Save Address</button>
+                <a asp-controller="Profile" asp-action="MyProfile" class="btn btn-outline-secondary rounded-0 text-uppercase small px-4">
+                    @Localizer["BackButton"]
+                </a>
+                <button type="submit" class="btn btn-dark rounded-0 text-uppercase small px-4">
+                    @Localizer["SaveAddressButton"]
+                </button>
             </div>
         </form>
     </div>

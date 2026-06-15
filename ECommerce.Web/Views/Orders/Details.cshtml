@@ -1,9 +1,14 @@
-﻿@model ECommerce.Application.DTOs.Order.OrderDto
+﻿@using System.Globalization
+@model ECommerce.Application.DTOs.Order.OrderDto
+
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = $"Order #{Model.OrderNumber}";
+    var isArabic = CultureInfo.CurrentCulture.Name.StartsWith("ar");
+    ViewData["Title"] = $"{Localizer["OrderTitlePrefix"]} #{Model.OrderNumber}";
 }
 
-<div class="container py-4">
+<div class="container py-4" dir="@(isArabic ? "rtl" : "ltr")">
 
     <div class="row mb-4">
         <div class="col-12">
@@ -14,7 +19,7 @@
                     <div class="alert alert-danger d-flex align-items-center mb-0 rounded-3 border-0 shadow-sm gap-3" role="alert">
                         <i class="bi bi-x-circle-fill fs-3 text-danger"></i>
                         <div>
-                            <h6 class="fw-bold mb-1">This order has been canceled</h6>
+                            <h6 class="fw-bold mb-1">@Localizer["OrderCanceledAlert"]</h6>
                         </div>
                     </div>
                 }
@@ -32,14 +37,14 @@
                                      style="width: 40px; height: 40px; font-size: 1.1rem; z-index: 2;">
                                     <i class="bi bi-receipt"></i>
                                 </div>
-                                <span class="small fw-bold mt-2 text-success">Pending</span>
+                                <span class="small fw-bold mt-2 text-success">@Localizer["StatusStepPending"]</span>
                             </div>
                         </div>
 
                         <div class="flex-fill position-relative">
                             <div class="position-absolute start-0 w-100"
-                                 style="height: 4px; top: 18px; left: -50% !important; width: 100%; z-index: 1;
-                                        background-color: @(currentStatus >= 2 ? "#198754" : "#e9ecef");">
+                                 style="height: 4px; top: 18px; @(isArabic ? "right: -50% !important;" : "left: -50% !important;") width: 100%; z-index: 1;
+                                             background-color: @(currentStatus >= 2 ? "#198754" : "#e9ecef");">
                             </div>
 
                             <div class="d-flex flex-column align-items-center">
@@ -47,14 +52,14 @@
                                      style="width: 40px; height: 40px; font-size: 1.1rem; z-index: 2;">
                                     <i class="bi bi-box-seam"></i>
                                 </div>
-                                <span class="small fw-bold mt-2 @(currentStatus >= 2 ? "text-success" : "text-muted")">Processing</span>
+                                <span class="small fw-bold mt-2 @(currentStatus >= 2 ? "text-success" : "text-muted")">@Localizer["StatusStepProcessing"]</span>
                             </div>
                         </div>
 
                         <div class="flex-fill position-relative">
                             <div class="position-absolute start-0 w-100"
-                                 style="height: 4px; top: 18px; left: -50% !important; width: 100%; z-index: 1;
-                                        background-color: @(currentStatus >= 3 ? "#198754" : "#e9ecef");">
+                                 style="height: 4px; top: 18px; @(isArabic ? "right: -50% !important;" : "left: -50% !important;") width: 100%; z-index: 1;
+                                             background-color: @(currentStatus >= 3 ? "#198754" : "#e9ecef");">
                             </div>
 
                             <div class="d-flex flex-column align-items-center">
@@ -62,14 +67,14 @@
                                      style="width: 40px; height: 40px; font-size: 1.1rem; z-index: 2;">
                                     <i class="bi bi-truck"></i>
                                 </div>
-                                <span class="small fw-bold mt-2 @(currentStatus >= 3 ? "text-success" : "text-muted")">Shipped</span>
+                                <span class="small fw-bold mt-2 @(currentStatus >= 3 ? "text-success" : "text-muted")">@Localizer["StatusStepShipped"]</span>
                             </div>
                         </div>
 
                         <div class="flex-fill position-relative">
                             <div class="position-absolute start-0 w-100"
-                                 style="height: 4px; top: 18px; left: -50% !important; width: 100%; z-index: 1;
-                                        background-color: @(currentStatus == 4 ? "#198754" : "#e9ecef");">
+                                 style="height: 4px; top: 18px; @(isArabic ? "right: -50% !important;" : "left: -50% !important;") width: 100%; z-index: 1;
+                                             background-color: @(currentStatus == 4 ? "#198754" : "#e9ecef");">
                             </div>
 
                             <div class="d-flex flex-column align-items-center">
@@ -77,7 +82,7 @@
                                      style="width: 40px; height: 40px; font-size: 1.1rem; z-index: 2;">
                                     <i class="bi bi-house-check"></i>
                                 </div>
-                                <span class="small fw-bold mt-2 @(currentStatus == 4 ? "text-success" : "text-muted")">Delivered</span>
+                                <span class="small fw-bold mt-2 @(currentStatus == 4 ? "text-success" : "text-muted")">@Localizer["StatusStepDelivered"]</span>
                             </div>
                         </div>
 
@@ -85,7 +90,7 @@
 
                     <div class="text-center mt-4">
                         <span class="badge bg-light text-success border border-success-subtle px-3 py-2 rounded-pill small fw-bold shadow-sm">
-                            <i class="bi bi-clock-history me-1"></i> Placed At @Model.CreatedAt.ToString("dd MMMM yyyy, h:mm tt")
+                            <i class="bi bi-clock-history me-1"></i> @Localizer["PlacedAtPrefix"] @Model.CreatedAt.ToString(isArabic ? "dd MMMM yyyy, h:mm tt" : "dd MMMM yyyy, h:mm tt", CultureInfo.CurrentCulture)
                         </span>
                     </div>
                 }
@@ -100,42 +105,50 @@
 
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
                     <div>
-                        <h4 class="mb-1 text-dark fw-bold">Order #@Model.OrderNumber</h4>
-                        <span class="text-muted small">Reference ID: @Model.Id</span>
+                        <h4 class="mb-1 text-dark fw-bold">@Localizer["OrderHeading"] #@Model.OrderNumber</h4>
+                        <span class="text-muted small">@Localizer["ReferenceIdLabel"]: @Model.Id</span>
                     </div>
 
                     @if (Model.IsDeleted)
                     {
-                        <span class="badge rounded-pill bg-danger px-3 py-2 text-uppercase">Canceled</span>
+                        <span class="badge rounded-pill bg-danger px-3 py-2 text-uppercase">@Localizer["CanceledBadgeText"]</span>
                     }
                     else
                     {
                         @switch (Model.OrderStatusId)
                         {
                             case 1:
-                                <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fw-bold">@Model.OrderStatus?.NameEn</span>
+                                <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fw-bold">
+                                    @(isArabic? Model.OrderStatus?.NameAr : Model.OrderStatus?.NameEn)
+                                </span>
                                 break;
                             case 2:
-                                <span class="badge rounded-pill bg-info text-dark px-3 py-2 fw-bold">@Model.OrderStatus?.NameEn</span>
+                                <span class="badge rounded-pill bg-info text-dark px-3 py-2 fw-bold">
+                                    @(isArabic? Model.OrderStatus?.NameAr : Model.OrderStatus?.NameEn)
+                                </span>
                                 break;
                             case 3:
-                                <span class="badge rounded-pill bg-primary px-3 py-2 fw-bold">@Model.OrderStatus?.NameEn</span>
+                                <span class="badge rounded-pill bg-primary px-3 py-2 fw-bold">
+                                    @(isArabic? Model.OrderStatus?.NameAr : Model.OrderStatus?.NameEn)
+                                </span>
                                 break;
                             case 4:
-                                <span class="badge rounded-pill bg-success px-3 py-2 fw-bold">@Model.OrderStatus?.NameEn</span>
+                                <span class="badge rounded-pill bg-success px-3 py-2 fw-bold">
+                                    @(isArabic? Model.OrderStatus?.NameAr : Model.OrderStatus?.NameEn)
+                                </span>
                                 break;
                         }
                     }
                 </div>
 
-                <h5 class="mb-3 fw-bold text-dark">Order Items</h5>
+                <h5 class="mb-3 fw-bold text-dark">@Localizer["OrderItemsHeading"]</h5>
                 <div class="table-responsive">
                     <table class="table align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th scope="col" class="border-0 text-muted small text-uppercase py-3">Product Name</th>
-                                <th scope="col" class="border-0 text-muted small text-uppercase py-3 text-center">Qty</th>
-                                <th scope="col" class="border-0 text-muted small text-uppercase py-3 text-end">Total Price</th>
+                                <th scope="col" class="border-0 text-muted small text-uppercase py-3 @(isArabic ? "text-start" : "")">@Localizer["ThProductName"]</th>
+                                <th scope="col" class="border-0 text-muted small text-uppercase py-3 text-center">@Localizer["ThQuantity"]</th>
+                                <th scope="col" class="border-0 text-muted small text-uppercase py-3 @(isArabic ? "text-start" : "text-end")">@Localizer["ThTotalPrice"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -143,11 +156,13 @@
                             {
                                 <tr>
                                     <td class="py-3">
-                                        <span class="fw-bold text-dark d-block mb-0">@item.Sku?.Product?.NameEn</span>
-                                        <span class="text-muted font-monospace small" style="font-size: 0.75rem;">SKU: @item.Sku?.SkuCode</span>
+                                        <span class="fw-bold text-dark d-block mb-0">
+                                            @(isArabic? item.Sku?.Product?.NameAr : item.Sku?.Product?.NameEn)
+                                        </span>
+                                        <span class="text-muted font-monospace small" style="font-size: 0.75rem;">@Localizer["SkuCodePrefix"]: @item.Sku?.SkuCode</span>
                                     </td>
                                     <td class="text-center fw-semibold text-dark py-3">@item.Quantity</td>
-                                    <td class="text-end fw-bold text-dark py-3">JOD @item.SubTotal.ToString("N2")</td>
+                                    <td class="fw-bold text-dark py-3 @(isArabic ? "text-start" : "text-end")">JOD @item.SubTotal.ToString("N2")</td>
                                 </tr>
                             }
                         </tbody>
@@ -160,11 +175,11 @@
         <div class="col-lg-4">
             <div class="card p-4 shadow-sm border-0 mb-4 bg-light">
 
-                <h5 class="mb-3 fw-bold text-dark">Payment Summary</h5>
+                <h5 class="mb-3 fw-bold text-dark">@Localizer["PaymentSummaryHeading"]</h5>
                 <hr class="my-2 text-muted opacity-25" />
 
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                    <span class="fw-bold text-secondary">Total Paid:</span>
+                    <span class="fw-bold text-secondary">@Localizer["TotalPaidLabel"]</span>
                     <h3 class="text-success font-monospace fw-bold mb-0">JOD @Model.TotalAmount.ToString("N2")</h3>
                 </div>
 

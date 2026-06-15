@@ -1,44 +1,50 @@
-﻿@model ECommerce.Application.DTOs.Wishlist.WishlistDto
-@{
-    ViewData["Title"] = "My Wishlist";
-}
-<div class="container my-5">
+﻿@using System.Globalization
+@model ECommerce.Application.DTOs.Wishlist.WishlistDto
 
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+@{
+    var isArabic = CultureInfo.CurrentCulture.Name.StartsWith("ar");
+    ViewData["Title"] = Localizer["MyWishlistTitle"];
+}
+
+<div class="container my-5" dir="@(isArabic ? "rtl" : "ltr")">
 
     @if (Model == null || Model.WishlistItems == null || !Model.WishlistItems.Any())
     {
         <div class="row justify-content-center">
             <div class="col-md-6 text-center py-5 bg-white">
-                <h3 class="fw-bold text-dark mb-2">Your Wishlist is Empty</h3>
+                <h3 class="fw-bold text-dark mb-2">@Localizer["WishlistEmptyHeader"]</h3>
                 <p class="text-secondary small mb-4 px-4">
-                    Looks like you haven't added anything to your wishlist yet. Explore our latest arrivals and find something special!
+                    @Localizer["WishlistEmptyDescription"]
                 </p>
                 <a asp-controller="Home" asp-action="Home" class="btn btn-dark rounded-0 px-5 py-2 fw-bold text-uppercase">
-                    Start Shopping
+                    @Localizer["StartShopping"]
                 </a>
             </div>
         </div>
     }
     else
     {
-
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="fw-bold text-dark">My Wishlist</h2>
-                <p class="text-muted small">Manage items you saved and want to purchase later.</p>
+                <h2 class="fw-bold text-dark">@Localizer["MyWishlist"]</h2>
+                <p class="text-muted small">@Localizer["WishlistSubtitle"]</p>
                 <hr />
             </div>
         </div>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             @foreach (var item in Model.WishlistItems)
             {
+                var productName = isArabic ? item.Product.NameAr : item.Product.NameEn;
+
                 <div class="col">
                     <a asp-controller="Search" asp-action="Details" asp-route-productId="@item.ProductId" class="text-decoration-none h-100 d-block">
                         <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden position-relative product-wishlist-card">
 
                             <button class="btn btn-light btn-sm text-danger rounded-circle shadow-sm position-absolute border-0"
-                                    style="top: 12px; right: 12px; z-index: 10; width: 32px; height: 32px; display: grid; place-content: center;"
-                                    onclick="event.preventDefault(); removeItem(@item.ProductId);">
+                                    style="top: 12px; @(isArabic ? "left: 12px;" : "right: 12px;") z-index: 10; width: 32px; height: 32px; display: grid; place-content: center;"
+                                    onclick="event.preventDefault(); removeItem(@item.ProductId.ToString(CultureInfo.InvariantCulture));">
                                 <i class="bi bi-trash fs-6"></i>
                             </button>
 
@@ -49,12 +55,12 @@
                                 <img src="@(string.IsNullOrEmpty(mainImg) ? "/images/placeholder.jpg" : mainImg)"
                                      class="img-fluid rounded wishlist-card-img"
                                      style="max-height: 100%; object-fit: contain;"
-                                     alt="@item.Product.NameEn" />
+                                     alt="@productName" />
                             </div>
 
                             <div class="card-body d-flex flex-column p-3">
-                                <h6 class="card-title text-dark fw-semibold text-truncate mb-1" title="@item.Product.NameEn">
-                                    @item.Product.NameEn
+                                <h6 class="card-title text-dark fw-semibold text-truncate mb-1" title="@productName">
+                                    @productName
                                 </h6>
 
                                 <div class="mb-3">
@@ -62,9 +68,9 @@
                                         var productPrice = item.Product.Skus?.FirstOrDefault()?.Price;
                                     }
                                     <span class="fs-5 fw-bold text-success">
-                                        @(productPrice.HasValue? productPrice.Value.ToString("N2") : "0.00")
+                                        @(productPrice.HasValue? productPrice.Value.ToString("N2", CultureInfo.InvariantCulture) : "0.00")
                                     </span>
-                                    <span class="fs-7 fw-medium text-success ms-1">JOD</span>
+                                    <span class="fs-7 fw-medium text-success ms-1">@Localizer["JOD"]</span>
                                 </div>
                             </div>
                         </div>
@@ -74,6 +80,7 @@
         </div>
     }
 </div>
+
 <style>
     .product-wishlist-card .wishlist-card-img {
         transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -82,18 +89,17 @@
 
     .product-wishlist-card:hover .wishlist-card-img {
         opacity: 0.65;
-        transform: scale(1.03); 
+        transform: scale(1.03);
     }
-
-
 </style>
+
 @section scripts {
     <script>
 
         async function removeItem(productId){
             if (!confirm("Are you sure you want to remove this item from your wishlist?")) return;
 
-            var userId = @Model?.UserId ?? 0;
+            var userId = @(Model?.UserId.ToString() ?? "0");
             try {
                 const response = await fetch(`/api/Wishlist/RemoveFromWishlist?productId=${productId}&userId=${userId}`, {
                     method: 'POST',

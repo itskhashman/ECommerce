@@ -1,9 +1,13 @@
 ﻿@using ECommerce.Application.DTOs.Wishlist
+@using System.Globalization
 
 @model ECommerce.Application.DTOs.Products.ProductDto
 
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = Model.NameEn;
+    var isArabic = CultureInfo.CurrentCulture.Name.StartsWith("ar");
+    ViewData["Title"] = isArabic ? Model.NameAr : Model.NameEn;
 }
 
 @{
@@ -14,21 +18,19 @@
     var NestedVariants = Model.NestedProductVariants.ToList();
 }
 
-
-
-<div class="container my-5">
+<div class="container my-5" dir="@(isArabic ? "rtl" : "ltr")">
 
     <div class="row g-5">
         <div class="col-lg-5 col-md-6">
             <div class="main-image-container border rounded-4 bg-white shadow-sm mb-3 d-flex align-items-center justify-content-center overflow-hidden position-relative" style="height: 450px; transition: all 0.3s ease;">
                 @if (mainImage != null && !string.IsNullOrEmpty(mainImage.URL))
                 {
-                    <img src="@mainImage.URL" id="mainDisplayImage" class="w-100 h-100 p-3" style="object-fit: contain;" alt="@Model.NameEn" />
+                    <img src="@mainImage.URL" id="mainDisplayImage" class="w-100 h-100 p-3" style="object-fit: contain;" alt="@(isArabic? Model.NameAr: Model.NameEn)" />
                 }
                 else
                 {
                     <div class="text-muted text-center">
-                        <span class="d-block small">No image uploaded</span>
+                        <span class="d-block small">@Localizer["NoImageUploaded"]</span>
                     </div>
                 }
             </div>
@@ -49,35 +51,35 @@
 
         <div class="col-lg-7 col-md-6">
             <span class="badge bg-secondary-subtle text-secondary text-uppercase px-3 py-2 rounded-pill fw-bold mb-2">
-                @Model.CategoryNameEn
+                @(isArabic? Model.CategoryNameAr: Model.CategoryNameEn)
             </span>
-            <h1 class="fw-extrabold text-dark fs-1 mb-2">@Model.NameEn</h1>
+            <h1 class="fw-extrabold text-dark fs-1 mb-2">@(isArabic? Model.NameAr: Model.NameEn)</h1>
 
             <div class="d-flex align-items-center flex-wrap gap-3 mb-4">
                 @if (Model.DiscountType?.Id != null)
                 {
                     <div id="priceWithDiscountContainer" class="d-none align-items-center gap-2">
                         <span id="priceDisplayHeader" class="fs-2 fw-extrabold text-primary">--</span>
-                        <span class="fs-5 text-primary fw-medium me-2">JOD</span>
+                        <span class="fs-5 text-primary fw-medium me-2">@Localizer["JOD"]</span>
                         <span class="text-decoration-line-through text-muted fs-5" id="originalPriceDisplay">--</span>
-                        <span class="text-muted small me-2">JOD</span>
+                        <span class="text-muted small me-2">@Localizer["JOD"]</span>
                         <span class="badge bg-danger text-white rounded-pill px-2 py-1 small fw-bold">
                             <i class="bi bi-tag-fill me-1"></i>
-                            @Model.DiscountAmount@(Model.DiscountTypeId == 1 ? "%" : " JOD")
+                            @Model.DiscountAmount @(Model.DiscountTypeId == 1 ? "%" : "JOD")
                         </span>
                     </div>
 
                     <div id="priceInitialPlaceholder" class="d-flex align-items-baseline gap-2">
-                        <span class="fs-5 fw-medium text-primary">Select variant to show price & avaliblity</span>
+                        <span class="fs-5 fw-medium text-primary">@Localizer["SelectVariantPlaceholder"]</span>
                     </div>
                 }
                 else
                 {
                     <div class="d-flex align-items-baseline gap-2">
                         <span id="priceDisplayHeader" class="fs-5 fw-bold text-primary">
-                            Select variant to show price & Avaliblity
+                            @Localizer["SelectVariantPlaceholder"]
                         </span>
-                        <span id="currencyLabel" class="fs-5 text-muted d-none">JOD</span>
+                        <span id="currencyLabel" class="fs-5 text-muted d-none">@Localizer["JOD"]</span>
                     </div>
                 }
             </div>
@@ -86,9 +88,7 @@
                 <span id="stockStatusBadge" class="badge px-3 py-2 rounded-pill fw-medium border"></span>
             </div>
 
-
-
-            <p class="text-muted mb-4 fs-6 border-bottom pb-4">@Model.DescriptionEn</p>
+            <p class="text-muted mb-4 fs-6 border-bottom pb-4">@(isArabic? Model.DescriptionAr: Model.DescriptionEn)</p>
 
             <div class="my-4 p-4 bg-light rounded-4 border">
                 @if (HasNested)
@@ -96,9 +96,8 @@
                     @foreach (var mainVariant in NestedVariants)
                     {
                         <div class="mb-4">
-
                             <label class="fw-bold text-dark small text-uppercase mb-2">
-                                Choose @mainVariant.NameEn
+                                @Localizer["ChooseLabel"] @(isArabic? mainVariant.NameAr: mainVariant.NameEn)
                             </label>
 
                             <div class="d-flex flex-wrap gap-2 mb-3">
@@ -108,7 +107,7 @@
                                     <button type="button"
                                             class="btn btn-outline-dark px-4 py-2 rounded-3 nested-main-btn fw-medium transition-all"
                                             onclick="toggleSubVariants(this, '@targetId')">
-                                        @mainOption.NameEn
+                                        @(isArabic? mainOption.NameAr: mainOption.NameEn)
                                     </button>
                                 }
                             </div>
@@ -120,9 +119,8 @@
                                     @foreach (var subVariant in mainOption.SubVariants)
                                     {
                                         <div class="mb-2">
-
                                             <label class="fw-semibold text-secondary small text-uppercase mb-2 d-block">
-                                                Select @subVariant.NameEn
+                                                @Localizer["Select"] @(isArabic? subVariant.NameAr: subVariant.NameEn)
                                             </label>
 
                                             <div class="d-flex flex-wrap gap-2">
@@ -130,8 +128,8 @@
                                                 {
                                                     <button type="button"
                                                             class="btn btn-outline-secondary btn-sm px-3 py-2 rounded-3 nested-sub-btn text-start"
-                                                            onclick="selectSubOption(this, @subOption.Price, @subOption.Stock, '@Model.Skus.Where(sk => sk.SKUJoinOptions.Any(sku => sku.ProductVariantOptionsId == subOption.Id)).Select(sk => sk.Id).FirstOrDefault()')">
-                                                        <span class="fw-bold d-block text-dark">@subOption.NameEn</span>
+                                                            onclick="selectSubOption(this, @subOption.Price.ToString(CultureInfo.InvariantCulture), @subOption.Stock.ToString(CultureInfo.InvariantCulture), '@Model.Skus.Where(sk => sk.SKUJoinOptions.Any(sku => sku.ProductVariantOptionsId == subOption.Id)).Select(sk => sk.Id).FirstOrDefault()')">
+                                                        <span class="fw-bold d-block text-dark">@(isArabic? subOption.NameAr: subOption.NameEn)</span>
                                                         <div class="d-flex justify-content-between gap-3 mt-1 small" style="font-size: 0.72rem;">
                                                         </div>
                                                     </button>
@@ -142,9 +140,7 @@
                                 </div>
                             }
                         </div>
-
                     }
-
                 }
                 else
                 {
@@ -153,9 +149,8 @@
                         @foreach (var variant in SimpleVariants)
                         {
                             <div class="mb-3 variant-group">
-
                                 <label class="fw-bold text-dark small text-uppercase mb-2 d-block">
-                                    Choose @variant.NameEn
+                                    @Localizer["Choose"] @(isArabic? variant.NameAr: variant.NameEn)
                                 </label>
 
                                 <div class="d-flex flex-wrap gap-2">
@@ -163,8 +158,8 @@
                                     {
                                         <button type="button"
                                                 class="btn btn-outline-dark px-4 py-2 rounded-3 simple-option-btn text-start"
-                                                onclick="selectSimpleOption(this, @option.Price, @option.Stock, '@Model.Skus.Where(sk => sk.SKUJoinOptions.Any(sku => sku.ProductVariantOptionsId == option.Id)).Select(sk => sk.Id).FirstOrDefault()')">
-                                            <span class="fw-bold d-block">@option.NameEn</span>
+                                                onclick="selectSimpleOption(this, @option.Price.ToString(CultureInfo.InvariantCulture), @option.Stock.ToString(CultureInfo.InvariantCulture), '@Model.Skus.Where(sk => sk.SKUJoinOptions.Any(sku => sku.ProductVariantOptionsId == option.Id)).Select(sk => sk.Id).FirstOrDefault()')">
+                                            <span class="fw-bold d-block">@(isArabic? option.NameAr: option.NameEn)</span>
                                             <div class="d-flex justify-content-between gap-3 mt-1 small" style="font-size: 0.72rem;">
                                             </div>
                                         </button>
@@ -176,12 +171,9 @@
                 }
 
                 <div id="quantityControlRow" class="mt-4 pt-3 border-top d-none">
-
-                    <label class="fw-bold text-dark small text-uppercase mb-2 d-block">Quantity</label>
+                    <label class="fw-bold text-dark small text-uppercase mb-2 d-block">@Localizer["Quantity"]</label>
                     <div class="d-flex align-items-center gap-2" style="max-width: 160px;">
-
                         <button type="button" style="max-width: 40px;" class="btn btn-outline-secondary rounded-3 px-3 py-2 fw-bold" onclick="adjustQuantity(-1)">-</button>
-
                         <input type="number"
                                style="max-width: 50px;"
                                id="purchaseQuantity"
@@ -193,15 +185,12 @@
                 </div>
             </div>
 
-
-
             <div class="d-flex align-items-center gap-3 mt-4 pt-2">
-
                 <button type="button"
                         id="addToCartBtn"
                         class="btn btn-dark btn-lg rounded-pill shadow-sm d-inline-flex align-items-center px-5 py-3 fw-bold disabled"
                         onclick="handleCartSubmission(@ViewBag.UserId)">
-                    <i class="bi bi-cart-plus me-2 fs-5"></i> Add to Cart
+                    <i class="bi bi-cart-plus me-2 fs-5 ms-2"></i> @Localizer["AddToCartButton"]
                 </button>
 
                 <button type="button"
@@ -211,7 +200,6 @@
                         onclick="handleWishlistSubmission(@ViewBag.UserId)">
                     <i class="bi bi-heart fs-5"></i>
                 </button>
-
             </div>
 
         </div>
@@ -219,23 +207,17 @@
 
 </div>
 
-
-
 <style>
-
     #purchaseQuantity::-webkit-outer-spin-button,
     #purchaseQuantity::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }
 
-
-
     #purchaseQuantity {
         -moz-appearance: textfield;
         appearance: textfield;
     }
-
 </style>
 
 @section Scripts {
@@ -384,27 +366,28 @@
             const qtyInput = document.getElementById('purchaseQuantity');
 
             const selectedQty = qtyInput ? (parseInt(qtyInput.value) || 1) : 1;
+            const isAr = @isArabic.ToString().ToLower();
 
             if (badgeContainer) badgeContainer.classList.remove('d-none');
 
             if (currentSelection.stock === 0) {
                 if (statusBadge) {
                     statusBadge.className = "badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill fw-medium";
-                    statusBadge.innerText = "Out of Stock";
+                    statusBadge.innerText = isAr ? "نفذت الكمية" : "Out of Stock";
                 }
                 if (cartBtn) cartBtn.classList.add('disabled');
                 if (wishlistBtn) wishlistBtn.classList.remove('disabled');
             } else if (selectedQty > currentSelection.stock) {
                 if (statusBadge) {
                     statusBadge.className = "badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2 rounded-pill fw-medium";
-                    statusBadge.innerText = `Insufficient Stock (Only ${currentSelection.stock} items left)`;
+                    statusBadge.innerText = isAr ? `الكمية غير كافية (متبقي ${currentSelection.stock} قطع فقط)` : `Insufficient Stock (Only ${currentSelection.stock} items left)`;
                 }
                 if (cartBtn) cartBtn.classList.add('disabled');
                 if (wishlistBtn) wishlistBtn.classList.remove('disabled');
             } else {
                 if (statusBadge) {
                     statusBadge.className = "badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fw-medium";
-                    statusBadge.innerText = `In Stock (${currentSelection.stock} units left)`;
+                    statusBadge.innerText = isAr ? `متوفر (${currentSelection.stock} وحدة متوفرة)` : `In Stock (${currentSelection.stock} units left)`;
                 }
                 if (cartBtn) cartBtn.classList.remove('disabled');
                 if (wishlistBtn) wishlistBtn.classList.remove('disabled');
@@ -451,14 +434,12 @@
             updateWishlistButtonUI();
         }
 
-
-      
         async function handleCartSubmission(userId) {
             const qtyInput = document.getElementById('purchaseQuantity');
             const qty = parseInt(qtyInput.value) || 1;
 
             if (!currentSelection.skuId || currentSelection.stock <= 0 || qty > currentSelection.stock) {
-                alert("You can't pick more than  the Stock avaliable")
+                alert("You can't pick more than the Stock available");
                 return;
             }
 
