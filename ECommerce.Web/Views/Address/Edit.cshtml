@@ -1,0 +1,58 @@
+﻿@model ECommerce.Application.DTOs.Address.AddressDto
+
+@{
+    ViewData["Title"] = "Edit Address";
+}
+
+<div class="container my-5" style="max-width: 600px;">
+    <div class="card border rounded-0 shadow-sm bg-white">
+        <div class="card-header bg-secondary text-white py-3 rounded-0">
+            <h5 class="m-0 text-uppercase small fw-bold"><i class="bi bi-pencil-square me-2"></i>Modify Saved Address</h5>
+        </div>
+        <form asp-controller="Address" asp-action="Edit" method="post" class="p-4">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UserId" />
+
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted text-uppercase mb-1">Address Label Tag</label>
+                <input type="text" asp-for="Label" class="form-control rounded-0 small" required />
+                <span asp-validation-for="Label" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted text-uppercase mb-1">Street Mapping Details</label>
+                <input type="text" asp-for="Street" class="form-control rounded-0 small" required />
+                <span asp-validation-for="Street" class="text-danger small"></span>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-sm-7">
+                    <label class="form-label small fw-bold text-muted text-uppercase mb-1">City Location</label>
+                    <select asp-for="CityId" class="form-select rounded-0 small" required>
+                        @if (ViewBag.Cities != null)
+                        {
+                            foreach (var city in ViewBag.Cities)
+                            {
+                                <option value="@city.Id" selected="@(city.Id == Model.CityId)">@city.NameEn</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="CityId" class="text-danger small"></span>
+                </div>
+                <div class="col-sm-5">
+                    <label class="form-label small fw-bold text-muted text-uppercase mb-1">Postal Code Designation</label>
+                    <input type="text" asp-for="PostalCode" class="form-control rounded-0 small font-monospace" required />
+                    <span asp-validation-for="PostalCode" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <input type="checkbox" asp-for="IsDefault" class="form-check-input rounded-0 d-none" value="false" />
+
+
+            <div class="pt-3 border-top d-flex justify-content-end gap-2">
+                <a asp-controller="Profile" asp-action="MyProfile" class="btn btn-outline-secondary rounded-0 text-uppercase small px-4">Discard Changes</a>
+                <button type="submit" class="btn btn-dark rounded-0 text-uppercase small px-4">Update Details</button>
+            </div>
+        </form>
+    </div>
+</div>

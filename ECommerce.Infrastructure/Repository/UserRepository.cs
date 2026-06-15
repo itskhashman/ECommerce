@@ -18,6 +18,10 @@ namespace ECommerce.Infrastructure.Repository
         {
             _userManager = userManager;
         }
+        public async Task<int?> GetTotalUsersAsync()
+        {
+            return await _context.Users.CountAsync(u => !u.IsDeleted && u.IsActive);
+        }
         public async Task<IEnumerable<User?>> GetAllUsersAsync()
         {
             return await _context.Users
@@ -54,7 +58,10 @@ namespace ECommerce.Infrastructure.Repository
         {
             return await _context.Users
                 .Where(u => u.Id == userId)
-                .Include(u => u.Address.Where(ad => !ad.IsDeleted)).FirstOrDefaultAsync();
+                .Include(u => u.Address.Where(ad => !ad.IsDeleted))
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                .FirstOrDefaultAsync();
         }
         public async Task<User?> UpdateUserInfo(User user, int? RoleId)
         {

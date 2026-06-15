@@ -1,25 +1,30 @@
 ﻿@model ECommerce.Web.Models.Home.SearchViewModel
 @{
     ViewData["Title"] = "Search";
+    bool hasActiveFilters = !string.IsNullOrEmpty(Model.SearchString) ||
+                            Model.MinPrice.HasValue ||
+                            Model.MaxPrice.HasValue ||
+                            Model.InStockOnly ||
+                            Model.CategoryId.HasValue;
 }
 
 <div class="container mt-5">
     <div class="row mb-5 justify-content-center">
         <div class="col-md-8 text-center">
-            <h2 class="fw-bold text-dark mb-3">Search Results</h2>
+            <h2 class="fw-bold text-white mb-3">Search Results</h2>
             <form method="get" asp-action="Search">
                 <input type="hidden" name="minPrice" value="@Model.MinPrice" />
                 <input type="hidden" name="maxPrice" value="@Model.MaxPrice" />
                 <input type="hidden" name="inStockOnly" value="@Model.InStockOnly.ToString().ToLower()" />
                 <input type="hidden" name="categoryId" value="@Model.CategoryId" />
-
+                
                 <div class="input-group input-group-lg shadow-sm rounded">
                     <input type="text"
                            name="searchString"
                            value="@Model.SearchString"
                            class="form-control border-secondary-subtle"
                            placeholder="Search for products" />
-                    <button class="btn btn-dark px-4" type="submit">
+                    <button class="btn btn-success px-4" type="submit">
                         <i class="bi bi-search me-1"></i> Search
                     </button>
                 </div>
@@ -29,11 +34,11 @@
 
     <div class="row">
         <div class="col-md-4 mb-4">
-            <form method="get" asp-action="Search">
+            <form method="get" asp-action="Search" id="filterForm">
 
                 <input type="hidden" name="searchString" value="@Model.SearchString" />
 
-                <div class="card border rounded-0 shadow-sm p-4 bg-white">
+                <div class="card border rounded-1 shadow-sm p-4 bg-white">
                     <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
                         <h5 class="fw-bold text-dark m-0">
                             <i class="bi bi-sliders2-vertical me-2 text-dark"></i>Filters
@@ -41,21 +46,17 @@
                     </div>
 
                     <div class="mb-4">
-
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-1">
                             <label class="form-label fw-bold text-dark fs-6 mb-0 ">Price</label>
                         </div>
-
                         <div class="d-flex gap-2 align-items-center">
                             <input type="number" name="minPrice" value="@Model.MinPrice" class="form-control form-control-sm" placeholder="Min" min="0">
                             <span class="text-muted">-</span>
                             <input type="number" name="maxPrice" value="@Model.MaxPrice" class="form-control form-control-sm" placeholder="Max" min="0">
                         </div>
-
                     </div>
 
                     <div class="mb-4">
-
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-1"
                              data-bs-toggle="collapse"
                              data-bs-target="#categoryListWrapper"
@@ -66,7 +67,6 @@
 
                         <div class="collapse show" id="categoryListWrapper">
                             <div class="pt-1">
-
                                 <div class="form-check mb-2">
                                     <input class="form-check-input border-secondary-subtle"
                                            type="radio"
@@ -95,25 +95,34 @@
                                         </label>
                                     </div>
                                 }
-
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-2">
-                        <label class="form-label small">Availability</label>
+                        <label class="form-label small fw-bold">Availability</label>
                         <div class="form-check mb-1">
                             <input class="form-check-input" type="checkbox" name="inStockOnly" value="true" id="inStock" @(Model.InStockOnly ? "checked" : "")>
-                            <label class="form-check-label text-dark" for="inStock">In Stock Only</label>
+                            <label class="form-check-label text-dark small" for="inStock">In Stock Only</label>
                         </div>
                     </div>
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-outline-dark btn-sm fw-semibold flex-grow-1">
+                            Apply Filters
+                        </button>
 
-                    <button type="submit" class="btn btn-outline-dark w-100 btn-sm mt-3 fw-semibold">Apply Filters</button>
+                        @if (hasActiveFilters)
+                        {
+                            <a asp-action="Search" class="btn btn-outline-danger btn-sm fw-semibold px-3">
+                                <i class="bi bi-x-circle"></i> Clear Filters
+                            </a>
+                        }
+                    </div>
                 </div>
             </form>
         </div>
 
-        <div class="col-md-8 card border rounded-0 shadow-sm py-2">
+        <div class="col-md-8 card border rounded-1 shadow-sm py-2">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-muted small">Showing <strong>@Model.Products.Count()</strong> items</span>
             </div>
@@ -121,7 +130,7 @@
             @if (!Model.Products.Any())
             {
                 <div class="text-center p-5 shadow-sm border-0">
-                    <h6 class="fw-bold">No items match your search.</h6>
+                    <h6 class="fw-bold text-muted">No items match your search filters.</h6>
                 </div>
             }
             else
@@ -154,9 +163,9 @@
                                             @product.NameEn
                                         </h6>
                                     </div>
-                                    <div class="mt-2">
-                                        <span class="fs-6 fw-bold text-primary">
-                                            @(firstPrice.HasValue ? "JOD " + firstPrice.Value.ToString() : "JOD 0.00")
+                                    <div>
+                                        <span class="fs-6 fw-bold text-success">
+                                            @(firstPrice.HasValue ? "JOD " + firstPrice.Value.ToString("F2") : "JOD 0.00")
                                         </span>
                                     </div>
                                 </div>

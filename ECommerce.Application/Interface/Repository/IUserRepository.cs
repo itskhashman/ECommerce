@@ -7,6 +7,7 @@ namespace ECommerce.Application.Interface.Repository
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+        public Task<int?> GetTotalUsersAsync();
         public Task<IEnumerable<User>?> GetAllUsersAsync();
         public Task<User?> GetUserByEmailAsync(string email);
         public Task<IEnumerable<User>?> GetUsersByRoleAsync(int roleId);

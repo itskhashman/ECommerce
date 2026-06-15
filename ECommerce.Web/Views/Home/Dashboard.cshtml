@@ -1,0 +1,279 @@
+﻿@model ECommerce.Application.DTOs.Dashboard.DashboardDto
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-primary border-2 p-3 shadow-sm h-100">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="text-secondary">
+                        <h6 class="text-uppercase tracking-wider small fw-semibold mb-1">Total Revenue</h6>
+                        <h3 class="text-dark fw-bold mb-0 g-1">@Model.TotalSales<span class="fw-bold fs-6">JOD</span></h3>
+                    </div>
+                    <div class="text-primary rounded p-3 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-currency-dollar fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-success border-2 p-3 shadow-sm h-100">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="text-secondary">
+                        <h6 class="text-uppercase tracking-wider small fw-semibold mb-1">Total Orders</h6>
+                        <h3 class="text-dark fw-bold mb-0">@Model.TotalOrders</h3>
+                    </div>
+                    <div class="text-success rounded p-3 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-cart-check fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-danger border-2 p-3 shadow-sm h-100">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="text-secondary">
+                        <h6 class="text-uppercase tracking-wider small fw-semibold mb-1">Total Products</h6>
+                        <h3 class="text-dark fw-bold mb-0">@Model.TotalProducts</h3>
+                    </div>
+                    <div class="text-danger rounded p-3 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-box-seam fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-warning border-2 p-3 shadow-sm h-100">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="text-secondary">
+                        <h6 class="text-uppercase tracking-wider small fw-semibold mb-1">Total Active Users</h6>
+                        <h3 class="text-dark fw-bold mb-0">@Model.TotalUsers</h3>
+                    </div>
+                    <div class="text-warning rounded p-3 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-people fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <h4 class="mb-3">Orders</h4>
+    
+    <div class="row mb-4 text-center">
+        <div class="col border-end"><strong>Pending:</strong> <span class="badge bg-secondary">@Model.OrdersPending</span></div>
+        <div class="col border-end"><strong>Confirmed:</strong> <span class="badge bg-primary">@Model.OrdersConfirmed</span></div>
+        <div class="col border-end"><strong>Shipped:</strong> <span class="badge bg-info">@Model.OrdersShipped</span></div>
+        <div class="col border-end"><strong>Delivered:</strong> <span class="badge bg-success">@Model.OrdersDelivered</span></div>
+        <div class="col"><strong>Cancelled:</strong> <span class="badge bg-danger">@Model.OrdersCancelled</span></div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card p-3 shadow-sm h-100">
+                    <h5 class="fw-bold mb-3 text-secondary">Last Week Orders</h5>
+                    <div style="position: relative; height:300px;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm h-100">
+                    <h5 class="fw-bold mb-3 text-secondary">Order Fulfillment Status</h5>
+                    <div style="position: relative; height:300px;" class="d-flex align-items-center justify-content-center">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card p-3 mb-4">
+                <h4>Recent Orders</h4>
+                <table class="table table-hover mt-2">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RecentOrders != null && Model.RecentOrders.Any())
+                        {
+                            foreach (var order in Model.RecentOrders)
+                            {
+                                <tr>
+                                    <td>#@order?.Id</td>
+                                    <td>JOD @order?.TotalAmount</td>
+                                    <td><span class="badge bg-dark">@order?.CreatedAt.ToString("g")</span></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="3" class="text-muted text-center">No orders found</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card p-3 mb-4">
+                <h4>Top Categories</h4>
+                <table class="table table-striped mt-2">
+                    <thead>
+                        <tr>
+                            <th>Category Name</th>
+                            <th>Total Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.TopCategories != null && Model.TopCategories.Any())
+                        {
+                            foreach (var category in Model.TopCategories)
+                            {
+                                <tr>
+                                    <td>@category.Value.NameEn</td>
+                                    <td>@category.Key</td>
+
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="2" class="text-muted text-center">No sales data yet</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card p-3 mb-4">
+                <h4>Top Products</h4>
+                <table class="table table-striped mt-2">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Total Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.TopProducts != null && Model.TopProducts.Any())
+                        {
+                            foreach (var product in Model.TopProducts)
+                            {
+                                <tr>
+                                    <td>@product.Value.NameEn</td>
+                                    <td>@product.Key</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="2" class="text-muted text-center">No sales data yet</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            @{
+                    var today = DateTime.UtcNow.Date;
+                    var last7Days = Enumerable.Range(0, 7)
+                            .Select(i => today.AddDays(-6 + i))
+                            .ToList();
+
+                    var chartLabels = last7Days.Select(d => d.ToString("ddd (MM/dd)")).ToList();
+
+                    var chartData = last7Days.Select(d => Model.OrdersLastWeek != null && Model.OrdersLastWeek.ContainsKey(d)
+                            ? Model.OrdersLastWeek[d]
+                            : 0).ToList();
+            }
+
+            const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctxRevenue, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(chartLabels)),
+                    datasets: [{
+                        label: 'Orders Placed',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(chartData)),
+                        borderColor: '#0d6efd',
+                        backgroundColor: 'rgba(13, 110, 253, 0.08)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#0d6efd',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1, precision: 0 }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+
+            const ctxOrder = document.getElementById('orderStatusChart').getContext('2d');
+            new Chart(ctxOrder, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
+                    datasets: [{
+                        data: [
+                            @Model.OrdersPending,
+                            @Model.OrdersConfirmed,
+                            @Model.OrdersShipped,
+                            @Model.OrdersDelivered,
+                            @Model.OrdersCancelled
+                        ],
+                        backgroundColor: ['#6c757d', '#0d6efd', '#0dcaf0', '#198754', '#dc3545'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+        });
+    </script>
+}

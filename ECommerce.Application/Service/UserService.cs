@@ -18,6 +18,10 @@ namespace ECommerce.Application.Service
             _userRepository = userRepository;
             _mapper = mapper;
         }
+        public async Task<int?> GetTotalUsersAsync()
+        {
+            return await _userRepository.GetTotalUsersAsync();
+        }
         public async Task<IEnumerable<UserDto>?> GetAllUsersAsync()
         {
             var users =  await _userRepository.GetAllUsersAsync();

@@ -1,11 +1,11 @@
 ﻿@model string
 
 <div class="col-12 text-center text-muted small fw-bold text-uppercase my-4">
-    <span class="@(Model == "Cart" ? "text-dark border-bottom border-2 border-dark pb-1" : "")">Cart</span>
+    <span class="@(Model == "Cart" ? "text-success border-bottom border-success border-2 pb-1" : "")">Cart</span>
 
     <span class="mx-2 text-secondary">&gt;</span>
-    <span class="@(Model == "PlaceOrder" ? "text-dark border-bottom border-2 border-dark pb-1" : "")">Place Order</span>
+    <span class="@(Model == "PlaceOrder" ? "text-success border-bottom border-success border-2 border-dark pb-1" : "")">Place Order</span>
 
     <span class="mx-2 text-secondary">&gt;</span>
-    <span class="@(Model == "Complete" ? "text-dark border-bottom border-2 border-dark pb-1" : "")">Order Complete</span>
+    <span class="@(Model == "Complete" ? "text-dark border-bottom border-success border-2 pb-1" : "")">Order Complete</span>
 </div>

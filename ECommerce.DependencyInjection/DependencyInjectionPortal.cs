@@ -33,7 +33,7 @@ public static class DependencyInjectionPortal
         services.ConfigureApplicationCookie(options =>
         {
             options.LoginPath = "/Account/Login";
-            options.AccessDeniedPath = "/Account/Login";
+            options.AccessDeniedPath = "/Account/AccessDenied";
             options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;

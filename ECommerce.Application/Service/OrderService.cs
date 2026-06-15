@@ -22,6 +22,45 @@ namespace ECommerce.Application.Service
             _productRepository = productRepository;
             _mapper = mapper;
         }
+        public async Task<int?> GetTotalOrdersAsync()
+        {
+            return await _orderRepository.GetTotalOrdersAsync();
+        }
+
+        public async Task<int?> GetTotalPendingAsync()
+        {
+            return await _orderRepository.GetTotalPendingAsync();
+        }
+        public async Task<int?> GetTotalConfirmedAsync()
+        {
+            return await _orderRepository.GetTotalConfirmedAsync();
+        }
+        public async Task<int?> GetTotalShippedAsync()
+        {
+            return await _orderRepository.GetTotalShippedAsync();
+        }
+        public async Task<int?> GetTotalDeliveredAsync()
+        {
+            return await _orderRepository.GetTotalDeliveredAsync();
+        }
+        public async Task<int?> GetTotalCancelledAsync()
+        {
+            return await _orderRepository.GetTotalCancelledAsync();
+        }
+        public async Task<decimal?> GetTotalSalesAsync()
+        {
+            return await _orderRepository.GetTotalSalesAsync();
+        }   
+        public async Task<Dictionary<DateTime, int>> GetLastWeekOrdersAsync()
+        {
+            return await _orderRepository.GetLastWeekOrdersAsync();
+        }
+
+        public async Task<IEnumerable<OrderDto>?> GetRecentOrdersAsync()
+        {
+            var recentOrders = await _orderRepository.GetRecentOrdersAsync();
+            return _mapper.Map<IEnumerable<OrderDto>>(recentOrders);
+        }
         public async Task<IEnumerable<OrderDto>?> GetAllOrdersAsync()
         {
             var orders = await _orderRepository.GetAllOrdersAsync();

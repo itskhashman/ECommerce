@@ -32,34 +32,51 @@ public class AccountController : Controller
     }
 
     [HttpGet]
-    public IActionResult Login()
+    public IActionResult Login(string returnUrl = null)
     {
+        ViewBag.ReturnUrl = returnUrl;
         return View();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
     {
         if (!ModelState.IsValid)
         {
-            return View(model);      
+            ViewBag.ReturnUrl = returnUrl;
+            return View(model);
         }
 
         var result = await _identityService.LoginAsync(model.Email, model.Password, model.RememberMe);
 
         if (result)
         {
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
             return RedirectToAction("Home", "Home");
         }
 
         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+        ViewBag.ReturnUrl = returnUrl;
         return View(model);
     }
-
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
         await _identityService.LogoutAsync();
+        return RedirectToAction("Login");
+    }
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Home", "Home");
+        }
+
         return RedirectToAction("Login");
     }
 }

@@ -1,0 +1,68 @@
+﻿@model ECommerce.Application.DTOs.User.UpdateUserDto
+
+@{
+    ViewData["Title"] = "Edit Information";
+}
+
+<div class="container my-5" style="max-width: 750px;">
+    <div class="card border rounded-0 shadow-sm bg-white">
+        <div class="card-header bg-dark text-white py-3 rounded-0">
+            <h5 class="m-0 text-uppercase small fw-bold"><i class="bi bi-person-gear me-2"></i>Edit Personal Information</h5>
+        </div>
+        <form asp-controller="Profile" asp-action="Edit" method="post" class="p-4">
+            <input type="hidden" asp-for="Id" />
+
+            <h6 class="fw-bold text-secondary text-uppercase small border-bottom pb-2 mb-3">Profile Details (English)</h6>
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label class="form-label text-uppercase text-muted fw-bold small mb-1">First Name</label>
+                    <input type="text" asp-for="FirstNameEn" class="form-control rounded-0 font-monospace small" required />
+                    <span asp-validation-for="FirstNameEn" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-uppercase text-muted fw-bold small mb-1">Middle Name</label>
+                    <input type="text" asp-for="MiddleNameEn" class="form-control rounded-0 font-monospace small" required />
+                    <span asp-validation-for="MiddleNameEn" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-uppercase text-muted fw-bold small mb-1">Last Name</label>
+                    <input type="text" asp-for="LastNameEn" class="form-control rounded-0 font-monospace small" required />
+                    <span asp-validation-for="LastNameEn" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <h6 class="fw-bold text-secondary text-uppercase small border-bottom pb-2 mb-3 text-end" dir="rtl">التفاصيل الشخصية (بالعربي)</h6>
+            <div class="row g-3 mb-4" dir="rtl">
+                <div class="col-md-4 text-end">
+                    <label class="form-label text-muted fw-bold small mb-1">الاسم الأول</label>
+                    <input type="text" asp-for="FirstNameAr" class="form-control rounded-0 font-monospace small" required />
+                    <span asp-validation-for="FirstNameAr" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4 text-end">
+                    <label class="form-label text-muted fw-bold small mb-1">اسم الأب</label>
+                    <input type="text" asp-for="MiddleNameAr" class="form-control rounded-0 font-monospace small" required />
+                    <span asp-validation-for="MiddleNameAr" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4 text-end">
+                    <label class="form-label text-muted fw-bold small mb-1">العائلة / اللقب</label>
+                    <input type="text" asp-for="LastNameAr" class="form-control rounded-0 font-monospace small" required />
+                    <span asp-validation-for="LastNameAr" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <h6 class="fw-bold text-secondary text-uppercase small border-bottom pb-2 mb-3">Contact Configuration</h6>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label text-uppercase text-muted fw-bold small mb-1">Phone Number</label>
+                    <input type="tel" asp-for="Phone" class="form-control rounded-0 font-monospace small" required />
+                    <span asp-validation-for="Phone" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="pt-3 border-top d-flex justify-content-end gap-2">
+                <a asp-controller="Profile" asp-action="MyProfile" class="btn btn-outline-secondary rounded-0 text-uppercase small px-4">Cancel</a>
+                <button type="submit" class="btn btn-dark rounded-0 text-uppercase small px-4">Save Profile</button>
+            </div>
+        </form>
+    </div>
+</div>

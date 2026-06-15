@@ -15,19 +15,6 @@ public class UsersController : Controller
         _userService = userService;
     }
 
-    [HttpGet("Profile")]
-    public async Task<IActionResult> Profile()
-    {
-        var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;
-        var userId = int.TryParse(domainUserIdClaim, out int outUserId) ? outUserId : 1;
-        var model = await _userService.GetUserWithAddressesAsync(userId);
-
-        ViewBag.Cities = await _userService.GetAllCitiesAsync();
-        ViewBag.Countries = await _userService.GetAllCountriesAsync();
-
-        return View(model);
-    }
-
     [HttpGet("Manage/Users")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Manage()

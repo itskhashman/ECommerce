@@ -5,6 +5,9 @@ namespace ECommerce.Application.Interfaces.services
 {
     public interface IProductService
     {
+        Task<int?> GetTotalProductsAsync();
+        Task<Dictionary<int, ProductDto>> GetTopProductsAsync();
+        Task<IEnumerable<ProductDto>?> GetNewestProductsAsync();
         Task<IEnumerable<ProductDto>> GetAllByCategoryIdAsync(int categoryId);
         Task<IEnumerable<ProductDto>> GetAllProductsWithMainImageAsync();
         Task<IEnumerable<DiscountTypeDto>> GetDiscountTypesAsync();

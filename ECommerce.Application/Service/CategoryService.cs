@@ -16,14 +16,34 @@ namespace ECommerce.Application.Service
             _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
+        public async Task<Dictionary<int, CategoryDto>?> GetTopCategoriesAsync()
+        {
+            var topCategories = await _categoryRepository.GetTopCategoriesAsync();
 
-        public async Task<IEnumerable<CategoryDto>> GetAllAsync()
+            if (topCategories == null) return null;
+
+            return topCategories.ToDictionary(
+                kvp => kvp.Key,
+                kvp => new CategoryDto
+                {
+                    Id = kvp.Value.Id,
+                    NameEn = kvp.Value.NameEn,
+                    NameAr = kvp.Value.NameAr,
+                }
+            );
+        }
+        public async Task<int?> GetTotalCategoriesAsync()
+        {
+            return await _categoryRepository.GetTotalCategoriesAsync();
+        }
+
+        public async Task<IEnumerable<CategoryDto>?> GetAllAsync()
         {
             var categories = await _categoryRepository.GetAllAsync();
 
             return _mapper.Map<IEnumerable<CategoryDto>>(categories);
         }
-        public async Task<IEnumerable<CategoryDto>> GetAllOrderedAsync()
+        public async Task<IEnumerable<CategoryDto>?> GetAllOrderedAsync()
         {
             var categories = await _categoryRepository.GetAllAsync();
 
@@ -43,20 +63,20 @@ namespace ECommerce.Application.Service
             return rootCategories;
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetAllMainCategoriesAsync()
+        public async Task<IEnumerable<CategoryDto>?> GetAllMainCategoriesAsync()
         {
             var parentCategories = await _categoryRepository.GetMainCategoriesAsync();
 
             return _mapper.Map<IEnumerable<CategoryDto>>(parentCategories);
         }
-        public async Task<IEnumerable<CategoryDto>> GetSubCategoriesByMainCategoryIdAsync(int mainCategoryId)
+        public async Task<IEnumerable<CategoryDto>?> GetSubCategoriesByMainCategoryIdAsync(int mainCategoryId)
         {
             var subCategories = await _categoryRepository.GetSubCategoriesByMainCategoryIdAsync(mainCategoryId);
             return _mapper.Map<IEnumerable<CategoryDto>>(subCategories);
         }
 
 
-        public async Task<IEnumerable<CategoryDto>> GetAllSubCategoriesAsync()
+        public async Task<IEnumerable<CategoryDto>?> GetAllSubCategoriesAsync()
         {
             var childCategories = await _categoryRepository.GetSubCategoriesAsync();
 
@@ -73,7 +93,7 @@ namespace ECommerce.Application.Service
             return _mapper.Map<CategoryDto>(category);
         }
 
-        public async Task<CategoryDto> CreateAsync(CreateCategoryDto dto)
+        public async Task<CategoryDto?> CreateAsync(CreateCategoryDto dto)
         {
             var category = _mapper.Map<Category>(dto);
 
@@ -82,12 +102,12 @@ namespace ECommerce.Application.Service
             return _mapper.Map<CategoryDto>(addedCategory);
         }
 
-        public async Task<CategoryDto> UpdateAsync(UpdateCategoryDto dto)
+        public async Task<CategoryDto?> UpdateAsync(UpdateCategoryDto dto)
         {
             var category = await _categoryRepository.GetByIDAsync(dto.Id);
 
             if (category == null)
-                throw new Exception("Category not found");
+                return null;
 
             _mapper.Map(dto, category);
 

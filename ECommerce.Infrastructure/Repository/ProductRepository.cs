@@ -14,7 +14,47 @@ namespace ECommerce.Infrastructure.Repository
         {
         }
 
-        public async Task<IEnumerable<Product>> GetProductsByCategoryIdAsync(int categoryId)
+        public async Task<int?> GetTotalProductsAsync()
+        {
+            return await _context.Products.Where(p => !p.IsDeleted).CountAsync();
+        }
+
+        public async Task<Dictionary<int, Product>> GetTopProductsAsync()
+        {
+            var topProductsData = await _context.OrderItems
+                .Where(oi => !oi.IsDeleted)
+                .GroupBy(oi => oi.Sku.ProductId)
+                .OrderByDescending(group => group.Sum(oi => oi.Quantity))
+                .Take(5)
+                .Select(group => new
+                {
+                    TotalSold = group.Sum(oi => oi.Quantity),
+                    Product = group.Select(oi => oi.Sku.Product).FirstOrDefault()
+                })
+                .ToListAsync();
+
+            return topProductsData
+                .Where(x => x.Product != null)
+                .ToDictionary(
+                    x => x.TotalSold,
+                    x => x.Product!
+                );
+        }
+        public async Task<IEnumerable<Product>?> GetNewestProductsAsync()
+        {
+            var products = await _context.Products
+                .Where(p => !p.IsDeleted && p.IsActive)
+                .Include(p => p.ProductVariants)
+                .Include(p => p.DiscountType)
+                .Include(p => p.ProductImages)
+                .OrderBy(p => p.CreatedAt)
+                .Take(10)
+                .ToListAsync();
+
+            return products;
+        }
+
+        public async Task<IEnumerable<Product>?> GetProductsByCategoryIdAsync(int categoryId)
         {
             var Products = await _context.Products
                 .AsNoTracking()
@@ -46,7 +86,7 @@ namespace ECommerce.Infrastructure.Repository
                     .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsWithMainImageAsync()
+        public async Task<IEnumerable<Product>?> GetAllProductsWithMainImageAsync()
         {
             var productsList = await _context.Products
                 .Where(p => !p.IsDeleted)
@@ -55,7 +95,7 @@ namespace ECommerce.Infrastructure.Repository
 
             return productsList;
         }
-        public async Task<IEnumerable<Product>> GetMostReviewedProductsAsync() // needs update
+        public async Task<IEnumerable<Product>?> GetMostReviewedProductsAsync() // needs update
         {
             var products = await _context.Products
                 .Where(p => !p.IsDeleted && p.IsActive)
@@ -63,7 +103,7 @@ namespace ECommerce.Infrastructure.Repository
             return products;
         }
 
-        public async Task<IEnumerable<DiscountType>> GetDiscountTypesAsync()
+        public async Task<IEnumerable<DiscountType>?> GetDiscountTypesAsync()
         {
             var discountTypes = await _context.DiscountTypes
                 .Where(dt => !dt.IsDeleted)
@@ -71,7 +111,7 @@ namespace ECommerce.Infrastructure.Repository
             return discountTypes;
         }
 
-        public async Task<IEnumerable<Product>> GetProductsByNameAsync(string name, int? categoryId, decimal? minPrice, decimal? maxPrice, bool inStockOnly = false)
+        public async Task<IEnumerable<Product>?> GetProductsByNameAsync(string name, int? categoryId, decimal? minPrice, decimal? maxPrice, bool inStockOnly = false)
         {
             var products = await _context.Products
                 .Where(p => !p.IsDeleted && p.IsActive && EF.Functions.Like(p.NameEn, $"%{name}%"))

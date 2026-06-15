@@ -12,6 +12,59 @@ namespace ECommerce.Infrastructure.Repository
         public OrderRepository(ApplicationDbContext context) : base(context)
         {
         }
+        public async Task<Dictionary<DateTime, int>> GetLastWeekOrdersAsync()
+        {
+            var last7DaysStart = DateTime.UtcNow.Date.AddDays(-6);
+
+            var ordersPerDay = await _context.Orders
+                .Where(o => !o.IsDeleted && o.CreatedAt >= last7DaysStart)
+                .GroupBy(o => o.CreatedAt.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    Count = g.Count()
+                })
+                .OrderBy(g => g.Date)
+                .ToListAsync();
+
+            return ordersPerDay.ToDictionary(x => x.Date, x => x.Count);
+        }
+        public async Task<int?> GetTotalOrdersAsync()
+        {
+            return await _context.Orders.Where(o => !o.IsDeleted).CountAsync();
+        }
+        public async Task<int?> GetTotalPendingAsync()
+        {
+            return await _context.Orders.Where(o => !o.IsDeleted && o.OrderStatusId == 1).CountAsync();
+        }
+        public async Task<int?> GetTotalConfirmedAsync()
+        {
+            return await _context.Orders.Where(o => !o.IsDeleted && o.OrderStatusId == 2).CountAsync();
+        }
+        public async Task<int?> GetTotalShippedAsync()
+        {
+            return await _context.Orders.Where(o => !o.IsDeleted && o.OrderStatusId == 3).CountAsync();
+        }
+        public async Task<int?> GetTotalDeliveredAsync()
+        {
+            return await _context.Orders.Where(o => !o.IsDeleted && o.OrderStatusId == 4).CountAsync();
+        }
+        public async Task<int?> GetTotalCancelledAsync()
+        {
+            return await _context.Orders.Where(o => o.IsDeleted).CountAsync();
+        }
+        public async Task<decimal?> GetTotalSalesAsync()
+        {
+            return await _context.Orders.Where(o => !o.IsDeleted).SumAsync(o => o.TotalAmount);
+        }
+        public async Task<IEnumerable<Order>?> GetRecentOrdersAsync()
+        {
+            return await _context.Orders
+                .Where(o => !o.IsDeleted)
+                .OrderByDescending(o => o.CreatedAt)
+                .Take(10)
+                .ToListAsync();
+        }
         public async Task<IEnumerable<Order>?> GetAllOrdersAsync()
         {
             var orders = await _context.Orders.
