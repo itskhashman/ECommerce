@@ -29,13 +29,13 @@ namespace ECommerce.Web.Controllers
             _mapper = mapper;
             _fileStorageService = fileStorageService;
         }
-
+        [HttpGet("Manage/Products")]
         public async Task<IActionResult> Index()
         {
             var products = await _productService.GetAllProductsWithMainImageAsync();
             return View(products);
         }
-
+        [HttpGet("Product/Details")]
         public async Task<IActionResult> Details(int id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -45,7 +45,7 @@ namespace ECommerce.Web.Controllers
             }
             return View(product);
         }
-
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             await PopulateDropdownsAsync();
@@ -54,7 +54,7 @@ namespace ECommerce.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProductDto dto)
+        public async Task<IActionResult> Create([FromForm] CreateProductDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -66,14 +66,12 @@ namespace ECommerce.Web.Controllers
             if (dto.ImageFiles != null && dto.ImageFiles.Any())
             {
                 string safeName = string.IsNullOrWhiteSpace(dto.NameEn) ? "Product" : dto.NameEn;
-                string fileUniqueSuffix = Guid.NewGuid().ToString().Substring(0, 5);
-
                 for (int i = 0; i < dto.ImageFiles.Count; i++)
                 {
                     var file = dto.ImageFiles[i];
                     if (file.Length > 0)
                     {
-                        string customName = $"{safeName}-{fileUniqueSuffix}-{i}";
+                        string customName = $"{safeName}-{i}";
                         string fileUrl = await _fileStorageService.UploadFileAsync(file, "products", customName);
 
                         if (!string.IsNullOrEmpty(fileUrl))
@@ -81,9 +79,7 @@ namespace ECommerce.Web.Controllers
                             dto.ProductImages.Add(new ProductImageDto
                             {
                                 URL = fileUrl,
-                                IsMain = (i == 0),
-                                AltText = $"{dto.NameEn} Image {i + 1}",
-                                SortOrder = i
+                                IsMain = (i == 0)
                             });
                         }
                     }
@@ -95,6 +91,7 @@ namespace ECommerce.Web.Controllers
             TempData["NotifyMessage"] = "Product along with its variant specifications and SKUs generated successfully!";
             return RedirectToAction("Index");
         }
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _productService.GetProductWithAllDetailsAsync(id);
@@ -107,7 +104,6 @@ namespace ECommerce.Web.Controllers
 
             return View(product);
         }
-
         [HttpPost]
         public async Task<IActionResult> Edit(UpdateProductDto product)
         {
@@ -126,7 +122,7 @@ namespace ECommerce.Web.Controllers
                     var file = product.ImageFiles[i];
                     if (file.Length > 0)
                     {
-                        string customName = $"{safeProductName}-{product.Id}-edit-{Guid.NewGuid().ToString().Substring(0, 5)}";
+                        string customName = $"{safeProductName}-{product.Id}";
                         string fileUrl = await _fileStorageService.UploadFileAsync(file, "products", customName);
 
                         if (!string.IsNullOrEmpty(fileUrl))
@@ -135,9 +131,7 @@ namespace ECommerce.Web.Controllers
                             {
                                 ProductId = product.Id,
                                 URL = fileUrl,
-                                IsMain = false,
-                                AltText = $"{product.NameEn} Image Update",
-                                SortOrder = i + 10
+                                IsMain = false
                             });
                         }
                     }

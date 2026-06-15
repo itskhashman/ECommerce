@@ -1,23 +1,38 @@
-﻿@model ECommerce.Web.Models.Home.SearchViewModel
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model ECommerce.Web.Models.Home.SearchViewModel
+
+@{
+    ViewData["Title"] = Localizer["SearchTitle"];
+
+    bool hasActiveFilters = !string.IsNullOrEmpty(Model.SearchString) ||
+                            Model.MinPrice.HasValue ||
+                            Model.MaxPrice.HasValue ||
+                            Model.InStockOnly ||
+                            Model.CategoryId.HasValue;
+
+    var isRtl = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft;
+}
 
 <div class="container mt-5">
     <div class="row mb-5 justify-content-center">
         <div class="col-md-8 text-center">
-            <h2 class="fw-bold text-dark mb-3">Search Results</h2>
+            <h2 class="fw-bold text-white mb-3">@Localizer["SearchResultsHeading"]</h2>
             <form method="get" asp-action="Search">
                 <input type="hidden" name="minPrice" value="@Model.MinPrice" />
                 <input type="hidden" name="maxPrice" value="@Model.MaxPrice" />
                 <input type="hidden" name="inStockOnly" value="@Model.InStockOnly.ToString().ToLower()" />
                 <input type="hidden" name="categoryId" value="@Model.CategoryId" />
 
-                <div class="input-group input-group-lg shadow-sm rounded">
+                <div class="input-group input-group-lg shadow-sm">
                     <input type="text"
                            name="searchString"
                            value="@Model.SearchString"
-                           class="form-control border-secondary-subtle"
-                           placeholder="Search for products" />
-                    <button class="btn btn-dark px-4" type="submit">
-                        <i class="bi bi-search me-1"></i> Search
+                           class="form-control border-secondary-subtle rounded @(isRtl ? "rounded-start-0" : "rounded-end-0")"
+                           placeholder="@Localizer["SearchPlaceholder"]" />
+                    <button class="btn btn-success px-4 rounded @(isRtl ? "rounded-end-0" : "rounded-start-0")" type="submit">
+                        <i class="bi bi-search me-1 ms-1"></i> @Localizer["SearchButton"]
                     </button>
                 </div>
             </form>
@@ -26,44 +41,38 @@
 
     <div class="row">
         <div class="col-md-4 mb-4">
-            <form method="get" asp-action="Search">
-
+            <form method="get" asp-action="Search" id="filterForm">
                 <input type="hidden" name="searchString" value="@Model.SearchString" />
 
-                <div class="card border rounded-0 shadow-sm p-4 bg-white">
+                <div class="card border rounded-1 shadow-sm p-4 bg-white">
                     <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
                         <h5 class="fw-bold text-dark m-0">
-                            <i class="bi bi-sliders2-vertical me-2 text-dark"></i>Filters
+                            <i class="bi bi-sliders2-vertical me-2 ms-2 text-dark"></i>@Localizer["FiltersHeading"]
                         </h5>
                     </div>
 
                     <div class="mb-4">
-
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-1">
-                            <label class="form-label fw-bold text-dark fs-6 mb-0 ">Price</label>
+                            <label class="form-label fw-bold text-dark fs-6 mb-0">@Localizer["PriceLabel"]</label>
                         </div>
-
                         <div class="d-flex gap-2 align-items-center">
-                            <input type="number" name="minPrice" value="@Model.MinPrice" class="form-control form-control-sm" placeholder="Min" min="0">
+                            <input type="number" name="minPrice" value="@Model.MinPrice" class="form-control form-control-sm" placeholder="@Localizer["MinPlaceholder"]" min="0">
                             <span class="text-muted">-</span>
-                            <input type="number" name="maxPrice" value="@Model.MaxPrice" class="form-control form-control-sm" placeholder="Max" min="0">
+                            <input type="number" name="maxPrice" value="@Model.MaxPrice" class="form-control form-control-sm" placeholder="@Localizer["MaxPlaceholder"]" min="0">
                         </div>
-
                     </div>
 
                     <div class="mb-4">
-
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-1"
                              data-bs-toggle="collapse"
                              data-bs-target="#categoryListWrapper"
                              style="cursor: pointer;">
-                            <label class="form-label fw-bold text-dark fs-6 mb-0">Category</label>
+                            <label class="form-label fw-bold text-dark fs-6 mb-0">@Localizer["CategoryLabel"]</label>
                             <i class="bi bi-dash fs-5 fw-bold text-dark"></i>
                         </div>
 
                         <div class="collapse show" id="categoryListWrapper">
                             <div class="pt-1">
-
                                 <div class="form-check mb-2">
                                     <input class="form-check-input border-secondary-subtle"
                                            type="radio"
@@ -71,14 +80,15 @@
                                            id="cat_all"
                                            value=""
                                            @(Model.CategoryId == null ? "checked" : "")>
-                                    <label class="form-check-label text-dark fw-medium small ps-1" for="cat_all">
-                                        All Categories
+                                    <label class="form-check-label text-dark fw-medium small ps-1 pe-1" for="cat_all">
+                                        @Localizer["AllCategoriesOption"]
                                     </label>
                                 </div>
 
                                 @foreach (var category in Model.Categories)
                                 {
                                     var isChecked = Model.CategoryId == category.Id;
+                                    var localizedCategoryName = isRtl ? category.NameAr : category.NameEn;
 
                                     <div class="form-check mb-2">
                                         <input class="form-check-input border-secondary-subtle"
@@ -87,38 +97,50 @@
                                                id="cat_@category.Id"
                                                value="@category.Id"
                                                @(isChecked ? "checked" : "")>
-                                        <label class="form-check-label text-dark fw-medium small ps-1" for="cat_@category.Id">
-                                            @category.NameEn
+                                        <label class="form-check-label text-dark fw-medium small ps-1 pe-1" for="cat_@category.Id">
+                                            @localizedCategoryName
                                         </label>
                                     </div>
                                 }
-
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-2">
-                        <label class="form-label small">Availability</label>
+                        <label class="form-label small fw-bold">@Localizer["AvailabilityLabel"]</label>
                         <div class="form-check mb-1">
                             <input class="form-check-input" type="checkbox" name="inStockOnly" value="true" id="inStock" @(Model.InStockOnly ? "checked" : "")>
-                            <label class="form-check-label text-dark" for="inStock">In Stock Only</label>
+                            <label class="form-check-label text-dark small" for="inStock">@Localizer["InStockOnlyOption"]</label>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-outline-dark w-100 btn-sm mt-3 fw-semibold">Apply Filters</button>
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-outline-dark btn-sm fw-semibold flex-grow-1">
+                            @Localizer["ApplyFiltersButton"]
+                        </button>
+
+                        @if (hasActiveFilters)
+                        {
+                            <a asp-action="Search" class="btn btn-outline-danger btn-sm fw-semibold px-3">
+                                <i class="bi bi-x-circle"></i> @Localizer["ClearFiltersButton"]
+                            </a>
+                        }
+                    </div>
                 </div>
             </form>
         </div>
 
-        <div class="col-md-8 card border rounded-0 shadow-sm py-2">
+        <div class="col-md-8 card border rounded-1 shadow-sm py-2 bg-white">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted small">Showing <strong>@Model.Products.Count()</strong> items</span>
+                <span class="text-muted small">
+                    @Localizer["ShowingItemsCount", Model.Products?.Count() ?? 0]
+                </span>
             </div>
 
-            @if (!Model.Products.Any())
+            @if (Model.Products == null || !Model.Products.Any())
             {
-                <div class="text-center p-5 shadow-sm border-0">
-                    <h6 class="fw-bold">No items match your search.</h6>
+                <div class="text-center p-5 border-0">
+                    <h6 class="fw-bold text-muted">@Localizer["NoItemsFoundMessage"]</h6>
                 </div>
             }
             else
@@ -128,32 +150,40 @@
                     {
                         var mainImgUrl = product.ProductImages?.FirstOrDefault(i => i.IsMain)?.URL;
                         var firstPrice = product.Skus?.OrderBy(s => s.Price).FirstOrDefault()?.Price;
+                        var localizedProductName = isRtl ? product.NameAr : product.NameEn;
 
                         <div class="col">
                             <a asp-action="Details" asp-route-productId="@product.Id" class="card h-100 shadow-sm border-0 position-relative text-decoration-none">
                                 <div class="bg-light overflow-hidden" style="height: 200px;">
                                     @if (!string.IsNullOrEmpty(mainImgUrl))
                                     {
-                                        <img src="@mainImgUrl" class="card-img-top w-100 h-100 object-fit-cover" alt="@product.NameEn" />
+                                        <img src="@mainImgUrl" class="card-img-top w-100 h-100 object-fit-cover" alt="@localizedProductName" />
                                     }
                                     else
                                     {
                                         <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center text-secondary opacity-50">
                                             <i class="bi bi-image fs-2"></i>
-                                            <small class="mt-1 small">No Image</small>
+                                            <small class="mt-1 small">@Localizer["NoImageFallback"]</small>
                                         </div>
                                     }
                                 </div>
 
                                 <div class="card-body d-flex flex-column text-center p-3">
                                     <div>
-                                        <h6 class="card-title text-dark fw-semibold mb-2 text-truncate" title="@product.NameEn">
-                                            @product.NameEn
+                                        <h6 class="card-title text-dark fw-semibold mb-2 text-truncate" title="@localizedProductName">
+                                            @localizedProductName
                                         </h6>
                                     </div>
-                                    <div class="mt-2">
-                                        <span class="fs-6 fw-bold text-primary">
-                                            @(firstPrice.HasValue ? "JOD " + firstPrice.Value.ToString() : "JOD 0.00")
+                                    <div>
+                                        <span class="fs-6 fw-bold text-success">
+                                            @if (firstPrice.HasValue)
+                                            {
+                                                @Localizer["CurrencyAmount", firstPrice.Value.ToString("F2")]
+                                            }
+                                            else
+                                            {
+                                                @Localizer["CurrencyAmount", "0.00"]
+                                            }
                                         </span>
                                     </div>
                                 </div>

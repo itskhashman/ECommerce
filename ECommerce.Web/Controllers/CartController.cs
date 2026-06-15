@@ -1,5 +1,6 @@
 ﻿
 using ECommerce.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 public class CartController : Controller
@@ -12,6 +13,7 @@ public class CartController : Controller
     }
 
     [HttpGet("Cart")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> Cart()
     {
         var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;

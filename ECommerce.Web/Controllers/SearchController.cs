@@ -3,6 +3,7 @@ using ECommerce.Application.DTOs.Wishlist;
 using ECommerce.Application.Interfaces;
 using ECommerce.Application.Interfaces.services;
 using ECommerce.Web.Models.Home;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 public class SearchController : Controller
 {
@@ -35,14 +36,15 @@ public class SearchController : Controller
         return View(viewModel);
     }
     [HttpGet]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> Details(int productId)
     {
         var product = await _productService.GetByIdAsync(productId);
         var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;
         ViewBag.UserId = int.TryParse(domainUserIdClaim, out int userId) ? userId : 1;
-        WishlistDto wishlist = await _wishlistService.GetWishlistByUserIdAsync(ViewBag.UserId);
-        ViewBag.IsProductWishlisted = wishlist.WishlistItems
-            .Any(item => item != null && item.ProductId == productId);
+        WishlistDto? wishlist = await _wishlistService.GetWishlistByUserIdAsync(ViewBag.UserId);
+        ViewBag.IsProductWishlisted = wishlist != null ? wishlist?.WishlistItems?
+            .Any(item => item != null && item.ProductId == productId) ?? false : false;
         return View(product);
     }
 

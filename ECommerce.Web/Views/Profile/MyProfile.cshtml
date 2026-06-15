@@ -1,0 +1,169 @@
+﻿@using System.Globalization
+@using System.Text.Encodings.Web
+@model ECommerce.Application.DTOs.User.UserDto
+
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+@{
+    var isArabic = CultureInfo.CurrentCulture.Name.StartsWith("ar");
+    ViewData["Title"] = Localizer["MyProfileTitle"];
+}
+
+<div class="container my-5" dir="@(isArabic ? "rtl" : "ltr")">
+    <div class="row g-4">
+        <div class="col-lg-3 col-md-4">
+            <div class="card border rounded-0 shadow-sm sticky-top" style="top: 2rem;">
+                <div class="card-header bg-dark text-white rounded-0 py-3">
+                    <h6 class="m-0 text-uppercase fw-bold small">
+                        <i class="bi bi-person-workspace me-2"></i>@Localizer["AccountManagement"]
+                    </h6>
+                </div>
+                <div class="list-group list-group-flush small" id="profile-tabs">
+                    <button type="button" class="list-group-item list-group-item-action py-3 list-group-item-success active-success fw-bold" onclick="switchProfileTab('profile-info', this)">
+                        <i class="bi bi-person-bounding-box me-2"></i> @Localizer["ProfileDetails"]
+                    </button>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <button type="button" class="list-group-item list-group-item-action py-3 fw-bold" onclick="switchProfileTab('addresses-info', this)">
+                                <i class="bi bi-geo-alt me-2"></i> @Localizer["SavedAddresses"]
+                            </button>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9 col-md-8">
+
+            <div id="profile-info" class="tab-panel">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="card border rounded-0 text-center p-4 shadow-sm bg-white h-100">
+                            <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 fw-bold" style="width:75px; height:75px; font-size:1.4rem;">
+                                @(!string.IsNullOrEmpty(Model?.FirstNameEn) ? Model.FirstNameEn[..1].ToUpper() : "")@(!string.IsNullOrEmpty(Model?.LastNameEn) ? Model.LastNameEn[..1].ToUpper() : "")
+                            </div>
+                            <h5 class="fw-bold text-dark mb-1">
+                                @(isArabic ? $"{Model?.FirstNameAr} {Model?.LastNameAr}" : $"{Model?.FirstNameEn} {Model?.LastNameEn}")
+                            </h5>
+                            <p class="text-muted small text-break mb-3">@Model?.Email</p>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 small fw-normal">@Localizer["ActiveAccount"]</span>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8">
+                        <div class="card border rounded-0 shadow-sm bg-white h-100">
+                            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
+                                <h6 class="m-0 fw-bold text-uppercase text-secondary small">@Localizer["PersonalIdentity"]</h6>
+                                <a asp-controller="Profile" asp-action="Edit" class="btn btn-sm btn-outline-dark rounded-0 text-uppercase small px-3">
+                                    <i class="bi bi-pencil-square me-1"></i> @Localizer["EditDetails"]
+                                </a>
+                            </div>
+                            <div class="card-body p-4 small">
+                                <div class="mb-3 pb-2 border-bottom @(isArabic ? "text-start" : "")" dir="ltr">
+                                    <label class="text-muted d-block mb-1 text-uppercase fw-bold small">@Localizer["FullNameEnglish"]</label>
+                                    <span class="text-dark font-monospace fw-bold fs-6">@Model?.FirstNameEn @Model?.MiddleNameEn @Model?.LastNameEn</span>
+                                </div>
+                                <div class="mb-3 pb-2 border-bottom @(isArabic ? "text-end" : "")" dir="rtl">
+                                    <label class="text-muted d-block mb-1 text-uppercase fw-bold small">@Localizer["FullNameArabic"]</label>
+                                    <span class="text-dark font-monospace fw-bold fs-6">@Model?.FirstNameAr @Model?.MiddleNameAr @Model?.LastNameAr</span>
+                                </div>
+                                <div>
+                                    <label class="text-muted d-block mb-1 text-uppercase fw-bold small">@Localizer["PhoneContact"]</label>
+                                    <span class="text-dark font-monospace fs-6">@Model?.Phone</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="addresses-info" class="tab-panel d-none">
+                <div class="card border rounded-0 shadow-sm bg-white">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
+                        <h6 class="m-0 fw-bold text-uppercase text-secondary small">
+                            <i class="bi bi-geo-alt-fill me-1"></i>@Localizer["ShippingDestinations"]
+                        </h6>
+                        <a asp-controller="Address" asp-action="Create" class="btn btn-sm btn-dark rounded-0 text-uppercase small px-3">
+                            @Localizer["AddAddress"]
+                        </a>
+                    </div>
+                    <div class="card-body p-4">
+                        @if (Model?.Address == null || !Model.Address.Any())
+                        {
+                            <div class="text-center py-5 border border-dashed rounded-0 bg-light-subtle">
+                                <i class="bi bi-geo-alt text-muted fs-2 mb-2 d-block"></i>
+                                <p class="text-muted small mb-0">@Localizer["NoAddressesFound"]</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row g-3">
+                                @foreach (var address in Model.Address)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="card rounded-0 p-3 border @(address.IsDefault ? "border-success shadow-sm bg-success-subtle bg-opacity-10" : "border-secondary-subtle") h-100">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="fw-bold text-uppercase font-monospace small px-2 py-1 border @(address.IsDefault ? "bg-success-subtle text-success border-success-subtle" : "bg-light text-dark")">
+                                                    @address.Label
+                                                </span>
+                                                @if (address.IsDefault)
+                                                {
+                                                    <span class="badge bg-success text-white rounded-0 small fw-normal px-2 py-1">@Localizer["PrimaryDefault"]</span>
+                                                }
+                                            </div>
+                                            <div class="small text-secondary mb-3 pt-2">
+                                                <p class="mb-1 text-dark fw-bold"><i class="bi bi-building me-1 text-muted"></i> @address.Street</p>
+                                                <p class="mb-1 text-dark">@(isArabic? address.City?.NameAr : address.City?.NameEn)</p>
+                                                <p class="mb-0 text-muted">@Localizer["PostalIndex"]: <span class="font-monospace text-dark fw-bold">@address.PostalCode</span></p>
+                                            </div>
+                                            <div class="d-flex justify-content-end gap-3 pt-2 border-top small mt-auto">
+                                                <a asp-controller="Address" asp-action="Edit" asp-route-addressId="@address.Id.ToString(CultureInfo.InvariantCulture)" class="text-decoration-none text-secondary hover-dark fw-bold">
+                                                    <i class="bi bi-pencil-square"></i> @Localizer["Modify"]
+                                                </a>
+                                                @if (!address.IsDefault)
+                                                {
+                                                    var confirmationMsg = JavaScriptEncoder.Default.Encode(Localizer["DropAddressConfirmation"].Value);
+                                                    <form asp-controller="Address" asp-action="Delete" asp-route-userId="@Model.Id.ToString(CultureInfo.InvariantCulture)" asp-route-addressId="@address.Id.ToString(CultureInfo.InvariantCulture)" method="post" onsubmit="return confirm('@confirmationMsg');" class="d-inline">
+                                                        <button type="submit" class="btn btn-link p-0 m-0 border-0 text-danger text-decoration-none align-baseline small fw-bold">
+                                                            <i class="bi bi-trash3"></i> @Localizer["Delete"]
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    #profile-tabs .list-group-item.active-success {
+        background-color: #198754 !important;
+        color: #ffffff !important;
+        border-color: #198754 !important;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function switchProfileTab(targetPanelId, activeBtn) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('d-none'));
+            document.getElementById(targetPanelId).classList.remove('d-none');
+
+            document.querySelectorAll('#profile-tabs .list-group-item-action').forEach(b => {
+                b.classList.remove('active', 'list-group-item-success', 'active-success');
+            });
+
+            activeBtn.classList.add('list-group-item-success', 'active-success');
+        }
+    </script>
+}

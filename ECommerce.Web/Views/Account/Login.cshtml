@@ -1,37 +1,47 @@
-﻿@using ECommerce.Web.Models.ViewModels.Account
+﻿@using System.Globalization
+@using ECommerce.Web.Models.ViewModels.Account
 @model LoginViewModel
 
-<div class="container mt-5">
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+@{
+    var isArabic = CultureInfo.CurrentCulture.Name.StartsWith("ar");
+    ViewData["Title"] = Localizer["LoginPageTitle"];
+}
+
+<div class="container mt-5" dir="@(isArabic ? "rtl" : "ltr")">
     <div class="row justify-content-center">
         <div class="col-md-5">
             <div class="card shadow border-0">
                 <div class="card-body p-5">
-                    <h2 class="text-center mb-4">Login</h2>
+                    <h2 class="text-center mb-4">@Localizer["LoginHeader"]</h2>
 
                     <form asp-action="Login" method="post">
-                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
 
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
+                            <label asp-for="Email" class="form-label">@Localizer["EmailLabel"]</label>
                             <input asp-for="Email" class="form-control" placeholder="name@example.com" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
+                            <label asp-for="Password" class="form-label">@Localizer["PasswordLabel"]</label>
                             <input asp-for="Password" type="password" class="form-control" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3 form-check">
                             <input asp-for="RememberMe" class="form-check-input" />
-                            <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+                            <label asp-for="RememberMe" class="form-check-label">@Localizer["RememberMeLabel"]</label>
                         </div>
+                        <div asp-validation-summary="All" class="text-danger"></div>
 
-                        <button type="submit" class="btn btn-success w-100 py-2">Sign In</button>
+                        <button type="submit" class="btn btn-success w-100 py-2">@Localizer["SignInButtonText"]</button>
 
                         <div class="mt-3 text-center">
-                            <a asp-action="Register" class="text-decoration-none">Don't have an account? Sign up here</a>
+                            <a asp-action="Register" class="text-decoration-none">@Localizer["RegisterLinkText"]</a>
                         </div>
                     </form>
                 </div>

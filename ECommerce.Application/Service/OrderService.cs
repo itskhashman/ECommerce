@@ -22,17 +22,62 @@ namespace ECommerce.Application.Service
             _productRepository = productRepository;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<OrderDto>> GetOrdersByUserIdAsync(int userId)
+        public async Task<int?> GetTotalOrdersAsync()
+        {
+            return await _orderRepository.GetTotalOrdersAsync();
+        }
+
+        public async Task<int?> GetTotalPendingAsync()
+        {
+            return await _orderRepository.GetTotalPendingAsync();
+        }
+        public async Task<int?> GetTotalConfirmedAsync()
+        {
+            return await _orderRepository.GetTotalConfirmedAsync();
+        }
+        public async Task<int?> GetTotalShippedAsync()
+        {
+            return await _orderRepository.GetTotalShippedAsync();
+        }
+        public async Task<int?> GetTotalDeliveredAsync()
+        {
+            return await _orderRepository.GetTotalDeliveredAsync();
+        }
+        public async Task<int?> GetTotalCancelledAsync()
+        {
+            return await _orderRepository.GetTotalCancelledAsync();
+        }
+        public async Task<decimal?> GetTotalSalesAsync()
+        {
+            return await _orderRepository.GetTotalSalesAsync();
+        }   
+        public async Task<Dictionary<DateTime, int>> GetLastWeekOrdersAsync()
+        {
+            return await _orderRepository.GetLastWeekOrdersAsync();
+        }
+
+        public async Task<IEnumerable<OrderDto>?> GetRecentOrdersAsync()
+        {
+            var recentOrders = await _orderRepository.GetRecentOrdersAsync();
+            return _mapper.Map<IEnumerable<OrderDto>>(recentOrders);
+        }
+        public async Task<IEnumerable<OrderDto>?> GetAllOrdersAsync()
+        {
+            var orders = await _orderRepository.GetAllOrdersAsync();
+            return _mapper.Map<IEnumerable<OrderDto>>(orders);
+        }
+
+        public async Task<IEnumerable<OrderDto>?> GetOrdersByUserIdAsync(int userId)
         {
             var orders = await _orderRepository.GetOrdersByUserIdAsync(userId);
             return _mapper.Map<IEnumerable<OrderDto>>(orders);
         }
-        public async Task<OrderDto> GetOrderWithDetailsAsync(int orderId)
+        public async Task<OrderDto?> GetOrderWithDetailsAsync(int orderId)
         {
             var order = await _orderRepository.GetOrderWithDetailsAsync(orderId);
             return _mapper.Map<OrderDto>(order);
         }
-        public async Task<OrderDto> CreateOrderByUserIdAsync(int userId, CartDto cart , int addressId, int paymentMethodId)
+        public async Task<OrderDto?> CreateOrderByUserIdAsync(int userId, CartDto cart, int addressId, int paymentMethodId)
         {
             if (cart == null || cart.CartItems == null || !cart.CartItems.Any())
             {
@@ -52,7 +97,7 @@ namespace ECommerce.Application.Service
                     {
                         discountAmount = (basePrice * (product.DiscountAmount.Value / 100m)) * quantity;
                     }
-                    else 
+                    else
                     {
                         discountAmount = product.DiscountAmount.Value * quantity;
                     }
@@ -66,7 +111,7 @@ namespace ECommerce.Application.Service
                     Quantity = quantity,
                     PriceAtPurchase = basePrice,
                     DiscountAmount = discountAmount,
-                    SubTotal = subTotal, 
+                    SubTotal = subTotal,
                     OrderItemNumber = index + 1,
                     ProductNameEn = item.Sku?.Product?.NameEn,
                     ProductNameAr = item.Sku?.Product?.NameAr,
@@ -75,17 +120,17 @@ namespace ECommerce.Application.Service
             }).ToList();
 
             var order = new Order
-        {
-            UserId = userId,
-            OrderNumber = "",
-            OrderItems = orderItems,
-            TotalAmount = orderItems.Sum(x => x.SubTotal),
-            CurrencyCode = "JOD",
-            OrderStatusId = 1,
-            AddressId = addressId,
-            PaymentId = paymentMethodId,
-            ShippingCost = 0
-        };
+            {
+                UserId = userId,
+                OrderNumber = "",
+                OrderItems = orderItems,
+                TotalAmount = orderItems.Sum(x => x.SubTotal),
+                CurrencyCode = "JOD",
+                OrderStatusId = 1,
+                AddressId = addressId,
+                PaymentId = paymentMethodId,
+                ShippingCost = 0
+            };
 
             var createdOrder = await _orderRepository.CreateOrderByUserIdAsync(userId, order);
 
@@ -94,16 +139,18 @@ namespace ECommerce.Application.Service
             await _cartRepository.ClearCartAsync(cart.Id);
             foreach (var item in order.OrderItems)
             {
-                    await _productRepository.UpdateProductStockAsync(item.SkuId, item.Quantity);
+                await _productRepository.UpdateProductStockAsync(item.SkuId, item.Quantity);
             }
             return _mapper.Map<OrderDto>(createdOrder);
         }
-        public async Task<OrderDto> UpdateOrderAsync(OrderDto orderUpdateDto)
+        public async Task<OrderDto?> UpdateOrderAsync(int orderId, int orderStatusId)
         {
-            var order = _mapper.Map<Order>(orderUpdateDto);
-            var updatedOrder = await _orderRepository.UpdateOrderAsync(order);
+            var updatedOrder = await _orderRepository.UpdateOrderStateAsync(orderId, orderStatusId);
             return _mapper.Map<OrderDto>(updatedOrder);
-
+        }
+        public async Task DeleteOrderAsync(int orderId)
+        {
+            await _orderRepository.DeleteOrderAsync(orderId);
         }
     }
 }

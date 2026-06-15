@@ -1,24 +1,29 @@
-﻿@model ECommerce.Application.DTOs.Cart.CartDto
+﻿@using System.Globalization
+@model ECommerce.Application.DTOs.Cart.CartDto
+
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Shopping Cart";
+    var isArabic = CultureInfo.CurrentCulture.Name.StartsWith("ar");
+    ViewData["Title"] = Localizer["ShoppingCartTitle"];
 
     var subtotal = Model?.CartItems?.Sum(item => item.Sku.Price * item.Quantity) ?? 0;
     var totalDiscount = Model?.CartItems?.Sum(item => ((item.Sku.Price - item.PriceAtAddTime) * item.Quantity)) ?? 0;
     var finalTotal = subtotal - totalDiscount;
 }
 
-<div class="container my-5">
+<div class="container my-5" dir="@(isArabic ? "rtl" : "ltr")">
 
     @if (Model == null || Model.CartItems == null || !Model.CartItems.Any())
     {
         <div class="row justify-content-center">
             <div class="col-md-6 text-center py-5 bg-white">
-                <h3 class="fw-bold text-dark mb-2">Your Cart is Empty</h3>
+                <h3 class="fw-bold text-dark mb-2">@Localizer["CartEmptyHeader"]</h3>
                 <p class="text-secondary small mb-4 px-4">
-                    Looks like you haven't added anything to your cart yet. Explore our latest arrivals and find something special!
+                    @Localizer["CartEmptyDescription"]
                 </p>
-                <a href="/" class="btn btn-dark rounded-0 px-5 py-2 fw-bold text-uppercase">
-                    Start Shopping
+                <a asp-controller="Home" asp-action="Home" class="btn btn-dark rounded-0 px-5 py-2 fw-bold text-uppercase">
+                    @Localizer["StartShopping"]
                 </a>
             </div>
         </div>
@@ -35,7 +40,7 @@
                     <div class="card-header bg-white border-bottom py-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <label class="form-check-label fw-bold text-uppercase text-dark fs-5">
-                                All Items (@Model.CartItems.Count)
+                                @Localizer["AllItems"] (@Model.CartItems.Count.ToString(CultureInfo.InvariantCulture))
                             </label>
                         </div>
                     </div>
@@ -44,6 +49,9 @@
                         @foreach (var item in Model.CartItems)
                         {
                             if (item?.Sku?.Product == null) continue;
+
+                            var productName = isArabic ? item.Sku.Product.NameAr : item.Sku.Product.NameEn;
+                            var productDesc = isArabic ? item.Sku.Product.DescriptionAr : item.Sku.Product.DescriptionEn;
 
                             <div class="p-3 border-bottom">
                                 <div class="row g-3 align-items-start">
@@ -54,18 +62,18 @@
                                             {
                                                 var mainImage = item.Sku.Product.ProductImages.FirstOrDefault(img => img.IsMain)
                                                 ?? item.Sku.Product.ProductImages.First();
-                                                <img src="@mainImage.URL" class="w-100 h-100 img-fluid" style="object-fit: cover;" alt="@item.Sku.Product.NameEn">
+                                                <img src="@mainImage.URL" class="w-100 h-100 img-fluid" style="object-fit: cover;" alt="@productName">
                                             }
                                             else
                                             {
-                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted small bg-secondary-subtle">No Img</div>
+                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted small bg-secondary-subtle">@Localizer["NoImg"]</div>
                                             }
                                         </div>
                                     </div>
 
                                     <div class="col-9 col-sm-10">
                                         <p class="small text-secondary mb-1 lh-sm text-wrap">
-                                            <strong class="text-dark ">@item.Sku.Product.NameEn</strong> <br> @item.Sku.Product.DescriptionEn
+                                            <strong class="text-dark">@productName</strong> <br> @productDesc
                                         </p>
 
                                         <div class="my-2">
@@ -76,10 +84,14 @@
 
                                         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-3">
                                             <div>
-                                                <span class="fw-bolder text-danger fs-5 font-monospace">JOD @item.PriceAtAddTime.ToString("F2")</span>
+                                                <span class="fw-bolder text-danger fs-5 font-monospace" dir="ltr">
+                                                    @Localizer["JOD"] @item.PriceAtAddTime.ToString("F2", CultureInfo.InvariantCulture)
+                                                </span>
                                                 @if (item.Sku.Price > item.PriceAtAddTime)
                                                 {
-                                                    <span class="text-decoration-line-through text-muted small ms-2 font-monospace">JOD @item.Sku.Price.ToString("F2")</span>
+                                                    <span class="text-decoration-line-through text-muted small ms-2 font-monospace">
+                                                        @Localizer["JOD"] @item.Sku.Price.ToString("F2", CultureInfo.InvariantCulture)
+                                                    </span>
                                                 }
                                             </div>
 
@@ -94,9 +106,9 @@
                                                     <input type="text"
                                                            class="form-control bg-white text-center font-monospace px-1"
                                                            id="qty-@item.SkuId"
-                                                           value="@item.Quantity"
+                                                           value="@item.Quantity.ToString(CultureInfo.InvariantCulture)"
                                                            readonly
-                                                           data-max-stock="@item.Sku.Stock">
+                                                           data-max-stock="@item.Sku.Stock.ToString(CultureInfo.InvariantCulture)">
 
                                                     <button class="btn btn-outline-secondary px-2"
                                                             type="button"
@@ -109,7 +121,7 @@
                                                     <button type="button"
                                                             class="btn btn-link text-danger p-0 border-0"
                                                             onclick="removeItemFromCart(@Model.UserId, @item.SkuId)">
-                                                        <i class="bi bi-trash3"></i> Remove
+                                                        <i class="bi bi-trash3"></i>
                                                     </button>
                                                 </div>
                                             </div>
@@ -127,28 +139,33 @@
             <div class="col-lg-4">
                 <div class="card border rounded-0 shadow-sm sticky-top" style="top: 20px;">
                     <div class="card-body p-4">
-                        <h5 class="card-title fw-bold text-dark mb-3">Order Summary</h5>
+                        <h5 class="card-title fw-bold text-dark mb-3">@Localizer["OrderSummary"]</h5>
 
                         <div class="d-flex justify-content-between mb-2 small text-dark fw-bold">
-                            <span>Total Price:</span>
-                            <span class="font-monospace">JOD @subtotal.ToString("F2")</span>
+                            <span>@Localizer["TotalPrice"]:</span>
+                            <span class="font-monospace">@Localizer["JOD"] @subtotal.ToString("F2", CultureInfo.InvariantCulture)</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 small text-success fw-bold">
-                            <span>Promotions:</span>
-                            <span class="font-monospace">-JOD @totalDiscount.ToString("F2")</span>
+                            <span>@Localizer["Promotions"]:</span>
+                            <span class="font-monospace">-@Localizer["JOD"] @totalDiscount.ToString("F2", CultureInfo.InvariantCulture)</span>
                         </div>
 
                         <hr class="my-3">
 
                         <div class="d-flex justify-content-between align-items-baseline mb-4">
-                            <span class="fw-bold text-dark m-0 fs-5">Estimated Price:</span>
+                            <span class="fw-bold text-dark m-0 fs-5">@Localizer["EstimatedPrice"]:</span>
                             <div class="text-end">
-                                <span class="fw-bolder text-danger fs-3 font-monospace m-0 d-block">JOD @finalTotal.ToString("F2")</span>
+                                <span class="fw-bolder text-danger fs-3 font-monospace m-0 d-block">
+                                    @Localizer["JOD"] @finalTotal.ToString("F2", CultureInfo.InvariantCulture)
+                                </span>
                             </div>
                         </div>
 
+                        @{
+                            var checkoutItemCount = Model.CartItems.Sum(i => i.Quantity).ToString(CultureInfo.InvariantCulture);
+                        }
                         <a asp-controller="Orders" asp-action="PlaceOrder" class="btn btn-dark w-100 rounded-0 py-3 fw-bold text-uppercase mb-2">
-                            Checkout Now (@Model.CartItems.Sum(i => i.Quantity))
+                            @Localizer["CheckoutNow"] (@checkoutItemCount)
                         </a>
                     </div>
                 </div>

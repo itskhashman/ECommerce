@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using ECommerce.Application.DTOs.Address;
-using ECommerce.Application.DTOs.Home;
 using ECommerce.Application.DTOs.Lookups;
-using ECommerce.Application.DTOs.Products;
 using ECommerce.Application.DTOs.User;
 using ECommerce.Application.Interface.Repository;
 using ECommerce.Application.Interfaces;
-using ECommerce.Application.Interfaces.services;
 using ECommerce.Domain.Entities.Users;
 
 
@@ -21,7 +18,15 @@ namespace ECommerce.Application.Service
             _userRepository = userRepository;
             _mapper = mapper;
         }
-
+        public async Task<int?> GetTotalUsersAsync()
+        {
+            return await _userRepository.GetTotalUsersAsync();
+        }
+        public async Task<IEnumerable<UserDto>?> GetAllUsersAsync()
+        {
+            var users =  await _userRepository.GetAllUsersAsync();
+            return _mapper.Map<IEnumerable<UserDto>>(users);
+        }
         public async Task<UserDto?> GetUserByEmailAsync(string email)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
@@ -51,7 +56,7 @@ namespace ECommerce.Application.Service
         public async Task<UserDto?> UpdateUserInfo(UpdateUserDto user)
         {
             var userEntity = _mapper.Map<User>(user);
-            await _userRepository.UpdateUserInfo(userEntity);
+            await _userRepository.UpdateUserInfo(userEntity, user.RoleId);
             var updatedUser = await _userRepository.GetUserWithAddressesAsync(user.Id);
             return updatedUser == null ? null : _mapper.Map<UserDto>(updatedUser);
         }   

@@ -1,86 +1,94 @@
-﻿@using ECommerce.Web.Models.ViewModels.Account
+﻿@using System.Globalization
+@using ECommerce.Web.Models.ViewModels.Account
 @model RegisterViewModel
 
-<div class="container mt-5">
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+@{
+    var isArabic = CultureInfo.CurrentCulture.Name.StartsWith("ar");
+    ViewData["Title"] = Localizer["RegisterPageTitle"];
+}
+
+<div class="container mt-5" dir="@(isArabic ? "rtl" : "ltr")">
     <div class="row justify-content-center">
         <div class="col-md-5">
             <div class="card shadow border-0">
                 <div class="card-body p-5">
-                    <h2 class="text-center mb-4">Create Account</h2>
+                    <h2 class="text-center mb-4">@Localizer["RegisterHeader"]</h2>
 
                     <form asp-action="Register" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <div class="mb-3">
-                            <label asp-for="FirstNameEn" class="form-label">First Name (EN)</label>
+                            <label asp-for="FirstNameEn" class="form-label">@Localizer["FirstNameEnLabel"]</label>
                             <input asp-for="FirstNameEn" class="form-control" />
                             <span asp-validation-for="FirstNameEn" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="MiddleNameEn" class="form-label">Middle Name (EN)</label>
+                            <label asp-for="MiddleNameEn" class="form-label">@Localizer["MiddleNameEnLabel"]</label>
                             <input asp-for="MiddleNameEn" class="form-control" />
                             <span asp-validation-for="MiddleNameEn" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="LastNameEn" class="form-label">Last Name (EN)</label>
+                            <label asp-for="LastNameEn" class="form-label">@Localizer["LastNameEnLabel"]</label>
                             <input asp-for="LastNameEn" class="form-control" />
                             <span asp-validation-for="LastNameEn" class="text-danger"></span>
                         </div>
 
                         <hr class="my-4 text-muted" />
 
-                        <div class="mb-3 text-end" dir="rtl">
-                            <label asp-for="FirstNameAr" class="form-label">الاسم الأول</label>
-                            <input asp-for="FirstNameAr" class="form-control" />
+                        <div class="mb-3 @(isArabic ? "text-end" : "text-start")">
+                            <label asp-for="FirstNameAr" class="form-label">@Localizer["FirstNameArLabel"]</label>
+                            <input asp-for="FirstNameAr" class="form-control" dir="rtl" />
                             <span asp-validation-for="FirstNameAr" class="text-danger"></span>
                         </div>
-                        <div class="mb-3 text-end" dir="rtl">
-                            <label asp-for="MiddleNameAr" class="form-label">الاسم الأوسط</label>
-                            <input asp-for="MiddleNameAr" class="form-control" />
+                        <div class="mb-3 @(isArabic ? "text-end" : "text-start")">
+                            <label asp-for="MiddleNameAr" class="form-label">@Localizer["MiddleNameArLabel"]</label>
+                            <input asp-for="MiddleNameAr" class="form-control" dir="rtl" />
                             <span asp-validation-for="MiddleNameAr" class="text-danger"></span>
                         </div>
-                        <div class="mb-3 text-end" dir="rtl">
-                            <label asp-for="LastNameAr" class="form-label">الاسم الأخير</label>
-                            <input asp-for="LastNameAr" class="form-control" />
+                        <div class="mb-3 @(isArabic ? "text-end" : "text-start")">
+                            <label asp-for="LastNameAr" class="form-label">@Localizer["LastNameArLabel"]</label>
+                            <input asp-for="LastNameAr" class="form-control" dir="rtl" />
                             <span asp-validation-for="LastNameAr" class="text-danger"></span>
                         </div>
 
                         <hr class="my-4 text-muted" />
 
                         <div class="mb-3">
-                            <label asp-for="Username" class="form-label">Username</label>
+                            <label asp-for="Username" class="form-label">@Localizer["UsernameLabel"]</label>
                             <input asp-for="Username" class="form-control" />
                             <span asp-validation-for="Username" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label">Email</label>
+                            <label asp-for="Email" class="form-label">@Localizer["EmailLabel"]</label>
                             <input asp-for="Email" class="form-control" placeholder="name@example.com" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Phone" class="form-label">Phone</label>
+                            <label asp-for="Phone" class="form-label">@Localizer["PhoneLabel"]</label>
                             <input asp-for="Phone" class="form-control" />
                             <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Password</label>
+                            <label asp-for="Password" class="form-label">@Localizer["PasswordLabel"]</label>
                             <input asp-for="Password" type="password" class="form-control" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                            <label asp-for="ConfirmPassword" class="form-label">@Localizer["ConfirmPasswordLabel"]</label>
                             <input asp-for="ConfirmPassword" type="password" class="form-control" />
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
 
-                        <button type="submit" class="btn btn-success w-100 py-2">Register</button>
+                        <button type="submit" class="btn btn-success w-100 py-2">@Localizer["RegisterButtonText"]</button>
 
                         <div class="mt-3 text-center">
-                            <a asp-action="Login" class="text-decoration-none">Already have an account? Sign in</a>
+                            <a asp-action="Login" class="text-decoration-none">@Localizer["LoginLinkText"]</a>
                         </div>
                     </form>
                 </div>
