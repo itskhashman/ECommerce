@@ -30,8 +30,7 @@ namespace ECommerce.Web.Controllers.Api
                 return Ok(new
                 {
                     success = true,
-                    message = "Successfully added items to the cart!",
-                    data = updatedCart
+                    message = "Successfully added items to the cart!"
                 });
             }
             catch (InvalidOperationException ex)

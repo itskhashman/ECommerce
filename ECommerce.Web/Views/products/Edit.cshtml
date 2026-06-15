@@ -85,17 +85,23 @@
         </div>
 
         <div class="card card-body shadow-sm border border-light rounded-3 mb-3 p-3 bg-white">
-            <label class="form-label small fw-bold text-secondary uppercase mb-2">Promotional Settings</label>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label small fw-bold text-secondary uppercase m-0">Promotional Settings</label>
+                <button type="button" class="btn btn-outline-danger btn-sm fw-semibold px-3" onclick="clearDiscountFields()">
+                    <i class="bi bi-x-circle me-1"></i>Clear Discount
+                </button>
+            </div>
+
             <div class="row g-2">
                 <div class="col-sm-6">
                     <label asp-for="DiscountTypeId" class="form-label small text-muted mb-1">Discount Mode</label>
-                    <select asp-for="DiscountTypeId" class="form-select form-select-sm" asp-items="ViewBag.DiscountTypes">
+                    <select asp-for="DiscountTypeId" id="discountTypeSelect" class="form-select form-select-sm" asp-items="ViewBag.DiscountTypes">
                         <option value="">-- No Discount --</option>
                     </select>
                 </div>
                 <div class="col-sm-6">
                     <label asp-for="DiscountAmount" class="form-label small text-muted mb-1">Value/Rate</label>
-                    <input asp-for="DiscountAmount" type="number" step="0.01" class="form-control form-control-sm" placeholder="e.g., 10.00" />
+                    <input asp-for="DiscountAmount" id="discountAmountInput" type="number" step="0.01" class="form-control form-control-sm" placeholder="e.g., 10.00" />
                     <span asp-validation-for="DiscountAmount" class="text-danger small"></span>
                 </div>
             </div>
@@ -127,7 +133,7 @@
 @section Scripts {
     <script src="~/js/product-variants.js"></script>
     <script>
-            document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function() {
             const mainCategorySelect = document.getElementById("MainCategoryId");
             const savedSubCategoryId = '@Model?.CategoryId';
 
@@ -147,14 +153,22 @@
                                     : Model?.SimpleProductVariants
                     );
 
-        console.log("Loaded Dynamic Variant Payload:", existingVariants); 
+        console.log("Loaded Dynamic Variant Payload:", existingVariants);
 
             if (window.ProductVariantsManager) {
                 window.ProductVariantsManager.initWithData(existingVariants, isNestedMode);
             }
         }
 
-           function loadSubCategories(mainCategoryId, selectedSubCategoryId = null, callback = null) {
+        function clearDiscountFields() {
+            const typeSelect = document.getElementById("discountTypeSelect");
+            const amountInput = document.getElementById("discountAmountInput");
+
+            if (typeSelect) typeSelect.value = "";
+            if (amountInput) amountInput.value = "";
+        }
+
+        function loadSubCategories(mainCategoryId, selectedSubCategoryId = null, callback = null) {
             const childSelect = document.getElementById("CategoryId");
             if (!childSelect) return;
 
@@ -189,5 +203,6 @@
                     console.error("Error loading cascading subcategories:", error);
                     if (typeof callback === "function") callback();
                 });
-        }</script>
+        }
+    </script>
 }

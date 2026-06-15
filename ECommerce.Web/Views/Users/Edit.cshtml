@@ -1,0 +1,156 @@
+﻿@model ECommerce.Application.DTOs.User.UpdateUserDto
+
+<div class="container-fluid px-4 py-3">
+    <div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a asp-action="Manage" class="text-decoration-none">Users</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit User Profile</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <a asp-action="Manage" class="btn btn-outline-secondary me-2">
+                <i class="bi bi-arrow-left"></i> Cancel
+            </a>
+        </div>
+    </div>
+
+    <form asp-action="Edit" asp-route-id="" method="post" id="editUserForm">
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-5">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4">
+                    <h5 class="text-dark fw-bold">English Name</h5>
+                </div>
+                <div class="col-xl-9 col-lg-8">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="FirstNameEn" class="form-label fw-semibold text-secondary small">First Name (EN)</label>
+                            <input type="text" asp-for="FirstNameEn" class="form-control form-control-lg" />
+                            <span asp-validation-for="FirstNameEn" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="MiddleNameEn" class="form-label fw-semibold text-secondary small">Middle Name (EN)</label>
+                            <input type="text" asp-for="MiddleNameEn" class="form-control form-control-lg" />
+                            <span asp-validation-for="MiddleNameEn" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="LastNameEn" class="form-label fw-semibold text-secondary small">Last Name (EN)</label>
+                            <input type="text" asp-for="LastNameEn" class="form-control form-control-lg" />
+                            <span asp-validation-for="LastNameEn" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4 text-muted opacity-25" />
+
+        <div class="mb-5">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4">
+                    <h5 class="text-dark fw-bold">Arabic Name</h5>
+                </div>
+                <div class="col-xl-9 col-lg-8">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="FirstNameAr" class="form-label fw-semibold text-secondary small">First Name (AR)</label>
+                            <input type="text" asp-for="FirstNameAr" class="form-control form-control-lg text-end" />
+                            <span asp-validation-for="FirstNameAr" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="MiddleNameAr" class="form-label fw-semibold text-secondary small">Middle Name (AR)</label>
+                            <input type="text" asp-for="MiddleNameAr" class="form-control form-control-lg text-end" />
+                            <span asp-validation-for="MiddleNameAr" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="LastNameAr" class="form-label fw-semibold text-secondary small">Last Name (AR)</label>
+                            <input type="text" asp-for="LastNameAr" class="form-control form-control-lg text-end" />
+                            <span asp-validation-for="LastNameAr" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4 text-muted opacity-25" />
+
+        <div class="mb-5">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4">
+                    <h5 class="text-dark fw-bold">Security & Contact</h5>
+                </div>
+                <div class="col-xl-9 col-lg-8">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label asp-for="Email" class="form-label fw-semibold text-secondary small">Email Address</label>
+                            <input type="email" asp-for="Email" class="form-control form-control-lg" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Phone" class="form-label fw-semibold text-secondary small">Phone Number</label>
+                            <input type="text" asp-for="Phone" class="form-control form-control-lg" />
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="RoleId" class="form-label fw-semibold text-secondary small">Role</label>
+                            <select asp-for="RoleId" class="form-select form-select-lg">
+                                <option value="" disabled>-- Select Access level --</option>
+                                <option value="1">Admin</option>
+                                <option value="2">Customer</option>
+                            </select>
+                            <span asp-validation-for="RoleId" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 pt-2">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch p-0 ps-5 d-flex align-items-center gap-3">
+                                <input type="checkbox"
+                                       name="IsActive"
+                                       id="edit-active"
+                                       value="true"
+                                       class="form-check-input ms-0 scale-switch"
+                                       @(Model.IsActive == true ? "checked" : "") />
+                                <input type="hidden" name="IsActive" value="false" />
+
+                                <label class="form-check-label fw-bold text-dark mb-0" for="edit-active">Is Active</label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="IsEmailVerified" value="false" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-light p-3 rounded-3 d-flex justify-content-end gap-3 mt-5 border">
+            <a asp-action="Manage" class="btn btn-link text-decoration-none text-secondary px-4 fw-semibold">Discard</a>
+            <button type="submit" class="btn btn-success px-5 fw-semibold shadow-sm">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $.validator.unobtrusive.parse("#editUserForm");
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                            <text>alert('@TempData["ErrorMessage"]');</text>
+            }
+        });
+    </script>
+    <style>
+        .scale-switch {
+            width: 3.5rem !important;
+            height: 1.75rem !important;
+            cursor: pointer;
+        }
+    </style>
+}

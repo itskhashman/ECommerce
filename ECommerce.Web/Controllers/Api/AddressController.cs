@@ -6,11 +6,11 @@ namespace ECommerce.Web.Controllers.Api
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AddressesController : ControllerBase
+    public class AddressController : ControllerBase
     {
         private readonly IUserService _userService;
 
-        public AddressesController(IUserService userService)
+        public AddressController(IUserService userService)
         {
             _userService = userService;
         }

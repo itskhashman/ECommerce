@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 public class AccountController : Controller
 {
     private readonly IIdentityService _identityService;
-
     public AccountController(IIdentityService identityService)
     {
         _identityService = identityService;
@@ -24,7 +23,7 @@ public class AccountController : Controller
 
         var result = await _identityService.RegisterAsync(model.Username
             , model.Email, model.Password, model.FirstNameAr, model.MiddleNameAr, model.LastNameAr,
-            model.FirstNameEn, model.MiddleNameEn, model.LastNameEn, model.Phone);
+            model.FirstNameEn, model.MiddleNameEn, model.LastNameEn, model.Phone,2,"Customer");
 
         if (result) return RedirectToAction("Home", "Home");
 
@@ -33,34 +32,51 @@ public class AccountController : Controller
     }
 
     [HttpGet]
-    public IActionResult Login()
+    public IActionResult Login(string returnUrl = null)
     {
+        ViewBag.ReturnUrl = returnUrl;
         return View();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
     {
         if (!ModelState.IsValid)
         {
-            return View(model);      
+            ViewBag.ReturnUrl = returnUrl;
+            return View(model);
         }
 
         var result = await _identityService.LoginAsync(model.Email, model.Password, model.RememberMe);
 
         if (result)
         {
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
             return RedirectToAction("Home", "Home");
         }
 
         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+        ViewBag.ReturnUrl = returnUrl;
         return View(model);
     }
-
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
         await _identityService.LogoutAsync();
-        return RedirectToAction("Home", "Home");
+        return RedirectToAction("Login");
+    }
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Home", "Home");
+        }
+
+        return RedirectToAction("Login");
     }
 }

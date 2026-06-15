@@ -2,7 +2,9 @@
 
 @model ECommerce.Application.DTOs.Products.ProductDto
 
-
+@{
+    ViewData["Title"] = Model.NameEn;
+}
 
 @{
     var Images = Model.ProductImages.ToList();
@@ -450,14 +452,18 @@
         }
 
 
-                
+      
         async function handleCartSubmission(userId) {
             const qtyInput = document.getElementById('purchaseQuantity');
             const qty = parseInt(qtyInput.value) || 1;
 
             if (!currentSelection.skuId || currentSelection.stock <= 0 || qty > currentSelection.stock) {
+                alert("You can't pick more than  the Stock avaliable")
                 return;
             }
+
+            const cartBtn = document.getElementById('addToCartBtn');
+            if (cartBtn) cartBtn.classList.add('disabled');
 
             try {
                 const response = await fetch(`/api/Cart/AddToCart/${userId}?skuId=${currentSelection.skuId}&quantity=${qty}`, {
@@ -467,15 +473,25 @@
                     }
                 });
 
-                const data = await response.json();
+                const responseText = await response.text();
+                let data = {};
+
+                try {
+                    data = JSON.parse(responseText);
+                } catch (e) {
+                    console.error("Failed to parse response body as JSON:", responseText);
+                }
 
                 if (response.ok && data.success) {
-                    alert(data.message);
+                    alert(data.message || "Successfully added items to the cart!");
                 } else {
-                    alert(data.message || "Could not process request on the server.");
+                    alert(data.message || `Error (${response.status}): Could not process your request.`);
                 }
             } catch (error) {
                 console.error("Cart Request Exception:", error);
+                alert("A network error occurred. Please check your connection and try again.");
+            } finally {
+                evalulateStockUI();
             }
         }
 

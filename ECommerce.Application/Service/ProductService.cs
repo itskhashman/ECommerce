@@ -18,7 +18,31 @@ namespace ECommerce.Application.Service
             _productRepository = productRepository;
             _mapper = mapper;
         }
+        public async Task<int?> GetTotalProductsAsync()
+        {
+            return await _productRepository.GetTotalProductsAsync();
+        }
+        public async Task<Dictionary<int , ProductDto>> GetTopProductsAsync()
+        {
+            var topProducts = await _productRepository.GetTopProductsAsync();
 
+
+            return topProducts.ToDictionary(
+                p => p.Key,
+                p => new ProductDto
+                {
+                    Id = p.Value.Id,
+                    NameAr = p.Value.NameAr,
+                    NameEn = p.Value.NameEn,
+                });   
+        }
+        public async Task<IEnumerable<ProductDto>?> GetNewestProductsAsync()
+        {
+            var topProducts =  await _productRepository.GetNewestProductsAsync();
+
+            return _mapper.Map<IEnumerable<ProductDto>>(topProducts);
+        }
+        
         public async Task<IEnumerable<ProductDto>> GetAllAsync()
         {
             var products = await _productRepository.GetAllAsync();
@@ -85,7 +109,9 @@ namespace ECommerce.Application.Service
         }
         public async Task<ProductDto> UpdateAsync(UpdateProductDto product)
         {
-            var productEntity = _mapper.Map<Product>(product);
+            var createProduct = _mapper.Map<CreateProductDto>(product);
+
+            var productEntity = MapCreateDtoToProductEntity(createProduct);
 
             var updatedProduct = await _productRepository.UpdateAsync(productEntity);
 

@@ -1,7 +1,7 @@
 ﻿
 using ECommerce.Application.Interfaces;
 using ECommerce.Application.Interfaces.services;
-using ECommerce.Web.Models.Home;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 public class HomeController : Controller
@@ -15,27 +15,17 @@ public class HomeController : Controller
         _categoryService = categoryService;
     }
 
-    [HttpGet]
     public async Task<IActionResult> Home()
     {
-        var model = await _homeService.GetHomeDataAsync();
+        var homeData = await _homeService.GetHomeDataAsync();
 
-        return View(model);
+        return View(homeData);
     }
-    [HttpGet]
-    public async Task<IActionResult> Search(SearchViewModel viewModel)
+    [HttpGet("Dashboard")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Dashboard()
     {
-        var results = await _homeService.GetSearchedProductAsync(
-            viewModel.SearchString,
-            viewModel.CategoryId,
-            viewModel.MinPrice,
-            viewModel.MaxPrice,
-            viewModel.InStockOnly
-        );
-
-        viewModel.Products = results;
-        viewModel.Categories = await _categoryService.GetAllMainCategoriesAsync();
-
-        return View(viewModel);
+        var dashboardData = await _homeService.GetDashboardDateAsync();
+        return View(dashboardData);
     }
 }

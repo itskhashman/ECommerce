@@ -3,6 +3,7 @@ using ECommerce.Application.DTOs.Address;
 using ECommerce.Application.DTOs.Cart;
 using ECommerce.Application.DTOs.Order;
 using ECommerce.Application.DTOs.Wishlist;
+using ECommerce.Domain.Entities.Users;
 
 namespace ECommerce.Application.DTOs.User
 {
@@ -22,6 +23,7 @@ namespace ECommerce.Application.DTOs.User
         public DateTime? LastLoginAt { get; set; }
         public ICollection<OrderDto>? Orders { get; set; } = new List<OrderDto>();
         public ICollection<AddressDto>? Address { get; set; } = new List<AddressDto>();
+        public ICollection<UsersRolesDto>? UserRoles { get; set; } = new List<UsersRolesDto>();
         public CartDto? Cart { get; set; }
         public WishlistDto? Wishlist { get; set; }
     }
