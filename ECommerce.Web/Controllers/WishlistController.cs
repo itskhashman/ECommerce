@@ -1,5 +1,7 @@
 ﻿
+using ECommerce.Application.DTOs.Wishlist;
 using ECommerce.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 public class WishlistController : Controller
@@ -12,12 +14,13 @@ public class WishlistController : Controller
     }
 
     [HttpGet("Wishlist")]
+    [Authorize(Roles = "Customer")]
     public async Task<IActionResult> Wishlist()
     {
         var domainUserIdClaim = User.FindFirst("DomainUserId")?.Value;
         int userId = int.TryParse(domainUserIdClaim, out int parsedUserId) ? parsedUserId : 1;
         
-        var wishlist = await _wishlistService.GetWishlistByUserIdAsync(userId);
+        WishlistDto? wishlist = await _wishlistService.GetWishlistByUserIdAsync(userId);
         return View(wishlist);
     }
 }

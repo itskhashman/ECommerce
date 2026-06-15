@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 public class AccountController : Controller
 {
     private readonly IIdentityService _identityService;
-
     public AccountController(IIdentityService identityService)
     {
         _identityService = identityService;
@@ -24,7 +23,7 @@ public class AccountController : Controller
 
         var result = await _identityService.RegisterAsync(model.Username
             , model.Email, model.Password, model.FirstNameAr, model.MiddleNameAr, model.LastNameAr,
-            model.FirstNameEn, model.MiddleNameEn, model.LastNameEn, model.Phone);
+            model.FirstNameEn, model.MiddleNameEn, model.LastNameEn, model.Phone,2,"Customer");
 
         if (result) return RedirectToAction("Home", "Home");
 
@@ -61,6 +60,6 @@ public class AccountController : Controller
     public async Task<IActionResult> Logout()
     {
         await _identityService.LogoutAsync();
-        return RedirectToAction("Home", "Home");
+        return RedirectToAction("Login");
     }
 }

@@ -10,19 +10,25 @@
                         <h4 class="mb-1">Order #@Model.OrderNumber</h4>
                         <span class="text-muted small">Placed on @Model.CreatedAt.ToString("dd MMMM yyyy, h:mm tt")</span>
                     </div>
-                    @switch (Model.OrderStatus.Id)
+                    @if (Model.IsDeleted)
                     {
+                        <span class="badge rounded-pill bg-danger">Canceled</span>
+
+                    }
+                    else
+                        @switch (Model.OrderStatusId)
+                        {
                         case 1:
-                            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning px-3 py-2">@Model.OrderStatus?.NameEn</span>
+                            <span class="badge rounded-pill bg-warning text-dark">@Model.OrderStatus?.NameEn</span>
                             break;
                         case 2:
-                            <span class="badge rounded-pill bg-info bg-opacity-10 text-info px-3 py-2">@Model.OrderStatus?.NameEn</span>
+                            <span class="badge rounded-pill bg-info text-dark">@Model.OrderStatus?.NameEn</span>
                             break;
                         case 3:
-                            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary px-3 py-2">@Model.OrderStatus?.NameEn</span>
+                            <span class="badge rounded-pill bg-primary">@Model.OrderStatus?.NameEn</span>
                             break;
                         case 4:
-                            <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2">@Model.OrderStatus?.NameEn</span>
+                            <span class="badge rounded-pill bg-success">@Model.OrderStatus?.NameEn</span>
                             break;
                         default:
                             break;
@@ -35,31 +41,20 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Product Name</th>
-                                <th class="text-center">Price</th>
                                 <th class="text-center">Qty</th>
-                                <th class="text-end">Total</th>
+                                <th class="text-end">Total Price</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.OrderItems != null && Model.OrderItems.Any())
-                            {
-                                foreach (var item in Model.OrderItems)
-                                {
-                                    <tr>
-                                        <td>
-                                            <span class="fw-bold text-dark d-block">@item.Sku?.Product?.NameEn</span>
-                                            <span class="text-muted small">@item.Sku?.SkuCode</span>
-                                        </td>
-                                        <td class="text-center">$@item.PriceAtPurchase</td>
-                                        <td class="text-center fw-semibold">@item.Quantity</td>
-                                        <td class="text-end fw-bold text-dark">JOD @item.SubTotal</td>
-                                    </tr>
-                                }
-                            }
-                            else
+                            @foreach (var item in Model.OrderItems)
                             {
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted py-3">No products mapped to this order record.</td>
+                                    <td>
+                                        <span class="fw-bold text-dark d-block">@item.Sku?.Product?.NameEn</span>
+                                        <span class="text-muted small">@item.Sku?.SkuCode</span>
+                                    </td>
+                                    <td class="text-center fw-semibold">@item.Quantity</td>
+                                    <td class="text-end fw-bold text-dark">JOD @item.SubTotal</td>
                                 </tr>
                             }
                         </tbody>

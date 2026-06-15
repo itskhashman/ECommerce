@@ -24,7 +24,7 @@ namespace ECommerce.Web.Controllers
             _mapper = mapper;
             _fileStorageService = fileStorageService;
         }
-
+        [HttpGet("Manage/Categories")]
         public async Task<IActionResult> Index()
         {
             var categories = await _categoryService.GetAllAsync();
@@ -42,7 +42,7 @@ namespace ECommerce.Web.Controllers
 
             return View(rootCategories);
         }
-
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             await PopulateParentCategoriesSelectList();
@@ -78,7 +78,7 @@ namespace ECommerce.Web.Controllers
             TempData["NotifyMessage"] = "Category created successfully!";
             return RedirectToAction("Index");
         }
-
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var category = await _categoryService.GetByIdAsync(id);

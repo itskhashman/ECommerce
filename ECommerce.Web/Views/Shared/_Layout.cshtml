@@ -24,43 +24,75 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                {
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Categories" asp-action="Index">Manage Categories</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Products" asp-action="Index">Manage Products</a>
-                        </li>
-                    </ul>
-                }
+                    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
+                            <li class="nav-item">
+                                <a class="nav-link px-3 rounded-2 text-white-50 hover-bg-dark" asp-controller="Categories" asp-action="Index">
+                                    <i class="bi bi-tags me-1 text-success"></i> Categories
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link px-3 rounded-2 text-white-50 hover-bg-dark" asp-controller="Products" asp-action="Index">
+                                    <i class="bi bi-box-seam me-1 text-success"></i> Products
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link px-3 rounded-2 text-white-50 hover-bg-dark" asp-controller="Orders" asp-action="Manage">
+                                    <i class="bi bi-receipt me-1 text-success"></i> Orders
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link px-3 rounded-2 text-white-50 hover-bg-dark" asp-controller="Users" asp-action="Manage">
+                                    <i class="bi bi-people me-1 text-success"></i> Users
+                                </a>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="me-auto"></div>
+                    }
 
-                <ul class="navbar-nav ms-auto align-items-center">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
                         @if (User.IsInRole("Customer"))
                         {
-                            <li class="nav-item me-3">
-                                <a class="nav-link text-light position-relative p-1" asp-controller="Wishlist" asp-action="Wishlist">
-                                    <i class="bi bi-heart fs-5 text-danger"></i>
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50 p-2 rounded-circle hover-icon position-relative"
+                                   asp-controller="Orders" asp-action="Index" title="My Orders">
+                                    <i class="bi bi-bag-check fs-5 text-success"></i>
                                 </a>
                             </li>
 
-                            <li class="nav-item me-4">
-                                <a class="nav-link text-light position-relative p-1" asp-controller="Cart" asp-action="Cart">
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50 p-2 rounded-circle hover-icon position-relative"
+                                   asp-controller="Wishlist" asp-action="Wishlist" title="Wishlist">
+                                    <i class="bi bi-heart-fill fs-5 text-danger"></i>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-white-50 p-2 rounded-circle hover-icon position-relative"
+                                   asp-controller="Cart" asp-action="Cart" title="Shopping Cart">
                                     <i class="bi bi-cart3 fs-5 text-success"></i>
                                 </a>
                             </li>
                         }
 
-                        <a class="nav-item me-4" asp-controller="Users" asp-action="Profile">
-                            <i class="bi bi-person-circle me-1 text-success fs-5"></i>
-                        </a>
+                        <span class="vr bg-secondary opacity-25 my-2 mx-1 d-none d-lg-inline" style="height: 1.5rem;"></span>
 
                         <li class="nav-item">
+                            <a class="nav-link p-2 rounded-circle hover-icon" asp-controller="Users" asp-action="Profile" title="My Profile">
+                                <i class="bi bi-person-circle text-success fs-5"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ms-1">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-outline-danger btn-sm px-3 fw-medium">
-                                    <i class="bi bi-box-arrow-right me-1"></i>Logout
+                                <button type="submit" class="btn btn-outline-danger btn-sm px-3 rounded-pill fw-semibold d-flex align-items-center gap-1">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
                                 </button>
                             </form>
                         </li>
@@ -68,16 +100,18 @@
                     else
                     {
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Login">
+                            <a class="nav-link text-white-50 px-3 fw-medium hover-link" asp-controller="Account" asp-action="Login">
                                 <i class="bi bi-box-arrow-in-right me-1"></i>Login
                             </a>
                         </li>
-                        <li class="nav-item ms-2">
-                            <a class="btn btn-success btn-sm px-3 text-white fw-medium" asp-controller="Account" asp-action="Register">
+                        <li class="nav-item">
+                            <a class="btn btn-success btn-sm px-4 rounded-pill fw-semibold shadow-sm text-white border-0"
+                               asp-controller="Account" asp-action="Register" style="background-color: #198754;">
                                 Sign Up
                             </a>
                         </li>
                     }
+                </ul>
                 </ul>
             </div>
         </div>

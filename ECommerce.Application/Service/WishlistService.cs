@@ -21,7 +21,7 @@ namespace ECommerce.Application.Service
         {
             await _wishlistRepository.AddToWishlistAsync(wishlistId, wishlistItemDto.ProductId);
         }
-        public async Task<WishlistDto> GetWishlistByUserIdAsync(int userId)
+        public async Task<WishlistDto?> GetWishlistByUserIdAsync(int userId)
         {
             var wishlist = await _wishlistRepository.GetWishlistByUserIdAsync(userId);
             return _mapper.Map<WishlistDto>(wishlist);
@@ -34,7 +34,7 @@ namespace ECommerce.Application.Service
         {
             await _wishlistRepository.ClearWishlistAsync(wishlistId);
         }
-        public async Task<WishlistDto> CreateWishlistAsync(int userId)
+        public async Task<WishlistDto?> CreateWishlistAsync(int userId)
         {
             var wishlist = await _wishlistRepository.AddAsync(new Wishlist { UserId = userId });
             return _mapper.Map<WishlistDto>(wishlist);

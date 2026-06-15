@@ -2,7 +2,9 @@
 
 @model ECommerce.Application.DTOs.Products.ProductDto
 
-
+@{
+    ViewData["Title"] = Model.NameEn;
+}
 
 @{
     var Images = Model.ProductImages.ToList();
